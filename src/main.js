@@ -14,6 +14,7 @@ import { criarLicaoMontagem } from './licoes/montagem.js';
 import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
+import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
 aplicarIcones();
@@ -90,6 +91,31 @@ const cenaRisco = {
     efeitosRisco.animar(t, dt, r);
     personagensRisco.animar(t, dt, r);
   },
+};
+
+// Cena da parada 4: casa na encosta com os sinais de perigo.
+const sinais = criarCenaSinais({ palco });
+const personagensSinais = criarPersonagensRisco({
+  palco,
+  relevo: relevoSinais,
+  posicoesAgente: POSICOES_AGENTE_SINAIS,
+  vizinhos: VIZINHOS_SINAIS,
+  alturaAtor: 1.15,
+});
+sinais.raiz.add(personagensSinais.grupo);
+const cenaSinais = {
+  raiz: sinais.raiz,
+  alvos: [],
+  enquadramento: ENQUADRAMENTOS_SINAIS.geral,
+  animar: (t, dt, r) => {
+    sinais.efeitos.animar(t, dt, r);
+    personagensSinais.animar(t, dt, r);
+  },
+};
+// Cada lição do tipo roteiro escolhe a cena pelo campo "cena".
+const CENAS_ROTEIRO = {
+  terreno: { cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS },
+  sinais: { cena: cenaSinais, efeitos: sinais.efeitos, personagens: personagensSinais, enquadramentos: ENQUADRAMENTOS_SINAIS },
 };
 
 // No celular, o kit vira uma grade com as colunas que deixam os itens maiores
@@ -305,13 +331,14 @@ function mostrarLicaoRoteiro(l) {
   letreiro.textContent = l.letreiro ?? l.titulo;
   if (!desktop.matches) guia.recolher(true);
   cena1.mostrarTrilha(false);
-  palco.definirCena(cenaRisco);
+  const c = CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno;
+  palco.definirCena(c.cena);
   licaoAtiva = criarLicaoRoteiro({
     licao: l,
     perfil,
-    efeitos: efeitosRisco,
-    personagens: personagensRisco,
-    enquadramentos: ENQUADRAMENTOS,
+    efeitos: c.efeitos,
+    personagens: c.personagens,
+    enquadramentos: c.enquadramentos,
     palco,
     guia,
     linhaTempo,

@@ -53,6 +53,8 @@ Cada lição tem: cena 3D própria + painel com 3 abas:
 | 6 | Durante a emergência | Rua alagada (água em shader animado) | Não atravessar ruas alagadas nem pontes submersas; desligar energia, gás e água; ir para local seguro; abandonar o carro se a água puder levá-lo; deslizamento: sair na hora e avisar vizinhos; ligar 199 ou 193 |
 | 7 | Depois da água baixar | Casa com marca de lama + sol | Só voltar quando as autoridades liberarem; cuidado com água e alimentos contaminados e animais peçonhentos; avaliar danos e informar as autoridades |
 
+> **Parada 4 (20/11/2026):** feita como roteiro (formato da parada 1, escolha do George), sem o mini-jogo "perigoso ou normal?": nenhuma fonte oficial diz o que é "normal". Sinais usados, todos com fonte: rachaduras e trincas no chão e nas paredes, saliências, muro estufado, árvores e postes inclinados, raízes expostas e água barrenta (F1, F2, F3, F10). Portas emperrando e estalos ficaram de fora por falta de fonte.
+>
 > **Validação (20/11/2026):** os textos de `data/licoes.json` foram reescritos com base em fontes oficiais (lista em `_fontes`), citadas no rodapé do guia. Falta a revisão da Defesa Civil SC.
 >
 > **IMPORTANTE:** os procedimentos acima são rascunho de concepção. Antes de publicar, validar o conteúdo com material oficial da Defesa Civil SC (defesacivil.sc.gov.br) e da Defesa Civil Nacional. Não inventar protocolo.

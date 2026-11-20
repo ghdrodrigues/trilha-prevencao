@@ -534,12 +534,13 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Rachaduras ou trincas no chão e nas paredes.",
-          "Água barrenta surgindo no barranco ou no morro.",
-          "Árvores, postes ou muros inclinados.",
-          "Muros estufados."
+          "Rachaduras no solo, trincas ou saliências no chão e nas paredes.",
+          "Muros estufados.",
+          "Árvores, postes ou muros inclinados, e árvores com raízes expostas.",
+          "Surgimento de água barrenta.",
+          "Ao perceber um sinal, saia da área na hora, avise os vizinhos e ligue 199."
         ],
-        "porque": "Esses são os sinais que a Defesa Civil de SC aponta para deslizamento. Ao perceber um deles, a orientação é sair da área na hora.",
+        "porque": "Esses são os sinais de deslizamento que a Defesa Civil de SC lista. Ao perceber sinais de instabilidade, a orientação é sair imediatamente da área.",
         "dica": "Viu um desses sinais? Sai na hora e liga 199."
       },
       "perfil_variacoes": {
@@ -556,7 +557,279 @@
       "fontes": [
         "F1",
         "F2",
+        "F3",
+        "F10",
         "F10b"
+      ],
+      "tipo": "roteiro",
+      "cena": "sinais",
+      "letreiro": "Sinais de perigo",
+      "resumo": "Reconhecer no terreno e na casa os sinais de que a encosta pode deslizar.",
+      "final": {
+        "titulo": "Agora você reconhece os sinais",
+        "texto": "Próximo passo: combinar com a família a rota de saída e o ponto de encontro."
+      },
+      "etapas": [
+        {
+          "id": "casa",
+          "titulo": "A casa na encosta",
+          "curto": "A casa",
+          "icone": "encosta",
+          "resumo": "Em área de encosta, a chuva intensa pede atenção ao terreno.",
+          "subpassos": [
+            {
+              "texto": "Uma casa na encosta, em dias de chuva intensa",
+              "foco": "geral",
+              "efeito": "chuva",
+              "agente": "acenar"
+            },
+            {
+              "texto": "Fique atento a rachaduras, inclinação de árvores ou postes e movimentação de terra",
+              "foco": "geral",
+              "agente": "apontar"
+            }
+          ],
+          "explicacao": [
+            "Em áreas de encosta, a Defesa Civil de SC orienta ficar atento a rachaduras, inclinação de árvores ou postes e movimentação de terra."
+          ],
+          "dicas": [
+            "Evite permanecer em encostas durante períodos de chuva intensa."
+          ],
+          "fontes": [
+            "F1",
+            "F2",
+            "F10b"
+          ]
+        },
+        {
+          "id": "trincas",
+          "titulo": "Rachaduras e trincas",
+          "curto": "Trincas",
+          "icone": "trinca",
+          "base": [
+            "chuva"
+          ],
+          "resumo": "Rachaduras no chão e trincas nas paredes.",
+          "subpassos": [
+            {
+              "texto": "Rachaduras no chão",
+              "foco": "chao",
+              "efeito": "chao",
+              "ancora": "chao",
+              "etiqueta": "Rachadura no chão",
+              "agente": "apontar",
+              "vizinho": {
+                "encosta": "examinar"
+              }
+            },
+            {
+              "texto": "Trincas nas paredes",
+              "foco": "parede",
+              "efeito": "parede",
+              "ancora": "parede",
+              "etiqueta": "Trinca na parede",
+              "agente": "apontar"
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar da Defesa Civil de SC orienta observar rachaduras, trincas ou saliências no chão e nas paredes.",
+            "A Defesa Civil Nacional reforça: onde há risco de deslizamento, fique atento a trincas no terreno ou rachaduras nas paredes."
+          ],
+          "dicas": [
+            "Viu rachadura no chão ou na parede? Avisa os vizinhos e a Defesa Civil: 199."
+          ],
+          "fontes": [
+            "F1",
+            "F2",
+            "F3",
+            "F10"
+          ]
+        },
+        {
+          "id": "estufados",
+          "titulo": "Chão e muro estufados",
+          "curto": "Estufados",
+          "icone": "estufado",
+          "base": [
+            "chuva"
+          ],
+          "resumo": "Saliências no chão e muros que estufam.",
+          "subpassos": [
+            {
+              "texto": "Saliências no chão",
+              "foco": "estufado",
+              "efeito": "saliencia",
+              "ancora": "saliencia",
+              "etiqueta": "Chão estufado",
+              "agente": "apontar"
+            },
+            {
+              "texto": "Muros estufados",
+              "foco": "estufado",
+              "efeito": "muro",
+              "ancora": "muro",
+              "etiqueta": "Muro estufado",
+              "agente": "apontar",
+              "vizinho": {
+                "encosta": "examinar"
+              }
+            }
+          ],
+          "explicacao": [
+            "Muro estufado está na lista de sinais de deslizamento da Defesa Civil de SC.",
+            "O Plano Emergencial Familiar pede atenção a saliências no chão e nas paredes."
+          ],
+          "dicas": [
+            "Ao perceber sinais de instabilidade, sai imediatamente da área."
+          ],
+          "fontes": [
+            "F1",
+            "F2"
+          ]
+        },
+        {
+          "id": "inclinados",
+          "titulo": "Árvores e postes inclinados",
+          "curto": "Inclinados",
+          "icone": "inclinado",
+          "base": [
+            "chuva"
+          ],
+          "resumo": "Árvores, postes ou muros com inclinação anormal.",
+          "subpassos": [
+            {
+              "texto": "Árvore inclinada, com raízes expostas",
+              "foco": "inclinado",
+              "efeito": "arvore",
+              "ancora": "arvore",
+              "etiqueta": "Árvore inclinada",
+              "agente": "apontar"
+            },
+            {
+              "texto": "Poste com inclinação anormal",
+              "foco": "inclinado",
+              "efeito": "poste",
+              "ancora": "poste",
+              "etiqueta": "Poste inclinado",
+              "agente": "apontar"
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil de SC pede para verificar se há árvores, postes ou muros com inclinação anormal no terreno.",
+            "A cartilha de deslizamentos da Defesa Civil de Joinville inclui árvores com raízes expostas."
+          ],
+          "dicas": [
+            "Se houver qualquer sinal de movimentação no terreno, procura um local seguro."
+          ],
+          "fontes": [
+            "F1",
+            "F2",
+            "F3",
+            "F10"
+          ]
+        },
+        {
+          "id": "agua",
+          "titulo": "Água barrenta",
+          "curto": "Água barrenta",
+          "icone": "agua",
+          "base": [
+            "chuva"
+          ],
+          "resumo": "Água barrenta surgindo no barranco.",
+          "subpassos": [
+            {
+              "texto": "Água barrenta surgindo no barranco",
+              "foco": "agua",
+              "efeito": "agua",
+              "ancora": "agua",
+              "etiqueta": "Água barrenta",
+              "agente": "apontar",
+              "vizinho": {
+                "encosta": "examinar"
+              },
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "O surgimento de água barrenta está na lista de sinais de deslizamento da Defesa Civil de SC."
+          ],
+          "dicas": [
+            "Água barrenta saindo do barranco é sinal de sair na hora."
+          ],
+          "fontes": [
+            "F1"
+          ]
+        },
+        {
+          "id": "saia",
+          "titulo": "Viu um sinal? Saia e avise",
+          "curto": "Saia e avise",
+          "icone": "telefone",
+          "base": [
+            "chuva",
+            "chao",
+            "parede",
+            "saliencia",
+            "muro",
+            "arvore",
+            "poste",
+            "agua"
+          ],
+          "resumo": "Ao perceber um sinal: sair, avisar os vizinhos e ligar 199.",
+          "subpassos": [
+            {
+              "texto": "Saia imediatamente da área",
+              "foco": "saida",
+              "vizinhoPara": [
+                3.6,
+                4.0
+              ],
+              "vizinho": "parado",
+              "ancora": "saida",
+              "etiqueta": "Saia na hora",
+              "agente": "apontar",
+              "pausa": 5
+            },
+            {
+              "texto": "Avise os vizinhos sobre o perigo",
+              "foco": "saida",
+              "vizinhoPara": [
+                3.6,
+                4.0
+              ],
+              "vizinho": "acenar",
+              "ancora": "saida",
+              "etiqueta": "Avise os vizinhos",
+              "agente": "acenar"
+            },
+            {
+              "texto": "Acione a Defesa Civil pelo telefone 199",
+              "foco": "saida",
+              "vizinhoPara": [
+                3.6,
+                4.0
+              ],
+              "vizinho": "parado",
+              "ancora": "telefone",
+              "etiqueta": "Defesa Civil: 199",
+              "agente": "radio",
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "Ao perceber sinais de instabilidade, a Defesa Civil de SC orienta sair imediatamente da área e acionar a Defesa Civil pelo 199.",
+            "O Plano Emergencial Familiar completa: em condições seguras, saia do local, comunique os vizinhos e avise as autoridades, o Corpo de Bombeiros e a Defesa Civil do município."
+          ],
+          "dicas": [
+            "Não espera o sinal piorar: sai, avisa os vizinhos e liga 199."
+          ],
+          "fontes": [
+            "F1",
+            "F2",
+            "F10"
+          ]
+        }
       ]
     },
     {

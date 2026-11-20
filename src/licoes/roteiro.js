@@ -32,10 +32,13 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
 
   const textoEtiqueta = (s) => (s.perfil && s.perfil === perfil ? `${s.etiqueta} · você mora aqui` : s.etiqueta ?? s.texto);
 
-  // Estado "antes do subpasso si": efeitos dos subpassos anteriores já aplicados.
+  // Estado "antes do subpasso si": efeitos de base da etapa e dos subpassos
+  // anteriores já aplicados.
   function prepararCena(ei, si) {
     efeitos.limpar();
     etiquetas.limpar();
+    personagens?.recomecar?.();
+    (etapas[ei].base ?? []).forEach((ef) => efeitos.aplicar(ef, { instantaneo: true }));
     etapas[ei].subpassos.slice(0, si).forEach((s) => efeitos.aplicar(s.efeito, { instantaneo: true }));
   }
 
@@ -46,7 +49,7 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
     const ancora = s.ancora && efeitos.ancoras[s.ancora];
     const mira = ancora ? ancora.getWorldPosition(new THREE.Vector3()) : null;
     const vizinho = s.perfil && s.perfil === perfil ? 'acenar' : typeof s.vizinho === 'object' ? s.vizinho?.[perfil] : s.vizinho;
-    personagens.encenar({ foco, mira, agente: s.agente, vizinho });
+    personagens.encenar({ foco, mira, agente: s.agente, vizinho, vizinhoPara: s.vizinhoPara });
   }
 
   async function tocarSubpasso(ei, si, meu) {
@@ -147,9 +150,10 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
     if (final) {
       const div = document.createElement('div');
       div.className = 'final';
-      div.innerHTML = `<p class="final-titulo">Agora você conhece seu risco</p><p></p>`;
+      div.innerHTML = `<p class="final-titulo"></p><p></p>`;
+      div.querySelector('.final-titulo').textContent = licao.final?.titulo ?? 'Agora você conhece seu risco';
       div.querySelector('p:last-child').textContent =
-        'Próximo passo: cadastrar o alerta por SMS para saber antes quando a chuva forte vier.';
+        licao.final?.texto ?? 'Próximo passo: cadastrar o alerta por SMS para saber antes quando a chuva forte vier.';
       div.appendChild(botao('Próxima parada →', () => aoTerminar?.(), 'botao primario'));
       el.appendChild(div);
     }
@@ -168,7 +172,11 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
           rotulo: 'Por que importa',
           render: (el) => paragrafos(el, etapa === 0 && variacao.porque ? [variacao.porque, ...[].concat(e.explicacao)] : e.explicacao),
         },
-        { chave: 'dicas', rotulo: 'Dica do agente', render: (el) => lista(el, e.dicas) },
+        {
+          chave: 'dicas',
+          rotulo: 'Dica do agente',
+          render: (el) => lista(el, etapa === 0 && variacao.dica ? [variacao.dica, ...[].concat(e.dicas ?? [])] : e.dicas),
+        },
       ],
       rodape: (el) => {
         if (e.nota) {

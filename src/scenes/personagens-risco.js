@@ -25,15 +25,11 @@ const VIZINHOS = {
   aberto: { chave: 'vizinhoAberto', pos: [6.1, -2.2] },
 };
 
-function noChao(obj, [x, z]) {
-  obj.position.set(x, altura(x, z), z);
-}
-
 // Um personagem: modelo, mixer e troca suave de clipe.
-function criarAtor(gltf) {
+function criarAtor(gltf, alturaAtor) {
   const modelo = gltf.scene;
   const caixa = new THREE.Box3().setFromObject(modelo);
-  modelo.scale.setScalar(ALTURA / Math.max(caixa.max.y - caixa.min.y, 1e-6));
+  modelo.scale.setScalar(alturaAtor / Math.max(caixa.max.y - caixa.min.y, 1e-6));
   modelo.traverse((o) => {
     if (o.isMesh) {
       o.castShadow = true;
@@ -63,18 +59,28 @@ function criarAtor(gltf) {
   return { raiz, mixer, tocar };
 }
 
-export function criarPersonagensRisco({ palco }) {
+// Outras cenas (parada 4) passam o próprio relevo, as posições e a escala.
+export function criarPersonagensRisco({
+  palco,
+  relevo = altura,
+  posicoesAgente = POSICAO_AGENTE,
+  vizinhos = VIZINHOS,
+  alturaAtor = ALTURA,
+  velocidadeAndar = 1.1, // unidades de cena por segundo
+}) {
+  const noChao = (obj, [x, z]) => obj.position.set(x, relevo(x, z), z);
   const grupo = new THREE.Group();
   grupo.name = 'personagens';
   let agente = null;
   let vizinho = null;
   let perfilVizinho = null;
   let alvo = null; // ponto que a Agente indica
+  let caminhada = null; // { de, para, t, dur }: o vizinho andando até um ponto
   let ultimaCena = null; // reaplicada quando um modelo termina de carregar
 
   carregarModelo('agente').then((gltf) => {
     if (!gltf) return;
-    agente = criarAtor(gltf);
+    agente = criarAtor(gltf, alturaAtor);
     agente.raiz.visible = false;
     grupo.add(agente.raiz);
     if (ultimaCena) encenar(ultimaCena);
@@ -82,11 +88,12 @@ export function criarPersonagensRisco({ palco }) {
 
   const cacheVizinhos = {};
   function carregarVizinho(perfil) {
-    const def = VIZINHOS[perfil];
+    const def = vizinhos[perfil];
     if (!def) return Promise.resolve(null);
     cacheVizinhos[perfil] ??= carregarModelo(def.chave).then((gltf) => {
       if (!gltf) return null;
-      const ator = criarAtor(gltf);
+      const ator = criarAtor(gltf, alturaAtor);
+      ator.casa = def.pos;
       noChao(ator.raiz, def.pos);
       ator.raiz.visible = false;
       grupo.add(ator.raiz);
@@ -128,7 +135,13 @@ export function criarPersonagensRisco({ palco }) {
     }
   }
 
+  // Volta o vizinho para casa: a próxima caminhada sai do começo.
+  function recomecar() {
+    caminhada = null;
+  }
+
   function sair() {
+    caminhada = null;
     perfilVizinho = null;
     ultimaCena = null;
     grupo.children.forEach((c) => (c.visible = false));
@@ -137,18 +150,57 @@ export function criarPersonagensRisco({ palco }) {
   /**
    * Aplica a cena de um subpasso: foco (onde a Agente fica), ponto indicado
    * e ações { agente, vizinho }. Ações ausentes voltam para "parado".
+   * vizinhoPara: [x, z] faz o vizinho andar de casa até lá e então tocar a ação.
    */
   function encenar(cena = {}) {
-    const { foco = 'geral', mira = null, agente: acaoAgente, vizinho: acaoVizinho } = cena;
+    const { foco = 'geral', mira = null, agente: acaoAgente, vizinho: acaoVizinho, vizinhoPara } = cena;
     ultimaCena = cena;
     const reduzido = palco.movimentoReduzido();
     alvo = mira;
     if (agente) {
       agente.raiz.visible = true;
-      noChao(agente.raiz, POSICAO_AGENTE[foco] ?? POSICAO_AGENTE.geral);
+      noChao(agente.raiz, posicoesAgente[foco] ?? posicoesAgente.geral);
       agente.tocar(acaoAgente ?? 'parado', { reduzido });
     }
-    if (vizinho) vizinho.tocar(acaoVizinho ?? 'parado', { reduzido });
+    if (vizinho) {
+      const chegou = caminhada && caminhada.t >= caminhada.dur;
+      const mesmoDestino = vizinhoPara && caminhada && caminhada.para.x === vizinhoPara[0] && caminhada.para.y === vizinhoPara[1];
+      if (mesmoDestino) {
+        // subpasso seguinte com o mesmo destino: segue andando ou só troca a ação
+        caminhada.acao = acaoVizinho ?? 'parado';
+        if (chegou || reduzido) {
+          caminhada.t = caminhada.dur;
+          noChao(vizinho.raiz, vizinhoPara);
+          vizinho.tocar(caminhada.acao, { reduzido });
+        }
+        return;
+      }
+      caminhada = null;
+      if (vizinhoPara) {
+        const de = new THREE.Vector2(...vizinho.casa);
+        const para = new THREE.Vector2(...vizinhoPara);
+        caminhada = { de, para, t: 0, dur: de.distanceTo(para) / velocidadeAndar, acao: acaoVizinho ?? 'acenar' };
+        if (reduzido) caminhada.t = caminhada.dur;
+        noChao(vizinho.raiz, reduzido ? vizinhoPara : vizinho.casa);
+        vizinho.tocar(reduzido ? caminhada.acao : 'andar', { reduzido });
+      } else {
+        noChao(vizinho.raiz, vizinho.casa);
+        vizinho.tocar(acaoVizinho ?? 'parado', { reduzido });
+      }
+    }
+  }
+
+  const p2 = new THREE.Vector2();
+  function andar(dt) {
+    if (!caminhada || !vizinho) return false;
+    const c = caminhada;
+    if (c.t >= c.dur) return false;
+    c.t = Math.min(c.t + dt, c.dur);
+    p2.lerpVectors(c.de, c.para, c.t / c.dur);
+    noChao(vizinho.raiz, [p2.x, p2.y]);
+    vizinho.raiz.rotation.y = Math.atan2(c.para.x - c.de.x, c.para.y - c.de.y);
+    if (c.t >= c.dur) vizinho.tocar(c.acao);
+    return true;
   }
 
   function animar(tempo, dt, reduzido) {
@@ -157,10 +209,10 @@ export function criarPersonagensRisco({ palco }) {
       if (!reduzido) agente.mixer.update(dt);
     }
     if (vizinho?.raiz.visible) {
-      orientar(vizinho, alvo);
+      if (!andar(reduzido ? 0 : dt)) orientar(vizinho, alvo);
       if (!reduzido) vizinho.mixer.update(dt);
     }
   }
 
-  return { grupo, entrar, sair, encenar, animar };
+  return { grupo, entrar, sair, encenar, animar, recomecar };
 }
