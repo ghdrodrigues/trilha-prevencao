@@ -3,7 +3,7 @@
 // uma etiqueta. Usada na parada 1 ("Conheça seu risco") sobre o mapa.
 
 import * as THREE from 'three';
-import { paragrafos, lista, avisoRascunho } from '../ui/guia.js';
+import { paragrafos, lista, avisoRascunho, citarFontes } from '../ui/guia.js';
 
 export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadramentos, palco, guia, linhaTempo, etiquetas, progresso, aoTerminar }) {
   // Etapas marcadas com ordenarPorPerfil mostram primeiro o perfil de quem usa.
@@ -177,6 +177,7 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
           p.textContent = e.nota;
           el.appendChild(p);
         }
+        citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes);
         if (licao.rascunho) avisoRascunho(el);
       },
     });

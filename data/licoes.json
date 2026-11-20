@@ -1,5 +1,5 @@
 {
-  "_aviso": "RASCUNHO VALIDADO CONTRA FONTES OFICIAIS EM 20/11/2026 (ver _fontes e o campo fontes de cada lição/etapa). Continua rascunho até revisão da Defesa Civil SC. Não inventar protocolo: texto novo precisa de fonte em _fontes. 'sem_fonte' marca dica de voz sem protocolo ou dado de imprensa/pesquisa.",
+  "_aviso": "Textos validados contra fontes oficiais em 20/11/2026 e reescritos só com o que consta nelas. Cada lição e etapa lista seus códigos em fontes, e a página mostra essas fontes no rodapé do guia. Texto novo precisa de fonte em _fontes. Continua rascunho até revisão da Defesa Civil SC.",
   "_fontes": {
     "F1": {
       "titulo": "Fenômeno Climático: Orientações e Perguntas Frequentes",
@@ -47,19 +47,19 @@
       "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/e/enchentes"
     },
     "F10": {
-      "titulo": "Cartilhas Deslizamentos e Vendavais: como agir",
-      "orgao": "Defesa Civil de Joinville (SC)",
+      "titulo": "Cartilha Deslizamentos: como agir",
+      "orgao": "Defesa Civil de Joinville, SC",
       "url": "https://www.joinville.sc.gov.br/wp-content/uploads/2025/04/Cartilha-Deslizamentos-como-agir.pdf"
     },
     "REF-PR": {
-      "titulo": "Kit de Emergência pessoal (comparação, outro estado)",
+      "titulo": "Kit de Emergência pessoal",
       "orgao": "Defesa Civil PR",
       "url": "https://www.defesacivil.pr.gov.br/Pagina/Kit-de-Emergencia-pessoal"
     },
-    "BRIEF": {
-      "titulo": "Dados de imprensa e pesquisa citados no BRIEF.md §2",
-      "orgao": "não oficial da Defesa Civil",
-      "url": ""
+    "F10b": {
+      "titulo": "Cartilha Vendavais: como agir",
+      "orgao": "Defesa Civil de Joinville, SC",
+      "url": "https://www.joinville.sc.gov.br/wp-content/uploads/2025/04/Cartilha-Vendavais-como-agir.pdf"
     }
   },
   "perfis": {
@@ -86,18 +86,18 @@
           "Identifique se sua casa está em área de risco: encosta, beira de rio ou área aberta.",
           "Procure a Defesa Civil do seu município para saber se sua rua está em área de risco."
         ],
-        "porque": "Chuva intensa responde por cerca de 90% dos óbitos em eventos climáticos em SC. 207 dos 295 municípios do estado (70,1%) estão entre os mais suscetíveis a deslizamentos, enxurradas e inundações.",
-        "dica": "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
+        "porque": "Em Santa Catarina, chuva acima da média aumenta a chance de alagamentos, enxurradas, inundações e deslizamentos de terra.",
+        "dica": "Mora em encosta ou perto de rio? Acompanha as previsões e os alertas da Defesa Civil."
       },
       "perfil_variacoes": {
         "encosta": {
-          "porque": "Quem mora em encosta convive com risco de deslizamento. Saber disso antes da chuva é o que dá tempo de sair."
+          "porque": "Na encosta, o risco é de deslizamento. A Defesa Civil de SC orienta evitar ficar na encosta durante chuva intensa."
         },
         "baixada": {
-          "porque": "Quem mora na beira do rio ou na baixada é o primeiro a receber a água. Conhecer até onde a água já chegou ajuda a decidir quando sair."
+          "porque": "Na beira do rio ou na baixada, o risco é de enchente. A orientação é ficar atento ao nível da água e não ficar isolado."
         },
         "aberto": {
-          "porque": "Em área aberta, o risco maior vem de vendaval e granizo. Telhado, árvores e fiação são os pontos a observar."
+          "porque": "Em área aberta, o risco maior vem de vendaval e granizo. Telhado, árvores perto da casa e fiação são os pontos a observar."
         }
       },
       "tipo": "roteiro",
@@ -148,14 +148,14 @@
             }
           ],
           "explicacao": [
-            "Chuva intensa responde por cerca de 90% dos óbitos em eventos climáticos em SC. 207 dos 295 municípios do estado (70,1%) estão entre os mais suscetíveis a deslizamentos, enxurradas e inundações."
+            "Em Santa Catarina, chuva acima da média aumenta a chance de alagamentos, enxurradas, inundações e deslizamentos de terra."
           ],
           "dicas": [
-            "Olhe a rua de casa com outros olhos: tem barranco atrás? O rio passa perto? A casa fica exposta ao vento?"
+            "Confere se a casa fica em encosta, perto de rio ou em área de várzea."
           ],
           "fontes": [
-            "F10",
-            "BRIEF"
+            "F1",
+            "F10"
           ]
         },
         {
@@ -163,18 +163,18 @@
           "titulo": "O que a chuva pode fazer",
           "curto": "O que pode acontecer",
           "icone": "chuva",
-          "resumo": "Chuva forte e contínua muda o terreno de três jeitos.",
+          "resumo": "Chuva intensa traz um risco diferente para cada terreno.",
           "subpassos": [
             {
-              "texto": "Chuva forte e contínua encharca o solo",
+              "texto": "Chuva intensa e contínua",
               "foco": "geral",
               "efeito": "chuva",
               "ancora": "chuva",
-              "etiqueta": "Chuva forte e contínua",
+              "etiqueta": "Chuva intensa",
               "agente": "radio"
             },
             {
-              "texto": "Na encosta, a terra encharcada pode escorregar",
+              "texto": "Na encosta: risco de deslizamento",
               "foco": "encosta",
               "efeito": "deslizamento",
               "ancora": "deslizamento",
@@ -185,7 +185,7 @@
               }
             },
             {
-              "texto": "Na baixada, o rio sobe e chega às casas",
+              "texto": "Na baixada: risco de alagamento e inundação",
               "foco": "baixada",
               "efeito": "enchente",
               "ancora": "enchente",
@@ -193,7 +193,7 @@
               "agente": "apontar"
             },
             {
-              "texto": "Na área aberta, o vento forte verga árvores",
+              "texto": "Na área aberta: risco de vendaval e granizo",
               "foco": "aberto",
               "efeito": "vento",
               "ancora": "vento",
@@ -202,65 +202,67 @@
             }
           ],
           "explicacao": [
-            "A mesma chuva causa problemas diferentes conforme o terreno. Saber qual é o seu ajuda a reconhecer o perigo cedo."
+            "Em Santa Catarina, chuva acima da média aumenta a chance de alagamentos, enxurradas, inundações e deslizamentos de terra."
           ],
           "dicas": [
             "Chuva forte por muitas horas? Acompanha os alertas, e só pelos canais oficiais da Defesa Civil."
           ],
           "fontes": [
-            "F1"
+            "F1",
+            "F3"
           ]
         },
         {
           "id": "historia",
-          "titulo": "A história do bairro",
-          "curto": "História do bairro",
+          "titulo": "De olho na água e nos vizinhos",
+          "curto": "Água e vizinhos",
           "icone": "rota",
-          "resumo": "O que já aconteceu no bairro mostra o que pode voltar a acontecer.",
+          "resumo": "Acompanhar o nível da água e avisar quem mora perto.",
           "subpassos": [
             {
-              "texto": "Até onde a água já chegou nas casas?",
+              "texto": "Fique atento ao nível da água",
               "foco": "baixada",
               "efeito": "marca",
               "ancora": "marca",
-              "etiqueta": "Até aqui a água já chegou",
+              "etiqueta": "Nível da água",
               "agente": "apontar"
             },
             {
-              "texto": "Pergunte a vizinhos antigos: já alagou? Já deslizou?",
+              "texto": "Ao notar sinais de perigo, avise os vizinhos",
               "foco": "baixada",
               "ancora": "vizinho",
-              "etiqueta": "Converse com o vizinho mais antigo",
+              "etiqueta": "Avise os vizinhos",
               "agente": "acenar"
             }
           ],
           "explicacao": [
-            "Marcas em muros, histórias de vizinhos e fotos antigas mostram o que o bairro já viveu."
+            "A Defesa Civil de SC orienta ficar atento ao nível da água, evitar ficar isolado e comunicar os vizinhos ao notar sinais de perigo."
           ],
           "dicas": [
-            "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
+            "Passou o perigo? Vê se algum vizinho precisa de ajuda."
           ],
           "fontes": [
-            "sem_fonte"
+            "F2",
+            "F10"
           ]
         },
         {
           "id": "mapa",
-          "titulo": "O mapa de risco",
-          "curto": "Mapa de risco",
+          "titulo": "Área de risco",
+          "curto": "Área de risco",
           "icone": "alerta",
-          "resumo": "A Defesa Civil do município mapeia as áreas de risco da cidade.",
+          "resumo": "Saiba se a sua casa está em área de risco.",
           "subpassos": [
             {
-              "texto": "Áreas de risco aparecem no mapa do município",
+              "texto": "Verifique se sua casa está em área de risco",
               "foco": "geral",
               "efeito": "mapa",
               "ancora": "mapa",
-              "etiqueta": "Mapa de risco (ilustrativo)",
+              "etiqueta": "Área de risco (ilustrativo)",
               "agente": "apontar"
             },
             {
-              "texto": "Procure a Defesa Civil do seu município",
+              "texto": "Mantenha contato com a Defesa Civil do seu município",
               "foco": "geral",
               "efeito": "mapa",
               "agente": "parado"
@@ -268,20 +270,23 @@
           ],
           "nota": "As cores desta cena são ilustrativas. Não são o mapa oficial do seu município.",
           "explicacao": [
-            "A Defesa Civil do município sabe quais ruas estão em área de risco e ajuda a planejar a saída."
+            "A Defesa Civil orienta verificar se a casa está em área de risco, como encostas e várzeas, e manter contato com a Defesa Civil e os órgãos competentes."
           ],
           "dicas": [
-            "Na dúvida se a sua rua é área de risco, pergunta para a Defesa Civil do seu município."
+            "Em caso de risco, liga 199 e fala com a Defesa Civil."
           ],
           "fontes": [
+            "F1",
             "F10"
           ]
         }
       ],
       "fontes": [
-        "F10",
         "F1",
-        "BRIEF"
+        "F2",
+        "F10",
+        "F10b",
+        "F3"
       ]
     },
     {
@@ -295,45 +300,43 @@
           "O Defesa Civil Alerta chega sozinho em celulares 4G e 5G, sem cadastro, e toca mesmo no silencioso.",
           "Siga apenas os canais oficiais da Defesa Civil."
         ],
-        "porque": "A Defesa Civil de SC emite avisos com até 72 horas de antecedência. SC lidera a adesão ao alerta por SMS: 10,51% da população cadastrada, mais que o dobro da média nacional.",
-        "dica": "Chegou alerta? Lê com calma e faz o que a Defesa Civil orienta. Mensagem repassada em grupo não é alerta oficial."
+        "porque": "A Defesa Civil de SC emite avisos com até 72 horas de antecedência e manda alertas por SMS, WhatsApp, Defesa Civil Alerta, redes sociais e site oficial.",
+        "dica": "Chegou alerta? Segue o que a Defesa Civil orienta e confere só nos canais oficiais."
       },
       "perfil_variacoes": {},
       "fontes": [
         "F1",
         "F6",
         "F7",
-        "F8",
-        "BRIEF"
+        "F8"
       ]
     },
     {
       "id": 3,
-      "titulo": "Monte o kit 72h",
+      "titulo": "Monte o kit de emergência",
       "rascunho": true,
       "perfil_variacoes": {},
       "tipo": "montagem",
       "cena": "kit",
-      "resumo": "Tudo o que sua família precisa para as primeiras 72 horas, numa mochila pronta perto da porta.",
+      "resumo": "Os itens que a Defesa Civil de SC indica para o kit de emergência da família.",
       "etapas": [
         {
           "id": "mochila",
-          "titulo": "A mochila",
-          "curto": "Mochila",
+          "titulo": "O kit",
+          "curto": "Kit",
           "icone": "mochila",
-          "resumo": "O kit cabe numa mochila que você pega em segundos.",
+          "resumo": "Monte o kit da família num só lugar.",
           "subpassos": [
             {
-              "texto": "Separe uma mochila só para o kit",
+              "texto": "Monte o kit de emergência",
               "objetos": [
                 "mochila"
               ],
-              "etiqueta": "Mochila do kit"
+              "etiqueta": "Kit de emergência"
             }
           ],
           "explicacao": [
-            "Na emergência, o tempo para sair é curto. Com a mochila pronta, ninguém procura item por item enquanto a água sobe ou o morro dá sinal.",
-            "A lista da Defesa Civil de SC também inclui cobertor leve e quente e sacolas plásticas."
+            "A lista da Defesa Civil de SC inclui também cobertor leve e quente, sacolas plásticas, pasta plástica e as chaves de casa e do carro."
           ],
           "dicas": [
             "A cada seis meses, confere o kit: comida, água e remédio não podem passar da validade."
@@ -347,25 +350,27 @@
           "titulo": "Água",
           "curto": "Água",
           "icone": "agua",
-          "resumo": "Água para beber é o primeiro item do kit.",
+          "resumo": "Água está na lista do kit.",
           "subpassos": [
             {
-              "texto": "Água potável em garrafas fechadas",
+              "texto": "Água",
               "objetos": [
                 "garrafa1",
                 "garrafa2"
               ],
-              "etiqueta": "Água potável"
+              "etiqueta": "Água"
             }
           ],
           "explicacao": [
-            "Durante uma enchente, a água da torneira pode faltar ou ficar contaminada."
+            "Depois de uma enxurrada, água de poço e de fonte natural fica contaminada."
           ],
           "dicas": [
-            "Confirme com a Defesa Civil a quantidade recomendada para cada pessoa da sua família."
+            "A Defesa Civil do Paraná indica 2 litros por pessoa por dia."
           ],
           "fontes": [
-            "F2"
+            "F2",
+            "F4",
+            "REF-PR"
           ]
         },
         {
@@ -373,7 +378,7 @@
           "titulo": "Comida",
           "curto": "Comida",
           "icone": "lata",
-          "resumo": "Alimentos que não estragam e não precisam de preparo.",
+          "resumo": "Alimentos não perecíveis.",
           "subpassos": [
             {
               "texto": "Alimentos não perecíveis",
@@ -394,14 +399,14 @@
             }
           ],
           "explicacao": [
-            "Sem energia, a geladeira para e o fogão pode não funcionar. O kit precisa de comida que dure e que se coma sem preparo."
+            "A Defesa Civil de SC lista chocolate e barra de cereais. A cartilha de vendavais de Joinville fala em alimentos não perecíveis."
           ],
           "dicas": [
-            "Prefere o que se come sem preparo, como barra de cereais e chocolate."
+            "A cada seis meses, confere a validade da comida e da água do kit."
           ],
           "fontes": [
             "F2",
-            "F10"
+            "F10b"
           ]
         },
         {
@@ -427,7 +432,7 @@
             }
           ],
           "explicacao": [
-            "Documentos molhados ou perdidos atrasam o atendimento depois do desastre."
+            "A Defesa Civil orienta proteger documentos e objetos de valor em sacos plásticos bem fechados."
           ],
           "dicas": [
             "Junta uma foto recente da família, dinheiro e as chaves de casa e do carro."
@@ -442,7 +447,7 @@
           "titulo": "Luz e comunicação",
           "curto": "Luz e rádio",
           "icone": "lanterna",
-          "resumo": "Para enxergar e se informar sem energia elétrica.",
+          "resumo": "Lanterna, pilhas, rádio e carregador portátil.",
           "subpassos": [
             {
               "texto": "Lanterna",
@@ -467,14 +472,15 @@
             }
           ],
           "explicacao": [
-            "Quando a energia cai, a lanterna mostra o caminho e o rádio a pilha continua trazendo os avisos oficiais.",
+            "O rádio serve para ouvir informações e instruções. A lanterna ajuda a ver os danos da casa.",
             "Fósforo e velas também estão na lista da Defesa Civil de SC."
           ],
           "dicas": [
             "Guarde pilhas reserva junto com a lanterna e o rádio."
           ],
           "fontes": [
-            "F2"
+            "F2",
+            "F5"
           ]
         },
         {
@@ -485,11 +491,11 @@
           "resumo": "Remédios de quem precisa e um jeito de pedir socorro.",
           "subpassos": [
             {
-              "texto": "Medicamentos de uso contínuo",
+              "texto": "Remédios",
               "objetos": [
                 "remedios"
               ],
-              "etiqueta": "Medicamentos"
+              "etiqueta": "Remédios"
             },
             {
               "texto": "Apito",
@@ -500,7 +506,8 @@
             }
           ],
           "explicacao": [
-            "Remédios de uso contínuo não podem faltar nos primeiros dias. O apito serve para pedir socorro."
+            "Remédios, apito e maleta de primeiros socorros estão na lista da Defesa Civil de SC.",
+            "O apito serve para sinalizar e pedir ajuda."
           ],
           "dicas": [
             "Completa com a maleta de primeiros socorros, álcool em gel, protetor solar e repelente."
@@ -511,11 +518,13 @@
           ]
         }
       ],
-      "letreiro": "Kit 72h",
+      "letreiro": "Kit de emergência",
       "fontes": [
         "F2",
         "F3",
-        "F10",
+        "F4",
+        "F5",
+        "F10b",
         "REF-PR"
       ]
     },
@@ -525,13 +534,13 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Rachaduras ou trincas novas no chão e nas paredes.",
+          "Rachaduras ou trincas no chão e nas paredes.",
           "Água barrenta surgindo no barranco ou no morro.",
           "Árvores, postes ou muros inclinados.",
           "Muros estufados."
         ],
         "porque": "Esses são os sinais que a Defesa Civil de SC aponta para deslizamento. Ao perceber um deles, a orientação é sair da área na hora.",
-        "dica": "Viu um desses sinais? Não espera piorar para ter certeza. Sai e liga 199."
+        "dica": "Viu um desses sinais? Sai na hora e liga 199."
       },
       "perfil_variacoes": {
         "encosta": {
@@ -547,7 +556,7 @@
       "fontes": [
         "F1",
         "F2",
-        "F10"
+        "F10b"
       ]
     },
     {
@@ -616,7 +625,7 @@
           "Avalie os danos da casa e informe as autoridades, como a Defesa Civil do município."
         ],
         "porque": "Depois que a água baixa, a casa pode ter estrutura danificada, água e comida contaminadas e animais peçonhentos.",
-        "dica": "Voltou? Usa bota e luva para tirar a lama e não anda descalço."
+        "dica": "Voltou? Usa bota e luva onde alagou e não anda descalço."
       },
       "perfil_variacoes": {},
       "fontes": [

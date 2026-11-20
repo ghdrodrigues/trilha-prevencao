@@ -1,4 +1,4 @@
-// Cena 3: Kit 72h. Uma lona no chão, a mochila laranja ao fundo e os itens
+// Cena 3: Kit de emergência. Uma lona no chão, a mochila laranja ao fundo e os itens
 // do kit, cada um um objeto separado (um GLB por objeto, ver assets.js).
 // Cada subpasso da lição faz seus objetos entrarem voando e pousarem na lona.
 

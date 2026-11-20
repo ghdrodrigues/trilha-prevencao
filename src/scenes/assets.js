@@ -16,7 +16,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 export const MODELOS = {
   terreno: 'terreno-base.glb', // 1. Terreno-base (cena 1, mapa da trilha)
   celular: 'celular.glb', // 2. Celular (cena 2)
-  // 3. Kit 72h (cena 3): um arquivo por item
+  // 3. Kit de emergência (cena 3): um arquivo por item
   kitMochila: 'kit-mochila.glb',
   kitGarrafa: 'kit-garrafa-agua.glb',
   kitLata: 'kit-lata.glb',

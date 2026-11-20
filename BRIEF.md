@@ -47,12 +47,14 @@ Cada lição tem: cena 3D própria + painel com 3 abas:
 |---|---|---|---|
 | 1 | Conheça seu risco | Terreno com morro, casas na encosta e na baixada, rio | Identificar o tipo de terreno onde mora; histórico do bairro; mapa de risco municipal |
 | 2 | Cadastre o alerta | Celular com balão de SMS | Enviar CEP para 40199; significado de cada tipo de aviso; seguir canais oficiais |
-| 3 | Monte o kit 72h | Mochila aberta com itens flutuando | Água, alimentos não perecíveis, documentos em saco plástico, lanterna, rádio a pilha, medicamentos, apito, carregador. Checklist interativo (estilo "Pack a survival kit") |
+| 3 | Monte o kit de emergência | Mochila aberta com itens flutuando | Itens do Plano Emergencial Familiar da Defesa Civil SC: água, chocolate e barra de cereais, documentos em saco plástico, lanterna e pilhas, rádio, remédios, apito, carregador portátil, entre outros. Checklist interativo (estilo "Pack a survival kit") |
 | 4 | Leia os sinais de perigo | Casa com trinca + árvore inclinada no morro | Trincas em paredes e no chão, portas/janelas emperrando, água barrenta minando do morro, árvores e postes inclinados, estalos. Mini-jogo "perigoso ou normal?" (estilo "Edible or poisonous") |
 | 5 | Plano de fuga da família | Mini bairro com rota pontilhada e ponto de encontro | Rota de saída, ponto de encontro, quem busca quem (crianças, idosos, pets), combinados sem celular |
-| 6 | Durante a emergência | Rua alagada (água em shader animado) | Nunca atravessar água em movimento; desligar energia; subir, não sair de carro; deslizamento: sair na hora e avisar vizinhos; ligar 199 |
-| 7 | Depois da água baixar | Casa com marca de lama + sol | Só voltar com liberação; cuidado com água contaminada e animais; fotografar perdas para documentação |
+| 6 | Durante a emergência | Rua alagada (água em shader animado) | Não atravessar ruas alagadas nem pontes submersas; desligar energia, gás e água; ir para local seguro; abandonar o carro se a água puder levá-lo; deslizamento: sair na hora e avisar vizinhos; ligar 199 ou 193 |
+| 7 | Depois da água baixar | Casa com marca de lama + sol | Só voltar quando as autoridades liberarem; cuidado com água e alimentos contaminados e animais peçonhentos; avaliar danos e informar as autoridades |
 
+> **Validação (20/11/2026):** os textos de `data/licoes.json` foram reescritos com base em fontes oficiais (lista em `_fontes`), citadas no rodapé do guia. Falta a revisão da Defesa Civil SC.
+>
 > **IMPORTANTE:** os procedimentos acima são rascunho de concepção. Antes de publicar, validar o conteúdo com material oficial da Defesa Civil SC (defesacivil.sc.gov.br) e da Defesa Civil Nacional. Não inventar protocolo.
 
 ### 3.3. Narrativa/tom
@@ -69,7 +71,7 @@ Lógica: a Agente guia e explica; o morador do perfil escolhido age. Quem escolh
 |---|---|---|---|---|
 | **Agente** | Mulher, ~40 anos, pele parda, cabelo curto cacheado; colete laranja #F77F00 com faixas refletivas e **sem brasão**, camisa e calça azul-escuro, bota preta, rádio no colete | Todos | Aparece em todas as lições; é o rosto da aba "Dica do agente"; aponta perigos e chama a atenção para cada subpasso | parado, acenar, apontar, andar, falar no rádio |
 | **Morador da encosta** | Homem negro, ~30 anos, barba curta, camiseta verde, jeans, botina | A. Encosta/morro | Lições 1, 4 e 6: identifica trincas e árvores inclinadas, sai na hora e avisa os vizinhos | parado, andar, correr, examinar (agachar), acenar |
-| **Moradora da baixada** | Mulher, ~28 anos, pele clara, rabo de cavalo, capa de chuva amarela, galocha verde | B. Beira de rio/baixada | Lições 1, 6 e 7: desliga a energia, sobe para o andar de cima, volta só com liberação | parado, andar, subir, desligar chave, acenar |
+| **Moradora da baixada** | Mulher, ~28 anos, pele clara, rabo de cavalo, capa de chuva amarela, galocha verde | B. Beira de rio/baixada | Lições 1, 6 e 7: desliga a energia, vai para um local seguro (clipe "andar"; o texto oficial diz "local seguro", então o clipe "subir" fica fora de uso), volta só com liberação | parado, andar, subir, desligar chave, acenar |
 | **Morador do interior** | Agricultor, ~65 anos, descendência teuto-italiana, bigode branco, chapéu de palha, camisa xadrez vermelha, suspensório | C. Área aberta/interior | Lições 1 e 6: abriga-se durante vendaval e granizo, longe de árvores e da rede elétrica | parado, andar, abrigar-se (proteger a cabeça), acenar |
 
 Nas lições 2, 3 e 5, quem age é o morador do perfil escolhido: ele cadastra o alerta, monta o kit e segue a rota de fuga.
