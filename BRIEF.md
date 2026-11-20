@@ -57,9 +57,24 @@ Cada lição tem: cena 3D própria + painel com 3 abas:
 
 ### 3.3. Narrativa/tom
 
-- Sem personagem fictícia nesta versão (a protagonista Duda pertence ao projeto IBAMA, outro cliente).
-- Voz da aba "Dica do agente": agente de Defesa Civil experiente, direto, acolhedor, sem jargão.
+- Elenco fictício aprovado em 20/11/2026 (substitui a regra anterior "sem personagem fictícia"): ver §3.4. A Duda continua fora, porque pertence ao projeto IBAMA, outro cliente.
+- Voz da aba "Dica do agente": a Agente (§3.4), experiente, direta, acolhedora, sem jargão.
 - Mote de abertura possível: "Em SC, não existe risco zero. Existe família preparada."
+
+### 3.4. Elenco (direção B: agente + 3 vizinhos)
+
+Lógica: a Agente guia e explica; o morador do perfil escolhido age. Quem escolhe "Encosta" vê o morador da encosta executar os passos nas 7 lições, e assim por diante.
+
+| Personagem | Visual | Perfil | Papel | Clipes de animação |
+|---|---|---|---|---|
+| **Agente** | Mulher, ~40 anos, pele parda, cabelo curto cacheado; colete laranja #F77F00 com faixas refletivas e **sem brasão**, camisa e calça azul-escuro, bota preta, rádio no colete | Todos | Aparece em todas as lições; é o rosto da aba "Dica do agente"; aponta perigos e chama a atenção para cada subpasso | parado, acenar, apontar, andar, falar no rádio |
+| **Morador da encosta** | Homem negro, ~30 anos, barba curta, camiseta verde, jeans, botina | A. Encosta/morro | Lições 1, 4 e 6: identifica trincas e árvores inclinadas, sai na hora e avisa os vizinhos | parado, andar, correr, examinar (agachar), acenar |
+| **Moradora da baixada** | Mulher, ~28 anos, pele clara, rabo de cavalo, capa de chuva amarela, galocha verde | B. Beira de rio/baixada | Lições 1, 6 e 7: desliga a energia, sobe para o andar de cima, volta só com liberação | parado, andar, subir, desligar chave, acenar |
+| **Morador do interior** | Agricultor, ~65 anos, descendência teuto-italiana, bigode branco, chapéu de palha, camisa xadrez vermelha, suspensório | C. Área aberta/interior | Lições 1 e 6: abriga-se durante vendaval e granizo, longe de árvores e da rede elétrica | parado, andar, abrigar-se (proteger a cabeça), acenar |
+
+Nas lições 2, 3 e 5, quem age é o morador do perfil escolhido: ele cadastra o alerta, monta o kit e segue a rota de fuga.
+
+**Pendências:** os personagens ainda não têm nome na interface. Arte-conceito v1 aprovada por George em 20/11/2026 (gerada no Higgsfield; o arquivo fica com George).
 
 ## 4. IDENTIDADE VISUAL
 
@@ -94,6 +109,29 @@ southern Brazil small town aesthetic
 5. **Bairro com rota:** "tiny neighborhood block diorama: six simple houses, one small plaza with a flag marker, dotted escape path, low-poly"
 6. **Rua alagada:** "street diorama with two houses, water level covering the road up to door height, one car partially submerged, low-poly" (água final em shader no Three.js, o modelo serve de base)
 7. **Pós-enchente:** "house diorama with mud stain line on the walls, cleaning bucket and broom at the door, small sun over it, low-poly"
+
+### 5.3.1. Prompts dos personagens
+
+**Método preferido:** imagem → 3D no Tripo, usando o recorte de cada personagem da arte-conceito v1 aprovada (mantém a consistência entre os quatro). O texto abaixo serve de complemento ou de alternativa.
+
+Prefixo de personagem (usar no lugar de "single object on neutral base" do §5.2):
+
+```
+low-poly stylized game character, chibi proportions about 2.5 heads tall,
+flat colors with soft gradients, clean silhouette, full body, front view,
+neutral A-pose with arms slightly away from body, no text, no logos,
+no emblems, southern Brazil small town aesthetic
+```
+
+8. **Agente:** "Brazilian civil defense field agent, woman in her 40s, brown skin, short curly black hair, warm confident smile, bright orange safety vest with white reflective stripes and no insignia, dark navy long-sleeve shirt, navy cargo pants, black boots, handheld radio clipped to vest"
+9. **Morador da encosta:** "Afro-Brazilian man in his 30s, short hair, light beard, plain green t-shirt, jeans, brown work boots, friendly expression"
+10. **Moradora da baixada:** "young southern Brazilian woman in her late 20s, light skin, brown hair in a ponytail, yellow rain jacket, dark leggings, tall green rubber boots"
+11. **Morador do interior:** "elderly farmer in his 60s of German-Italian descent, fair sunburned skin, white mustache, straw hat, red plaid shirt, suspenders, gray trousers"
+
+**Rig e animação:**
+- Rig automático humanoide do Tripo, com os clipes da tabela do §3.4 embutidos no GLB. O código toca cada clipe por subpasso com `AnimationMixer`.
+- Validar primeiro com a Agente: tamanho do GLB, deformação do colete e do rosto. Se o rig falhar, usar um GLB por pose como alternativa.
+- Orçamento: 4 personagens × até 1,5 MB = 6 MB, metade dos ~12 MB da página. Alvo por personagem: ≤ 1 MB (cerca de 8 mil triângulos, textura 1024 px). A página carrega só a Agente e o morador do perfil escolhido, então o custo real fica em torno de 2 MB.
 
 ### 5.4. Limites técnicos dos GLBs
 
