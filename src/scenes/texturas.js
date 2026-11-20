@@ -367,3 +367,41 @@ export const agua = () =>
       g.stroke();
     }
   }, { repetir: [8, 1] });
+
+// Máscara de bordas suaves (alphaMap): branco no meio, some nas bordas.
+export const bordaSuave = () =>
+  textura('borda', 128, 128, (g, w, h) => {
+    g.fillStyle = '#000';
+    g.fillRect(0, 0, w, h);
+    g.filter = 'blur(10px)';
+    g.fillStyle = '#fff';
+    g.fillRect(18, 18, w - 36, h - 36);
+    g.filter = 'none';
+  }, { cor: false });
+
+// Mancha radial branca (tingida pela cor do material): zonas e mapa de risco.
+export const manchaRadial = () =>
+  textura('mancha', 128, 128, (g, w, h) => {
+    const grad = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(0.7, 'rgba(255,255,255,0.75)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, w, h);
+  });
+
+// Contorno de zona: borda forte e preenchimento leve (tingido pelo material).
+export const anelZona = () =>
+  textura('anel-zona', 256, 256, (g, w, h) => {
+    const c = w / 2;
+    g.fillStyle = 'rgba(255,255,255,0.22)';
+    g.beginPath();
+    g.arc(c, c, c * 0.9, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = 'rgba(255,255,255,1)';
+    g.lineWidth = c * 0.07;
+    g.setLineDash([c * 0.16, c * 0.08]);
+    g.beginPath();
+    g.arc(c, c, c * 0.88, 0, Math.PI * 2);
+    g.stroke();
+  });

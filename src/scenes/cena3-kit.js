@@ -245,17 +245,41 @@ export const OBJETOS = {
   lata3: { fabrica: lata, glb: 'kitLata', pos: [-1.45, 3.55, 0] },
   barra1: { fabrica: barra, glb: 'kitBarra', pos: [-0.2, 2.2, 0.3] },
   barra2: { fabrica: barra, glb: 'kitBarra', pos: [0.1, 2.75, 0.2] },
-  documentos: { fabrica: documentos, glb: 'kitDocumentos', pos: [2.0, 2.8, -0.25] },
-  lanterna: { fabrica: lanterna, glb: 'kitLanterna', pos: [-1.3, -1.2, 0.5] },
-  radio: { fabrica: radio, glb: 'kitRadio', pos: [0.8, -1.7, -0.2] },
+  documentos: { fabrica: documentos, glb: 'kitDocumentos', pos: [2.0, 2.8, -0.25], girar: [-Math.PI / 2, 0, 0] },
+  lanterna: { fabrica: lanterna, glb: 'kitLanterna', pos: [-1.3, -1.2, 0.5], escala: 1.25 },
+  radio: { fabrica: radio, glb: 'kitRadio', pos: [0.8, -1.7, -0.2], escala: 0.65 },
   carregador: { fabrica: carregador, glb: 'kitCarregador', pos: [2.6, -1.0, 0.4] },
   remedios: { fabrica: remedios, glb: 'kitRemedios', pos: [4.6, 2.3, -0.2] },
   apito: { fabrica: apito, glb: 'kitApito', pos: [4.5, -1.1, 0.6] },
 };
 
+// Celular em pé: grade de 2 colunas na tela. Posições em [u, v, rotY], com u
+// para a direita e v para baixo na tela (vista isométrica a 45°).
+const RETRATO = {
+  mochila: [-1.4, -6.0, 0.35],
+  garrafa1: [1.1, -6.2, 0],
+  garrafa2: [1.9, -5.6, 0],
+  lata1: [-2.0, -3.2, 0],
+  lata2: [-1.2, -3.0, 0],
+  lata3: [-1.6, -2.4, 0],
+  barra1: [1.4, -3.3, 0.3],
+  barra2: [1.6, -2.6, 0.2],
+  documentos: [-1.5, -0.2, -0.25],
+  lanterna: [1.5, -0.3, 0.5],
+  radio: [-1.5, 3.0, -0.2],
+  carregador: [1.5, 2.6, 0.4],
+  remedios: [-1.5, 5.6, -0.2],
+  apito: [1.5, 5.4, 0.6],
+};
+const R2 = Math.SQRT1_2;
+const daTela = ([u, v, r]) => [(u + v) * R2, (v - u) * R2, r];
+const ENQ_PAISAGEM = { centro: [0, 0.6, 0.8], largura: 15, altura: 10 };
+const ENQ_RETRATO = { centro: [-0.5, 1.0, -0.5], largura: 6.4, altura: 12 };
+
 export function criarCenaKit() {
   const raiz = new THREE.Group();
-  raiz.add(lona());
+  const objLona = lona();
+  raiz.add(objLona);
 
   // Recebe sombra no chão fora da lona.
   const chao = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: 0.18 }));
@@ -269,7 +293,7 @@ export function criarCenaKit() {
   const sombras = {};
   const texSombra = TX.sombraContato();
   for (const [id, def] of Object.entries(OBJETOS)) {
-    const grupo = assetTrocavel(def.glb, def.fabrica());
+    const grupo = assetTrocavel(def.glb, def.fabrica(), { girar: def.girar, escala: def.escala });
     const [x, z, r] = def.pos;
     grupo.position.set(x, 0, z);
     grupo.rotation.y = r;
@@ -310,7 +334,7 @@ export function criarCenaKit() {
   function entrar(id, { atraso = 0, reduzido = false } = {}) {
     const o = objetos[id];
     const casa = o.userData.casa;
-    const giroFinal = OBJETOS[id].pos[2];
+    const giroFinal = o.userData.giro ?? OBJETOS[id].pos[2];
     o.visible = true;
     if (reduzido) {
       o.position.copy(casa);
@@ -361,7 +385,7 @@ export function criarCenaKit() {
     o.visible = true;
     o.position.copy(o.userData.casa);
     o.scale.setScalar(1);
-    o.rotation.y = OBJETOS[id].pos[2];
+    o.rotation.y = o.userData.giro ?? OBJETOS[id].pos[2];
   }
 
   function ocultar(id) {
@@ -415,6 +439,27 @@ export function criarCenaKit() {
     }
   }
 
+  // Troca a disposição: lona horizontal (desktop) ou vertical em 2 colunas (celular em pé).
+  let retratoAtual = false;
+  function layout(retrato) {
+    if (retrato === retratoAtual) return false;
+    retratoAtual = retrato;
+    // A lona gira 45° para alinhar com a tela e fica mais estreita.
+    objLona.rotation.y = retrato ? -Math.PI / 4 : 0;
+    objLona.scale.set(retrato ? 1.16 : 1, 1, retrato ? 0.7 : 1);
+    objLona.position.set(retrato ? 0.28 : 0, 0, retrato ? -0.28 : 0);
+    for (const [id, o] of Object.entries(objetos)) {
+      const [x, z, r] = retrato ? daTela(RETRATO[id]) : OBJETOS[id].pos;
+      o.userData.casa.set(x, 0, z);
+      o.userData.giro = r;
+      o.position.x = x;
+      o.position.z = z;
+      o.rotation.y = r;
+    }
+    api.enquadramento = retrato ? ENQ_RETRATO : ENQ_PAISAGEM;
+    return true;
+  }
+
   function animar(tempo, dt, reduzido) {
     for (const [id, o] of Object.entries(objetos)) {
       // A sombra de contato acompanha o objeto: some e abre conforme ele sobe.
@@ -441,12 +486,13 @@ export function criarCenaKit() {
     }
   }
 
-  return {
+  const api = {
+    layout,
     raiz,
     objetos,
     ancoras,
     alvos: Object.values(objetos),
-    enquadramento: { centro: [0, 0.6, 0.8], largura: 15, altura: 10 },
+    enquadramento: ENQ_PAISAGEM,
     conectar(p) {
       palco = p;
     },
@@ -457,4 +503,5 @@ export function criarCenaKit() {
     guardarNaMochila,
     animar,
   };
+  return api;
 }

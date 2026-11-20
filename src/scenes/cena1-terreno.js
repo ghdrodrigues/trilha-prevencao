@@ -54,6 +54,20 @@ function sombraNoChao(x, z, larg, prof, rot = 0, opacidade = 0.42) {
   return m;
 }
 
+export const CASAS_ENCOSTA = [
+  [-5.6, -0.2, 0.3],
+  [-2.0, -0.6, -0.2],
+  [-4.0, 0.9, 0.1],
+  [-1.0, -3.2, 0.5],
+];
+export const CASAS_BAIXADA = [
+  [2.5, 2.9, 0],
+  [4.5, 3.0, 0.2],
+  [6.6, 2.8, -0.1],
+  [0.4, 3.0, 0.1],
+];
+export { RIO_Z };
+
 function terreno() {
   const g = new THREE.Group();
 
@@ -104,21 +118,11 @@ function terreno() {
   g.add(rio);
 
   // Casas na encosta.
-  for (const [x, z, r] of [
-    [-5.6, -0.2, 0.3],
-    [-2.0, -0.6, -0.2],
-    [-4.0, 0.9, 0.1],
-    [-1.0, -3.2, 0.5],
-  ]) {
+  for (const [x, z, r] of CASAS_ENCOSTA) {
     g.add(casa(x, z, r), sombraNoChao(x, z, 1.7, 1.6, r));
   }
   // Casas na baixada, perto do rio.
-  for (const [x, z, r] of [
-    [2.5, 2.9, 0],
-    [4.5, 3.0, 0.2],
-    [6.6, 2.8, -0.1],
-    [0.4, 3.0, 0.1],
-  ]) {
+  for (const [x, z, r] of CASAS_BAIXADA) {
     g.add(casa(x, z, r), sombraNoChao(x, z, 1.7, 1.6, r));
   }
   // Árvores: pinheiros e copas redondas.
@@ -177,6 +181,7 @@ function casa(x, z, rot) {
 
 function arvore(x, z, tipo, semente) {
   const g = new THREE.Group();
+  g.name = 'arvore';
   const tons = [0x3f7d4a, 0x4b8b45, 0x356e3f, 0x5a9a4c];
   const folha = (i) => new THREE.MeshStandardMaterial({ color: tons[(semente + i) % tons.length], roughness: 0.85 });
   const tronco = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, 0.6, 8), new THREE.MeshStandardMaterial({ color: 0x6b4a2e, roughness: 1 }));
@@ -307,7 +312,7 @@ export const DESTAQUES_PERFIL = {
 };
 
 // Zona do terreno ligada a cada perfil (anel grande no chão).
-const ZONAS_PERFIL = {
+export const ZONAS_PERFIL = {
   encosta: { x: -3.6, z: -0.6, raio: 3.2 },
   baixada: { x: 3.4, z: 3.4, raio: 3.4 },
   aberto: { x: 6.6, z: -3.0, raio: 2.6 },
@@ -373,9 +378,17 @@ export function criarCena1() {
     });
   }
 
+  // Marcadores, trilha e zona do perfil somem dentro da lição 1.
+  function mostrarTrilha(sim) {
+    grupoTrilha.visible = sim;
+    for (const m of marcadores) m.visible = sim;
+    if (!sim) zona.visible = false;
+  }
+
   return {
     raiz,
     marcadores,
+    mostrarTrilha,
     alvos,
     aplicarPerfil,
     selecionar,

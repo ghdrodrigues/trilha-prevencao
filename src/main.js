@@ -11,6 +11,8 @@ import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
 import { criarLicaoMontagem } from './licoes/montagem.js';
+import { criarLicaoRoteiro } from './licoes/roteiro.js';
+import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
 aplicarIcones();
@@ -49,7 +51,10 @@ function areaLivre() {
     };
   }
   const base = h - Math.min(guiaEl.getBoundingClientRect().top, linhaEl.getBoundingClientRect().top);
-  return { esquerda: 8, topo: topo.offsetHeight + 8, direita: 8, base: Math.max(base, 0) + 8 };
+  // os controles ficam numa segunda linha abaixo da marca
+  const ctl = topo.querySelector('.controles').getBoundingClientRect();
+  const alto = Math.max(topo.getBoundingClientRect().bottom, ctl.height ? ctl.bottom : 0);
+  return { esquerda: 8, topo: alto + 8, direita: 8, base: Math.max(base, 0) + 8 };
 }
 
 const palco = criarPalco($('#palco'), { areaLivre });
@@ -70,6 +75,24 @@ const linhaTempo = criarLinhaTempo(linhaEl, { aoEscolher: (i) => navegar(i) });
 const cena1 = criarCena1();
 const cenaKit = criarCenaKit();
 cenaKit.conectar(palco);
+const efeitosRisco = criarEfeitosRisco({ cena1, palco });
+cena1.raiz.add(efeitosRisco.grupo);
+// Cena da parada 1: o mesmo mapa, sem marcadores, com os efeitos de risco.
+const cenaRisco = {
+  raiz: cena1.raiz,
+  alvos: [],
+  enquadramento: ENQUADRAMENTOS.geral,
+  animar: (t, dt, r) => {
+    cena1.animar(t, dt, r);
+    efeitosRisco.animar(t, dt, r);
+  },
+};
+
+// Celular em pé: o kit muda para a lona vertical em 2 colunas.
+const retrato = () => !desktop.matches && window.innerHeight > window.innerWidth;
+window.addEventListener('resize', () => {
+  if (palco.cena === cenaKit && cenaKit.layout(retrato())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
+});
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -184,6 +207,8 @@ function irParaParada(id) {
 function mostrarTrilha(selecionada = null) {
   document.body.dataset.modo = 'trilha';
   letreiro.textContent = 'Prepare-se';
+  efeitosRisco.limpar();
+  cena1.mostrarTrilha(true);
   palco.definirCena(cena1);
   cena1.selecionar(selecionada);
   cena1.aoTocar = (n) => irParaParada(n);
@@ -245,10 +270,33 @@ function mostrarLicaoMontagem(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
   if (!desktop.matches) guia.recolher(true);
+  cenaKit.layout(retrato());
   palco.definirCena(cenaKit);
   licaoAtiva = criarLicaoMontagem({
     licao: l,
     cena: cenaKit,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+}
+
+function mostrarLicaoRoteiro(l) {
+  document.body.dataset.modo = 'licao';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  if (!desktop.matches) guia.recolher(true);
+  cena1.mostrarTrilha(false);
+  palco.definirCena(cenaRisco);
+  licaoAtiva = criarLicaoRoteiro({
+    licao: l,
+    perfil,
+    efeitos: efeitosRisco,
+    enquadramentos: ENQUADRAMENTOS,
     palco,
     guia,
     linhaTempo,
@@ -272,6 +320,7 @@ function rotear() {
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
   if (!l) return mostrarTrilha();
+  if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
   if (l.etapas) return mostrarLicaoMontagem(l);
   mostrarTrilha(l.id);
   mostrarLicaoSimples(l);

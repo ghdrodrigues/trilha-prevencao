@@ -50,7 +50,9 @@ const disponiveis = fetch(`${base}models/disponiveis.json`)
  * Coloca `placeholder` dentro de um grupo e tenta trocá-lo pelo GLB da chave.
  * Retorna o grupo imediatamente; a troca acontece quando o arquivo carregar.
  */
-export function assetTrocavel(chave, placeholder, { aoTrocar } = {}) {
+// girar: [x, y, z] em radianos, aplicado ao GLB antes do encaixe (ex.: deitar um objeto exportado em pé).
+// escala: multiplica o tamanho encaixado (o encaixe usa a base do placeholder).
+export function assetTrocavel(chave, placeholder, { aoTrocar, girar, escala = 1 } = {}) {
   const grupo = new THREE.Group();
   grupo.name = `asset:${chave}`;
   grupo.add(placeholder);
@@ -60,18 +62,19 @@ export function assetTrocavel(chave, placeholder, { aoTrocar } = {}) {
 
   disponiveis.then((lista) => {
     if (!lista.has(arquivo)) return;
-    carregar(arquivo, grupo, placeholder, aoTrocar);
+    carregar(arquivo, grupo, placeholder, aoTrocar, girar, escala);
   });
   return grupo;
 }
 
-function carregar(arquivo, grupo, placeholder, aoTrocar) {
+function carregar(arquivo, grupo, placeholder, aoTrocar, girar, escala) {
   loader.load(
     `${base}models/${arquivo}`,
     (gltf) => {
       const modelo = gltf.scene;
+      if (girar) modelo.rotation.set(...girar);
       grupo.add(modelo);
-      encaixar(modelo, placeholder, grupo);
+      encaixar(modelo, placeholder, grupo, escala);
       modelo.traverse((o) => {
         if (o.isMesh) {
           o.castShadow = true;
@@ -105,12 +108,12 @@ function caixaNoGrupo(obj, grupo) {
   return caixa;
 }
 
-function encaixar(modelo, placeholder, grupo) {
+function encaixar(modelo, placeholder, grupo, fator = 1) {
   const alvo = caixaNoGrupo(placeholder, grupo);
   const caixa = caixaNoGrupo(modelo, grupo);
   const tamAlvo = alvo.getSize(new THREE.Vector3());
   const tam = caixa.getSize(new THREE.Vector3());
-  const escala = Math.max(tamAlvo.x, tamAlvo.z) / Math.max(tam.x, tam.z, 1e-6);
+  const escala = (fator * Math.max(tamAlvo.x, tamAlvo.z)) / Math.max(tam.x, tam.z, 1e-6);
   modelo.scale.multiplyScalar(escala);
 
   const depois = caixaNoGrupo(modelo, grupo);

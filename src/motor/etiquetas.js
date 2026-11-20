@@ -12,7 +12,17 @@ export function criarEtiquetas(camada, palco) {
   const lista = new Map(); // id → { ancora, el, linha, ponto, dx, dy }
   const v = new THREE.Vector3();
   // Etiquetas não sobem por baixo da barra do topo.
-  const margemTopo = () => document.getElementById('topo')?.offsetHeight ?? 0;
+  // No celular os controles descem para uma segunda linha: conta o que estiver mais abaixo.
+  const margemTopo = () => {
+    const topo = document.getElementById('topo');
+    if (!topo) return 0;
+    let base = topo.getBoundingClientRect().bottom;
+    for (const el of topo.querySelectorAll('.controles, .progresso')) {
+      const r = el.getBoundingClientRect();
+      if (r.height) base = Math.max(base, r.bottom);
+    }
+    return base;
+  };
 
   function adicionar(id, { ancora, texto, sub, dx = 46, dy = -58, tipo = '' }) {
     remover(id);
