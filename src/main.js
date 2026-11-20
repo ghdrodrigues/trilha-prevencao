@@ -11,6 +11,8 @@ import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
 import { criarLicaoMontagem } from './licoes/montagem.js';
+import { criarLicaoRoteiro } from './licoes/roteiro.js';
+import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
 aplicarIcones();
@@ -70,6 +72,18 @@ const linhaTempo = criarLinhaTempo(linhaEl, { aoEscolher: (i) => navegar(i) });
 const cena1 = criarCena1();
 const cenaKit = criarCenaKit();
 cenaKit.conectar(palco);
+const efeitosRisco = criarEfeitosRisco({ cena1, palco });
+cena1.raiz.add(efeitosRisco.grupo);
+// Cena da parada 1: o mesmo mapa, sem marcadores, com os efeitos de risco.
+const cenaRisco = {
+  raiz: cena1.raiz,
+  alvos: [],
+  enquadramento: ENQUADRAMENTOS.geral,
+  animar: (t, dt, r) => {
+    cena1.animar(t, dt, r);
+    efeitosRisco.animar(t, dt, r);
+  },
+};
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -184,6 +198,8 @@ function irParaParada(id) {
 function mostrarTrilha(selecionada = null) {
   document.body.dataset.modo = 'trilha';
   letreiro.textContent = 'Prepare-se';
+  efeitosRisco.limpar();
+  cena1.mostrarTrilha(true);
   palco.definirCena(cena1);
   cena1.selecionar(selecionada);
   cena1.aoTocar = (n) => irParaParada(n);
@@ -260,6 +276,28 @@ function mostrarLicaoMontagem(l) {
   licaoAtiva.iniciar();
 }
 
+function mostrarLicaoRoteiro(l) {
+  document.body.dataset.modo = 'licao';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  if (!desktop.matches) guia.recolher(true);
+  cena1.mostrarTrilha(false);
+  palco.definirCena(cenaRisco);
+  licaoAtiva = criarLicaoRoteiro({
+    licao: l,
+    perfil,
+    efeitos: efeitosRisco,
+    enquadramentos: ENQUADRAMENTOS,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+}
+
 function rotear() {
   const id = Number(new URLSearchParams(location.search).get('parada'));
   const l = dados.licoes.find((x) => x.id === id);
@@ -272,6 +310,7 @@ function rotear() {
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
   if (!l) return mostrarTrilha();
+  if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
   if (l.etapas) return mostrarLicaoMontagem(l);
   mostrarTrilha(l.id);
   mostrarLicaoSimples(l);

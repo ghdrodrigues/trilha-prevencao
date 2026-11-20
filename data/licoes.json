@@ -38,7 +38,157 @@
         "aberto": {
           "porque": "Em área aberta, o risco maior vem de vendaval e granizo. Telhado, árvores e fiação são os pontos a observar."
         }
-      }
+      },
+      "tipo": "roteiro",
+      "cena": "terreno",
+      "letreiro": "Seu risco",
+      "resumo": "Saber que tipo de terreno é o seu e o que a chuva faz ali.",
+      "etapas": [
+        {
+          "id": "terreno",
+          "titulo": "Onde você mora",
+          "curto": "Seu terreno",
+          "icone": "mapa",
+          "ordenarPorPerfil": true,
+          "resumo": "Cada terreno tem um risco principal. Comece pelo seu.",
+          "subpassos": [
+            {
+              "texto": "Encosta ou morro: risco de deslizamento",
+              "perfil": "encosta",
+              "foco": "encosta",
+              "efeito": "zona:encosta",
+              "ancora": "encosta",
+              "etiqueta": "Encosta"
+            },
+            {
+              "texto": "Beira de rio ou baixada: risco de enchente",
+              "perfil": "baixada",
+              "foco": "baixada",
+              "efeito": "zona:baixada",
+              "ancora": "baixada",
+              "etiqueta": "Baixada"
+            },
+            {
+              "texto": "Área aberta ou interior: risco de vendaval e granizo",
+              "perfil": "aberto",
+              "foco": "aberto",
+              "efeito": "zona:aberto",
+              "ancora": "aberto",
+              "etiqueta": "Área aberta"
+            },
+            {
+              "texto": "Identifique o tipo de terreno onde você mora",
+              "foco": "geral",
+              "efeito": "zonas"
+            }
+          ],
+          "explicacao": [
+            "Chuva intensa responde por cerca de 90% dos óbitos em eventos climáticos em SC. 207 dos 295 municípios do estado (70,1%) estão entre os mais suscetíveis a deslizamentos, enxurradas e inundações."
+          ],
+          "dicas": [
+            "Olhe a rua de casa com outros olhos: tem barranco atrás? O rio passa perto? A casa fica exposta ao vento?"
+          ]
+        },
+        {
+          "id": "chuva",
+          "titulo": "O que a chuva pode fazer",
+          "curto": "O que pode acontecer",
+          "icone": "chuva",
+          "resumo": "Chuva forte e contínua muda o terreno de três jeitos.",
+          "subpassos": [
+            {
+              "texto": "Chuva forte e contínua encharca o solo",
+              "foco": "geral",
+              "efeito": "chuva",
+              "ancora": "chuva",
+              "etiqueta": "Chuva forte e contínua"
+            },
+            {
+              "texto": "Na encosta, a terra encharcada pode escorregar",
+              "foco": "encosta",
+              "efeito": "deslizamento",
+              "ancora": "deslizamento",
+              "etiqueta": "Deslizamento"
+            },
+            {
+              "texto": "Na baixada, o rio sobe e chega às casas",
+              "foco": "baixada",
+              "efeito": "enchente",
+              "ancora": "enchente",
+              "etiqueta": "Enchente"
+            },
+            {
+              "texto": "Na área aberta, o vento forte verga árvores",
+              "foco": "aberto",
+              "efeito": "vento",
+              "ancora": "vento",
+              "etiqueta": "Vendaval"
+            }
+          ],
+          "explicacao": [
+            "A mesma chuva causa problemas diferentes conforme o terreno. Saber qual é o seu ajuda a reconhecer o perigo cedo."
+          ],
+          "dicas": [
+            "Chuva que não para por horas pede atenção, mesmo que pareça fraca."
+          ]
+        },
+        {
+          "id": "historia",
+          "titulo": "A história do bairro",
+          "curto": "História do bairro",
+          "icone": "rota",
+          "resumo": "O que já aconteceu no bairro mostra o que pode voltar a acontecer.",
+          "subpassos": [
+            {
+              "texto": "Até onde a água já chegou nas casas?",
+              "foco": "baixada",
+              "efeito": "marca",
+              "ancora": "marca",
+              "etiqueta": "Até aqui a água já chegou"
+            },
+            {
+              "texto": "Pergunte a vizinhos antigos: já alagou? Já deslizou?",
+              "foco": "baixada",
+              "ancora": "vizinho",
+              "etiqueta": "Converse com o vizinho mais antigo"
+            }
+          ],
+          "explicacao": [
+            "Marcas em muros, histórias de vizinhos e fotos antigas mostram o que o bairro já viveu."
+          ],
+          "dicas": [
+            "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
+          ]
+        },
+        {
+          "id": "mapa",
+          "titulo": "O mapa de risco",
+          "curto": "Mapa de risco",
+          "icone": "alerta",
+          "resumo": "A Defesa Civil do município mapeia as áreas de risco da cidade.",
+          "subpassos": [
+            {
+              "texto": "Áreas de risco aparecem no mapa do município",
+              "foco": "geral",
+              "efeito": "mapa",
+              "ancora": "mapa",
+              "etiqueta": "Mapa de risco (ilustrativo)"
+            },
+            {
+              "texto": "Consulte o mapa de risco na Defesa Civil municipal",
+              "foco": "geral",
+              "efeito": "mapa"
+            }
+          ],
+          "nota": "As cores desta cena são ilustrativas. Não são o mapa oficial do seu município.",
+          "explicacao": [
+            "O mapa oficial mostra se a sua rua está em área de risco e ajuda a planejar a saída."
+          ],
+          "dicas": [
+            "Peça na Defesa Civil do seu município o mapa de risco do bairro. É um serviço público."
+          ]
+        }
+      ]
     },
     {
       "id": 2,
