@@ -11,12 +11,18 @@ export function criarSeletorPerfil({ elemento, perfis, aoEscolher }) {
     b.dataset.perfil = chave;
     b.setAttribute('aria-pressed', 'false');
     b.innerHTML = `<span class="icone" aria-hidden="true">${ICONES[chave] ?? ''}</span>
-      <strong>${p.titulo}</strong><span class="enfase">Ênfase em ${p.enfase}</span>`;
+      <strong></strong><span class="enfase"></span>`;
+    b.querySelector('strong').textContent = p.titulo;
+    b.querySelector('.enfase').textContent = `Ênfase em ${p.enfase}`;
     b.addEventListener('click', () => {
-      for (const o of botoes) o.setAttribute('aria-pressed', String(o === b));
+      marcar(chave);
       aoEscolher(chave);
     });
     botoes.push(b);
     elemento.appendChild(b);
   }
+  function marcar(chave) {
+    for (const o of botoes) o.setAttribute('aria-pressed', String(o.dataset.perfil === chave));
+  }
+  return { marcar };
 }

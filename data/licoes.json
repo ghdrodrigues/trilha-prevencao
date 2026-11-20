@@ -1,9 +1,18 @@
 {
-  "_aviso": "RASCUNHO DE CONCEPÇÃO. Textos retirados do BRIEF.md §3.2. Validar com material oficial da Defesa Civil SC e da Defesa Civil Nacional antes de publicar. Não inventar protocolo.",
+  "_aviso": "RASCUNHO DE CONCEPÇÃO. Textos retirados do BRIEF.md §3.2. Validar com material oficial da Defesa Civil SC e da Defesa Civil Nacional antes de publicar. Não inventar protocolo. Lição 3: itens do BRIEF.md §3.2; explicações e dicas são placeholder sem fonte oficial.",
   "perfis": {
-    "encosta": { "titulo": "Encosta ou morro", "enfase": "deslizamento" },
-    "baixada": { "titulo": "Beira de rio ou baixada", "enfase": "enchente" },
-    "aberto": { "titulo": "Área aberta ou interior", "enfase": "vendaval e granizo" }
+    "encosta": {
+      "titulo": "Encosta ou morro",
+      "enfase": "deslizamento"
+    },
+    "baixada": {
+      "titulo": "Beira de rio ou baixada",
+      "enfase": "enchente"
+    },
+    "aberto": {
+      "titulo": "Área aberta ou interior",
+      "enfase": "vendaval e granizo"
+    }
   },
   "licoes": [
     {
@@ -50,20 +59,190 @@
       "id": 3,
       "titulo": "Monte o kit 72h",
       "rascunho": true,
-      "abas": {
-        "passo": [
-          "Água.",
-          "Alimentos não perecíveis.",
-          "Documentos em saco plástico.",
-          "Lanterna e rádio a pilha.",
-          "Medicamentos de uso contínuo.",
-          "Apito.",
-          "Carregador de celular."
-        ],
-        "porque": "Nas primeiras horas de uma emergência, o socorro pode demorar a chegar até você. O kit garante o básico enquanto isso.",
-        "dica": "Deixa a mochila perto da porta, não no fundo do armário. Na hora, ninguém procura nada."
-      },
-      "perfil_variacoes": {}
+      "perfil_variacoes": {},
+      "tipo": "montagem",
+      "cena": "kit",
+      "resumo": "Tudo o que sua família precisa para as primeiras 72 horas, numa mochila pronta perto da porta.",
+      "etapas": [
+        {
+          "id": "mochila",
+          "titulo": "A mochila",
+          "curto": "Mochila",
+          "icone": "🎒",
+          "resumo": "O kit cabe numa mochila que você pega em segundos.",
+          "subpassos": [
+            {
+              "texto": "Separe uma mochila só para o kit",
+              "objetos": [
+                "mochila"
+              ],
+              "etiqueta": "Mochila do kit"
+            },
+            {
+              "texto": "Deixe a mochila perto da porta",
+              "destaque": [
+                "mochila"
+              ],
+              "etiqueta": "Perto da porta"
+            }
+          ],
+          "explicacao": [
+            "Na emergência, o tempo para sair é curto. Com a mochila pronta, ninguém procura item por item enquanto a água sobe ou o morro dá sinal."
+          ],
+          "dicas": [
+            "Deixa a mochila perto da porta, não no fundo do armário. Na hora, ninguém procura nada."
+          ]
+        },
+        {
+          "id": "agua",
+          "titulo": "Água",
+          "curto": "Água",
+          "icone": "💧",
+          "resumo": "Água para beber é o primeiro item do kit.",
+          "subpassos": [
+            {
+              "texto": "Água potável em garrafas fechadas",
+              "objetos": [
+                "garrafa1",
+                "garrafa2"
+              ],
+              "etiqueta": "Água potável"
+            }
+          ],
+          "explicacao": [
+            "Durante uma enchente, a água da torneira pode faltar ou ficar contaminada."
+          ],
+          "dicas": [
+            "Confirme com a Defesa Civil a quantidade recomendada para cada pessoa da sua família."
+          ]
+        },
+        {
+          "id": "comida",
+          "titulo": "Comida",
+          "curto": "Comida",
+          "icone": "🥫",
+          "resumo": "Alimentos que não estragam e não precisam de preparo.",
+          "subpassos": [
+            {
+              "texto": "Enlatados",
+              "objetos": [
+                "lata1",
+                "lata2",
+                "lata3"
+              ],
+              "etiqueta": "Enlatados"
+            },
+            {
+              "texto": "Barras e outros alimentos não perecíveis",
+              "objetos": [
+                "barra1",
+                "barra2"
+              ],
+              "etiqueta": "Não perecíveis"
+            }
+          ],
+          "explicacao": [
+            "Sem energia, a geladeira para e o fogão pode não funcionar. O kit precisa de comida que dure e que se coma sem preparo."
+          ],
+          "dicas": [
+            "Se levar enlatado, lembre do abridor."
+          ]
+        },
+        {
+          "id": "documentos",
+          "titulo": "Documentos",
+          "curto": "Documentos",
+          "icone": "📄",
+          "resumo": "Documentos da família protegidos da água.",
+          "subpassos": [
+            {
+              "texto": "Documentos pessoais da família",
+              "objetos": [
+                "documentos"
+              ],
+              "etiqueta": "Documentos"
+            },
+            {
+              "texto": "Tudo dentro de um saco plástico fechado",
+              "destaque": [
+                "documentos"
+              ],
+              "etiqueta": "Saco plástico fechado"
+            }
+          ],
+          "explicacao": [
+            "Documentos molhados ou perdidos atrasam o atendimento depois do desastre."
+          ],
+          "dicas": [
+            "Guarde também uma cópia de cada documento."
+          ]
+        },
+        {
+          "id": "luz",
+          "titulo": "Luz e comunicação",
+          "curto": "Luz e rádio",
+          "icone": "🔦",
+          "resumo": "Para enxergar e se informar sem energia elétrica.",
+          "subpassos": [
+            {
+              "texto": "Lanterna",
+              "objetos": [
+                "lanterna"
+              ],
+              "etiqueta": "Lanterna"
+            },
+            {
+              "texto": "Rádio a pilha",
+              "objetos": [
+                "radio"
+              ],
+              "etiqueta": "Rádio a pilha"
+            },
+            {
+              "texto": "Carregador de celular",
+              "objetos": [
+                "carregador"
+              ],
+              "etiqueta": "Carregador"
+            }
+          ],
+          "explicacao": [
+            "Quando a energia cai, a lanterna mostra o caminho e o rádio a pilha continua trazendo os avisos oficiais."
+          ],
+          "dicas": [
+            "Guarde pilhas reserva junto com a lanterna e o rádio."
+          ]
+        },
+        {
+          "id": "saude",
+          "titulo": "Saúde e sinal",
+          "curto": "Saúde e apito",
+          "icone": "💊",
+          "resumo": "Remédios de quem precisa e um jeito de pedir socorro.",
+          "subpassos": [
+            {
+              "texto": "Medicamentos de uso contínuo",
+              "objetos": [
+                "remedios"
+              ],
+              "etiqueta": "Medicamentos"
+            },
+            {
+              "texto": "Apito",
+              "objetos": [
+                "apito"
+              ],
+              "etiqueta": "Apito"
+            }
+          ],
+          "explicacao": [
+            "Remédios de uso contínuo não podem faltar nos primeiros dias. O apito ajuda equipes de resgate a encontrar você."
+          ],
+          "dicas": [
+            "Anote numa folha os remédios e as doses de cada pessoa da família e guarde no kit."
+          ]
+        }
+      ]
     },
     {
       "id": 4,

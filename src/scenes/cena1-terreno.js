@@ -204,7 +204,7 @@ function marcador(numero) {
     new THREE.MeshBasicMaterial({ visible: false }),
   );
   alvo.position.y = 1.1;
-  alvo.userData.parada = numero;
+  alvo.userData.toque = numero;
   alvo.name = 'alvo';
 
   // Anel de destaque por perfil de risco.
@@ -296,7 +296,7 @@ export function criarCena1() {
 
   const alvos = marcadores.map((m) => m.getObjectByName('alvo'));
 
-  function animar(tempo, movimentoReduzido) {
+  function animar(tempo, dt, movimentoReduzido) {
     if (movimentoReduzido) return;
     marcadores.forEach((m, i) => {
       const y = 1.35 + Math.sin(tempo * 2 + i) * 0.06;
@@ -307,5 +307,14 @@ export function criarCena1() {
     });
   }
 
-  return { raiz, marcadores, alvos, aplicarPerfil, selecionar, animar };
+  return {
+    raiz,
+    marcadores,
+    alvos,
+    aplicarPerfil,
+    selecionar,
+    animar,
+    enquadramento: { centro: [0, 0.6, 0], largura: 25, altura: 15 },
+    aoTocar: null,
+  };
 }

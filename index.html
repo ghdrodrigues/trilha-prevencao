@@ -8,49 +8,78 @@
     <meta name="theme-color" content="#F77F00" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <header class="topo">
-      <!-- Placeholder tipográfico: não usar o brasão oficial sem autorização (BRIEF §4). -->
-      <span class="marca">Defesa Civil <span aria-hidden="true">·</span> Santa Catarina</span>
+    <!-- Palco 3D em tela cheia; a interface fica por cima. -->
+    <div id="palco" class="palco"></div>
+    <div id="etiquetas" class="etiquetas"></div>
+
+    <header class="topo" id="topo">
+      <button type="button" class="icone-botao" id="abrir-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">☰</button>
+      <a class="marca" href="./" id="marca">
+        <!-- Placeholder tipográfico: não usar o brasão oficial sem autorização (BRIEF §4). -->
+        <span class="marca-titulo">Trilha da Prevenção</span>
+        <span class="marca-sub">Defesa Civil · Santa Catarina</span>
+      </a>
+
+      <div class="controles" role="toolbar" aria-label="Controles da cena">
+        <button type="button" class="icone-botao" data-acao="girar-esq" aria-label="Girar a vista para a esquerda">↺</button>
+        <button type="button" class="icone-botao" data-acao="redefinir" aria-label="Redefinir a vista">⌖</button>
+        <button type="button" class="icone-botao" data-acao="girar-dir" aria-label="Girar a vista para a direita">↻</button>
+        <span class="separador" aria-hidden="true"></span>
+        <button type="button" class="icone-botao so-licao" data-acao="reiniciar" aria-label="Reiniciar a lição">⏮</button>
+        <button type="button" class="icone-botao so-licao" data-acao="pausar" aria-label="Pausar" aria-pressed="false">⏸</button>
+        <button type="button" class="icone-botao so-licao velocidade" data-acao="velocidade" aria-label="Velocidade da animação: 1 vez">1×</button>
+      </div>
+
+      <div class="progresso so-licao" id="progresso" aria-live="polite">
+        <span class="progresso-rotulo"></span>
+        <span class="progresso-barra"><span></span></span>
+        <span class="progresso-num"></span>
+      </div>
+
+      <a class="alerta" href="sms:40199" aria-label="Receba alertas: envie seu CEP por SMS para 40199">
+        <span class="alerta-icone" aria-hidden="true">✉</span>
+        <span><small>Alerta por SMS</small> CEP para <strong>40199</strong></span>
+      </a>
     </header>
 
-    <main>
-      <section class="hero" aria-labelledby="hero-titulo">
-        <h1 id="hero-titulo">Trilha da Prevenção</h1>
+    <nav id="menu" class="menu" aria-label="Menu" hidden>
+      <div class="menu-cabeca">
+        <strong>Trilha da Prevenção</strong>
+        <button type="button" class="icone-botao" id="fechar-menu" aria-label="Fechar menu">×</button>
+      </div>
+      <a class="menu-item" href="./" data-rota="trilha">🗺️ Mapa da trilha</a>
+      <p class="menu-secao">Paradas</p>
+      <ol class="menu-paradas" id="menu-paradas"></ol>
+      <button type="button" class="menu-item" id="trocar-perfil">📍 Onde você mora: <span id="perfil-atual">escolher</span></button>
+      <p class="menu-secao">Emergência</p>
+      <p class="menu-contatos">
+        <a href="tel:199">Defesa Civil <strong>199</strong></a>
+        <a href="tel:193">Bombeiros <strong>193</strong></a>
+      </p>
+    </nav>
+
+    <aside id="guia" class="guia" aria-label="Guia da lição"></aside>
+
+    <footer id="linha-tempo" class="linha-tempo" aria-label="Etapas"></footer>
+
+    <!-- Abertura: hero + perfil de risco (BRIEF §3.1, passos 1 e 2). -->
+    <div id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-titulo" hidden>
+      <div class="intro-cartao">
+        <p class="intro-marca">Defesa Civil · Santa Catarina</p>
+        <h1 id="intro-titulo">Trilha da Prevenção</h1>
         <p class="lema">Aprenda · Prepare · Proteja</p>
         <p class="mote">Em SC, não existe risco zero. Existe família preparada.</p>
-        <a class="botao" href="#perfil">Começar</a>
-      </section>
-
-      <section id="perfil" class="perfil" aria-labelledby="perfil-titulo">
-        <h2 id="perfil-titulo">Onde você mora?</h2>
-        <p>Escolha o lugar mais parecido com o seu. A trilha destaca o que importa para você.</p>
+        <h2>Onde você mora?</h2>
         <div id="perfis" class="perfis"></div>
-      </section>
-
-      <section id="trilha" class="trilha" aria-labelledby="trilha-titulo">
-        <h2 id="trilha-titulo">A trilha: 7 paradas</h2>
-        <p class="instrucao">Toque em uma parada no mapa ou na lista.</p>
-        <div class="trilha-corpo">
-          <div id="palco" class="palco"></div>
-          <ol id="lista-paradas" class="lista-paradas" aria-label="Paradas da trilha"></ol>
-          <aside id="painel" class="painel" role="dialog" aria-modal="false" hidden></aside>
-        </div>
-      </section>
-    </main>
-
-    <footer class="cta" aria-label="Contatos de emergência">
-      <p class="cta-sms">
-        <strong>Receba alertas:</strong> envie seu CEP por SMS para
-        <a href="sms:40199">40199</a>
-      </p>
-      <p class="cta-tel">
-        <a href="tel:199">Defesa Civil 199</a>
-        <a href="tel:193">Bombeiros 193</a>
-      </p>
-    </footer>
+        <button type="button" class="botao" id="comecar" disabled>Começar a trilha</button>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>

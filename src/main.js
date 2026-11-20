@@ -1,143 +1,274 @@
-// Setup Three.js, cena 1 (trilha) e ligação com a interface.
+// Aplicação: palco em tela cheia, mapa da trilha e lições.
+// Rotas: ./ (mapa da trilha) e ./?parada=N (lição N), compartilháveis no WhatsApp.
 
-import * as THREE from 'three';
 import './style.css';
 import dados from '../data/licoes.json';
-import { criarCena1 } from './scenes/cena1-terreno.js';
-import { criarPainel } from './ui/painel.js';
+import { criarPalco } from './motor/palco.js';
+import { criarEtiquetas } from './motor/etiquetas.js';
+import { criarCena1, DESTAQUES_PERFIL } from './scenes/cena1-terreno.js';
+import { criarCenaKit } from './scenes/cena3-kit.js';
+import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
+import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
+import { criarLicaoMontagem } from './licoes/montagem.js';
 
-const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-// ---------- Renderizador e cena ----------
-const palco = document.getElementById('palco');
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
-palco.appendChild(renderer.domElement);
-renderer.domElement.setAttribute('aria-hidden', 'true');
-
-const cena = new THREE.Scene();
-
-cena.add(new THREE.HemisphereLight(0xfff4e6, 0x5a6b7d, 1.4));
-const sol = new THREE.DirectionalLight(0xffffff, 2.2);
-sol.position.set(8, 14, 6);
-sol.castShadow = true;
-sol.shadow.mapSize.set(2048, 2048);
-Object.assign(sol.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14 });
-cena.add(sol);
-
-const cena1 = criarCena1();
-cena.add(cena1.raiz);
-
-// Câmera isométrica fixa (ortográfica). O enquadramento cabe o diorama
-// tanto em tela larga quanto em retrato (celular).
-const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
-camera.position.set(18, 16, 18);
-camera.lookAt(0, 0.6, 0);
-const ALVO_LARGURA = 27; // largura visível mínima em unidades de cena
-const ALVO_ALTURA = 16; // altura visível mínima
-const LARGURA_PAINEL = 412; // painel lateral no desktop (380 px + margens)
-const painelEl = document.getElementById('painel');
-
-function redimensionar() {
-  const { clientWidth: w, clientHeight: h } = palco;
-  renderer.setSize(w, h, false);
-  // No desktop, o painel lateral cobre a direita da cena: o diorama
-  // se centraliza na área que sobra.
-  const painelLateral = !painelEl.hidden && window.matchMedia('(min-width: 1000px)').matches;
-  const wUtil = painelLateral ? w - LARGURA_PAINEL : w;
-  const aspecto = wUtil / h;
-  let meiaAltura = ALVO_ALTURA / 2;
-  if (meiaAltura * aspecto < ALVO_LARGURA / 2) meiaAltura = ALVO_LARGURA / 2 / aspecto;
-  const meiaLargura = (meiaAltura * w) / h;
-  const deslocamento = painelLateral ? (LARGURA_PAINEL / 2) * ((2 * meiaLargura) / w) : 0;
-  camera.top = meiaAltura;
-  camera.bottom = -meiaAltura;
-  camera.left = -meiaLargura + deslocamento;
-  camera.right = meiaLargura + deslocamento;
-  camera.updateProjectionMatrix();
-}
-new ResizeObserver(redimensionar).observe(palco);
-redimensionar();
-
-// ---------- Toque e clique nos marcadores ----------
-const raycaster = new THREE.Raycaster();
-const ponteiro = new THREE.Vector2();
-let inicioToque = null;
-
-function paradaSob(evento) {
-  const r = renderer.domElement.getBoundingClientRect();
-  ponteiro.set(((evento.clientX - r.left) / r.width) * 2 - 1, -((evento.clientY - r.top) / r.height) * 2 + 1);
-  raycaster.setFromCamera(ponteiro, camera);
-  return raycaster.intersectObjects(cena1.alvos, false)[0]?.object.userData.parada ?? null;
-}
-
-renderer.domElement.addEventListener('pointerdown', (e) => {
-  inicioToque = { x: e.clientX, y: e.clientY };
-});
-renderer.domElement.addEventListener('pointerup', (e) => {
-  // Ignora arrasto (rolagem da página no celular).
-  if (!inicioToque || Math.hypot(e.clientX - inicioToque.x, e.clientY - inicioToque.y) > 10) return;
-  const parada = paradaSob(e);
-  if (parada) abrirLicao(parada);
-});
-renderer.domElement.addEventListener('pointermove', (e) => {
-  if (e.pointerType !== 'mouse') return;
-  renderer.domElement.style.cursor = paradaSob(e) ? 'pointer' : '';
-});
-
-// ---------- Interface ----------
-let perfilAtual = null;
-const painel = criarPainel({
-  elemento: document.getElementById('painel'),
-  dados,
-  aoFechar: () => {
-    cena1.selecionar(null);
-    redimensionar();
-  },
-  aoNavegar: (id) => abrirLicao(id),
-});
-
-function abrirLicao(id) {
-  cena1.selecionar(id);
-  painel.abrir(id, perfilAtual);
-  redimensionar();
-  for (const b of document.querySelectorAll('[data-parada]')) {
-    b.setAttribute('aria-current', String(Number(b.dataset.parada) === id));
+const $ = (s) => document.querySelector(s);
+const CHAVE_PERFIL = 'trilha.perfil';
+const ler = (k) => {
+  try {
+    return localStorage.getItem(k);
+  } catch {
+    return null;
   }
+};
+const gravar = (k, v) => {
+  try {
+    localStorage.setItem(k, v);
+  } catch {
+    /* sem armazenamento */
+  }
+};
+
+// ---------- Palco e área livre (o que os painéis não cobrem) ----------
+const topo = $('#topo');
+const guiaEl = $('#guia');
+const linhaEl = $('#linha-tempo');
+const desktop = window.matchMedia('(min-width: 900px)');
+
+function areaLivre() {
+  const h = window.innerHeight;
+  if (desktop.matches) {
+    return {
+      esquerda: 16,
+      topo: topo.offsetHeight + 8,
+      direita: guiaEl.offsetWidth + 32,
+      base: linhaEl.offsetHeight + 16,
+    };
+  }
+  const base = h - Math.min(guiaEl.getBoundingClientRect().top, linhaEl.getBoundingClientRect().top);
+  return { esquerda: 8, topo: topo.offsetHeight + 8, direita: 8, base: Math.max(base, 0) + 8 };
 }
 
-criarSeletorPerfil({
-  elemento: document.getElementById('perfis'),
+const palco = criarPalco($('#palco'), { areaLivre });
+const etiquetas = criarEtiquetas($('#etiquetas'), palco);
+const guia = criarGuia(guiaEl, { aoMudarTamanho: () => requestAnimationFrame(palco.redimensionar) });
+// No celular a cena manda: o guia começa recolhido (título + subpasso atual).
+if (!desktop.matches) guia.recolher(true);
+new ResizeObserver(() => palco.redimensionar()).observe(guiaEl);
+new ResizeObserver(() => {
+  document.documentElement.style.setProperty('--lt-h', `${linhaEl.offsetHeight}px`);
+  palco.redimensionar();
+}).observe(linhaEl);
+
+let navegar = () => {};
+const linhaTempo = criarLinhaTempo(linhaEl, { aoEscolher: (i) => navegar(i) });
+
+// ---------- Cenas ----------
+const cena1 = criarCena1();
+const cenaKit = criarCenaKit();
+cenaKit.conectar(palco);
+
+// ---------- Perfil ----------
+let perfil = ler(CHAVE_PERFIL);
+if (perfil && !dados.perfis[perfil]) perfil = null;
+const seletor = criarSeletorPerfil({
+  elemento: $('#perfis'),
   perfis: dados.perfis,
-  aoEscolher: (perfil) => {
-    perfilAtual = perfil;
-    cena1.aplicarPerfil(perfil);
-    painel.atualizarPerfil(perfil);
-    document.getElementById('lista-paradas').dataset.perfil = perfil;
+  aoEscolher: (p) => {
+    perfil = p;
+    gravar(CHAVE_PERFIL, p);
+    $('#comecar').disabled = false;
+    aplicarPerfil();
   },
 });
+function aplicarPerfil() {
+  cena1.aplicarPerfil(perfil);
+  $('#perfil-atual').textContent = perfil ? dados.perfis[perfil].titulo.toLowerCase() : 'escolher';
+  if (perfil) seletor.marcar(perfil);
+}
 
-// Lista de paradas em texto: alternativa acessível à cena 3D.
-const lista = document.getElementById('lista-paradas');
+function abrirIntro() {
+  $('#intro').hidden = false;
+  $('#comecar').disabled = !perfil;
+  ($('#perfis [aria-pressed=true]') ?? $('#perfis button'))?.focus();
+}
+$('#comecar').addEventListener('click', () => {
+  $('#intro').hidden = true;
+  rotear();
+});
+$('#trocar-perfil').addEventListener('click', () => {
+  fecharMenu();
+  abrirIntro();
+});
+
+// ---------- Menu ----------
+const menu = $('#menu');
+function fecharMenu() {
+  menu.hidden = true;
+  $('#abrir-menu').setAttribute('aria-expanded', 'false');
+}
+$('#abrir-menu').addEventListener('click', () => {
+  menu.hidden = false;
+  $('#abrir-menu').setAttribute('aria-expanded', 'true');
+  $('#fechar-menu').focus();
+});
+$('#fechar-menu').addEventListener('click', fecharMenu);
+document.addEventListener('keydown', (e) => e.key === 'Escape' && fecharMenu());
 for (const l of dados.licoes) {
   const li = document.createElement('li');
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.dataset.parada = l.id;
-  b.innerHTML = `<span class="num">${l.id}</span> ${l.titulo}`;
-  b.addEventListener('click', () => abrirLicao(l.id));
-  li.appendChild(b);
-  lista.appendChild(li);
+  const a = document.createElement('a');
+  a.href = `?parada=${l.id}`;
+  a.className = 'menu-item';
+  a.textContent = `${l.id}. ${l.titulo}${l.etapas ? ' · 3D' : ''}`;
+  li.appendChild(a);
+  $('#menu-paradas').appendChild(li);
+}
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="?parada="], a[data-rota="trilha"], a#marca');
+  if (!a) return;
+  e.preventDefault();
+  fecharMenu();
+  history.pushState(null, '', a.getAttribute('href'));
+  rotear();
+});
+window.addEventListener('popstate', () => rotear());
+
+// ---------- Controles ----------
+const VELOCIDADES = [1, 1.5, 2, 0.5];
+let licaoAtiva = null;
+$('.controles').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-acao]');
+  if (!b) return;
+  const acao = b.dataset.acao;
+  if (acao === 'girar-esq') palco.girar(-1);
+  if (acao === 'girar-dir') palco.girar(1);
+  if (acao === 'redefinir') palco.redefinirVista();
+  if (acao === 'reiniciar') licaoAtiva?.reiniciar();
+  if (acao === 'pausar') {
+    palco.pausado = !palco.pausado;
+    b.setAttribute('aria-pressed', String(palco.pausado));
+    b.setAttribute('aria-label', palco.pausado ? 'Continuar' : 'Pausar');
+    b.textContent = palco.pausado ? '▶' : '⏸';
+  }
+  if (acao === 'velocidade') {
+    const v = VELOCIDADES[(VELOCIDADES.indexOf(palco.velocidade) + 1) % VELOCIDADES.length];
+    palco.velocidade = v;
+    const txt = String(v).replace('.', ',');
+    b.textContent = `${txt}×`;
+    b.setAttribute('aria-label', `Velocidade da animação: ${txt} vez${v > 1 ? 'es' : ''}`);
+  }
+});
+
+function progresso({ rotulo, feitas, total }) {
+  const el = $('#progresso');
+  el.querySelector('.progresso-rotulo').textContent = rotulo;
+  el.querySelector('.progresso-num').textContent = `${feitas}/${total}`;
+  el.querySelector('.progresso-barra span').style.width = `${(feitas / total) * 100}%`;
 }
 
-// ---------- Loop ----------
-const relogio = new THREE.Timer();
-renderer.setAnimationLoop((t) => {
-  relogio.update(t);
-  cena1.animar(relogio.getElapsed(), movimentoReduzido.matches);
-  renderer.render(cena, camera);
-});
+// ---------- Modos ----------
+const ICONES_PARADA = ['🗺️', '📱', '🎒', '⚠️', '🏃', '🌧️', '☀️'];
+
+function irParaParada(id) {
+  if (id < 1 || id > dados.licoes.length) return;
+  history.pushState(null, '', `?parada=${id}`);
+  rotear();
+}
+
+function mostrarTrilha(selecionada = null) {
+  document.body.dataset.modo = 'trilha';
+  palco.definirCena(cena1);
+  cena1.selecionar(selecionada);
+  cena1.aoTocar = (n) => irParaParada(n);
+  aplicarPerfil();
+
+  const destaque = DESTAQUES_PERFIL[perfil] ?? [];
+  linhaTempo.definir({
+    titulo: 'A trilha: 7 paradas',
+    itens: dados.licoes.map((l) => ({
+      icone: ICONES_PARADA[l.id - 1],
+      titulo: l.titulo,
+      marca: destaque.includes(l.id) ? 'para você' : '',
+    })),
+    atual: selecionada ? selecionada - 1 : -1,
+  });
+  navegar = (i) => irParaParada(i + 1);
+
+  guia.mostrar({
+    cabeca: perfil ? `Você mora em: ${dados.perfis[perfil].titulo.toLowerCase()}` : 'Defesa Civil · Santa Catarina',
+    titulo: 'Toque numa parada',
+    abas: [
+      {
+        chave: 'trilha',
+        rotulo: 'Trilha',
+        render: (el) => {
+          paragrafos(el, 'Sete paradas para preparar sua família para chuva forte, enchente e deslizamento.');
+          if (perfil) paragrafos(el, 'As paradas com anel laranja foram adaptadas para onde você mora.');
+        },
+      },
+    ],
+  });
+}
+
+// Lições ainda sem cena animada: o mapa fica ao fundo e o guia mostra as 3 abas.
+function mostrarLicaoSimples(l) {
+  document.body.dataset.modo = 'simples';
+  guia.recolher(false); // sem animação, o texto é o conteúdo
+  const abas = { ...l.abas, ...(l.perfil_variacoes?.[perfil] ?? {}) };
+  const adaptado = Boolean(l.perfil_variacoes?.[perfil]);
+  guia.mostrar({
+    cabeca: `Parada ${l.id} de ${dados.licoes.length}${adaptado ? ' · adaptada para você' : ''}`,
+    titulo: l.titulo,
+    abas: [
+      { chave: 'passo', rotulo: 'Passo a passo', render: (el) => lista(el, abas.passo, true) },
+      { chave: 'porque', rotulo: 'Por que importa', render: (el) => paragrafos(el, abas.porque) },
+      { chave: 'dica', rotulo: 'Dica do agente', render: (el) => paragrafos(el, abas.dica) },
+    ],
+    rodape: (el) => {
+      const p = document.createElement('p');
+      p.className = 'em-breve';
+      p.textContent = 'Cena animada desta parada: em produção.';
+      el.appendChild(p);
+      if (l.rascunho) avisoRascunho(el);
+    },
+  });
+}
+
+function mostrarLicaoMontagem(l) {
+  document.body.dataset.modo = 'licao';
+  if (!desktop.matches) guia.recolher(true);
+  palco.definirCena(cenaKit);
+  licaoAtiva = criarLicaoMontagem({
+    licao: l,
+    cena: cenaKit,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+}
+
+function rotear() {
+  const id = Number(new URLSearchParams(location.search).get('parada'));
+  const l = dados.licoes.find((x) => x.id === id);
+  licaoAtiva?.parar();
+  licaoAtiva = null;
+  etiquetas.limpar();
+  palco.pausado = false;
+  const bp = document.querySelector('[data-acao=pausar]');
+  bp.textContent = '⏸';
+  bp.setAttribute('aria-pressed', 'false');
+  bp.setAttribute('aria-label', 'Pausar');
+  if (!l) return mostrarTrilha();
+  if (l.etapas) return mostrarLicaoMontagem(l);
+  mostrarTrilha(l.id);
+  mostrarLicaoSimples(l);
+}
+
+aplicarPerfil();
+rotear();
+if (!perfil) abrirIntro();

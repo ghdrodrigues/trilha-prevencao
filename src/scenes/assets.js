@@ -3,18 +3,30 @@
 // Cada cena monta seus objetos com primitivas (blockout). Quando o arquivo
 // listado em MODELOS existir em public/models/, ele substitui a primitiva,
 // ajustado à caixa dela (mesma largura e mesma base). Sem o arquivo, a
-// primitiva continua na cena. Para trocar um asset, basta salvar o GLB
-// otimizado com o nome abaixo (veja `npm run assets:otimizar`).
+// primitiva continua na cena. Para trocar um asset, salve o GLB bruto com o nome abaixo em
+// public/models/_bruto/ e rode `npm run assets:otimizar`.
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 // Nomes dos arquivos seguem os prompts do BRIEF.md §5.3.
+// Um GLB por objeto: o motor anima cada peça separadamente (entrar, pousar,
+// guardar na mochila). Dioramas inteiros num único modelo não animam por partes.
 export const MODELOS = {
-  terreno: 'terreno-base.glb', // 1. Terreno-base (cena 1)
+  terreno: 'terreno-base.glb', // 1. Terreno-base (cena 1, mapa da trilha)
   celular: 'celular.glb', // 2. Celular (cena 2)
-  kit: 'kit-72h.glb', // 3. Kit 72h (cena 3)
+  // 3. Kit 72h (cena 3): um arquivo por item
+  kitMochila: 'kit-mochila.glb',
+  kitGarrafa: 'kit-garrafa-agua.glb',
+  kitLata: 'kit-lata.glb',
+  kitBarra: 'kit-barra-cereal.glb',
+  kitDocumentos: 'kit-documentos-saco.glb',
+  kitLanterna: 'kit-lanterna.glb',
+  kitRadio: 'kit-radio-pilha.glb',
+  kitCarregador: 'kit-carregador.glb',
+  kitRemedios: 'kit-remedios.glb',
+  kitApito: 'kit-apito.glb',
   casaSinais: 'casa-sinais.glb', // 4. Casa com sinais (cena 4)
   bairro: 'bairro-rota.glb', // 5. Bairro com rota (cena 5)
   ruaAlagada: 'rua-alagada.glb', // 6. Rua alagada (cena 6)
@@ -26,6 +38,13 @@ const base = import.meta.env.BASE_URL;
 // quando o primeiro GLB comprimido carrega.
 const draco = new DRACOLoader();
 const loader = new GLTFLoader().setDRACOLoader(draco);
+
+// Lista dos GLBs presentes, gerada por `npm run assets:otimizar`. Evita pedir
+// arquivos que ainda não existem (e os 404 no console).
+const disponiveis = fetch(`${base}models/disponiveis.json`)
+  .then((r) => (r.ok ? r.json() : []))
+  .catch(() => [])
+  .then((l) => new Set(l));
 
 /**
  * Coloca `placeholder` dentro de um grupo e tenta trocá-lo pelo GLB da chave.
@@ -39,13 +58,20 @@ export function assetTrocavel(chave, placeholder, { aoTrocar } = {}) {
   const arquivo = MODELOS[chave];
   if (!arquivo) return grupo;
 
+  disponiveis.then((lista) => {
+    if (!lista.has(arquivo)) return;
+    carregar(arquivo, grupo, placeholder, aoTrocar);
+  });
+  return grupo;
+}
+
+function carregar(arquivo, grupo, placeholder, aoTrocar) {
   loader.load(
     `${base}models/${arquivo}`,
     (gltf) => {
       const modelo = gltf.scene;
       grupo.add(modelo);
-      grupo.updateMatrixWorld(true);
-      encaixar(modelo, placeholder);
+      encaixar(modelo, placeholder, grupo);
       modelo.traverse((o) => {
         if (o.isMesh) {
           o.castShadow = true;
@@ -57,27 +83,40 @@ export function assetTrocavel(chave, placeholder, { aoTrocar } = {}) {
     },
     undefined,
     () => {
-      // Arquivo ainda não existe: segue com a primitiva.
+      console.warn(`Modelo ${arquivo} não carregou; mantendo a primitiva.`);
     },
   );
-  return grupo;
 }
 
 // Escala o modelo para a largura da primitiva e apoia na mesma base.
-// O grupo pode ser movido, mas não girado nem escalado.
-function encaixar(modelo, placeholder) {
-  const alvo = new THREE.Box3().setFromObject(placeholder);
-  const caixa = new THREE.Box3().setFromObject(modelo);
+// As caixas são medidas no espaço do grupo, então o grupo pode ser movido,
+// girado ou escalado.
+function caixaNoGrupo(obj, grupo) {
+  grupo.updateWorldMatrix(true, true);
+  const inv = grupo.matrixWorld.clone().invert();
+  const caixa = new THREE.Box3();
+  const m = new THREE.Matrix4();
+  obj.traverse((o) => {
+    if (!o.isMesh) return;
+    if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+    m.multiplyMatrices(inv, o.matrixWorld);
+    caixa.union(o.geometry.boundingBox.clone().applyMatrix4(m));
+  });
+  return caixa;
+}
+
+function encaixar(modelo, placeholder, grupo) {
+  const alvo = caixaNoGrupo(placeholder, grupo);
+  const caixa = caixaNoGrupo(modelo, grupo);
   const tamAlvo = alvo.getSize(new THREE.Vector3());
   const tam = caixa.getSize(new THREE.Vector3());
-  const escala = Math.max(tamAlvo.x, tamAlvo.z) / Math.max(tam.x, tam.z || 1e-6);
+  const escala = Math.max(tamAlvo.x, tamAlvo.z) / Math.max(tam.x, tam.z, 1e-6);
   modelo.scale.multiplyScalar(escala);
-  modelo.updateMatrixWorld(true);
 
-  caixa.setFromObject(modelo);
-  const centro = caixa.getCenter(new THREE.Vector3());
+  const depois = caixaNoGrupo(modelo, grupo);
+  const centro = depois.getCenter(new THREE.Vector3());
   const centroAlvo = alvo.getCenter(new THREE.Vector3());
   modelo.position.x += centroAlvo.x - centro.x;
   modelo.position.z += centroAlvo.z - centro.z;
-  modelo.position.y += alvo.min.y - caixa.min.y;
+  modelo.position.y += alvo.min.y - depois.min.y;
 }

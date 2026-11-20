@@ -4,16 +4,24 @@
 // Saída: public/models/<nome>.glb, com Draco, texturas WebP e no máximo 1024 px.
 
 import { execFileSync } from 'node:child_process';
-import { readdirSync, statSync, mkdirSync } from 'node:fs';
+import { readdirSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const BRUTO = 'public/models/_bruto';
 const SAIDA = 'public/models';
 mkdirSync(BRUTO, { recursive: true });
 
+// Lista que o motor lê para saber quais modelos já existem.
+function registrar() {
+  const lista = readdirSync(SAIDA).filter((f) => f.endsWith('.glb')).sort();
+  writeFileSync(join(SAIDA, 'disponiveis.json'), JSON.stringify(lista, null, 2) + '\n');
+  console.log(`public/models/disponiveis.json: ${lista.length} modelo(s).`);
+}
+
 const arquivos = readdirSync(BRUTO).filter((f) => f.toLowerCase().endsWith('.glb'));
 if (!arquivos.length) {
   console.log(`Nenhum .glb em ${BRUTO}/. Coloque lá os arquivos exportados do Tripo.`);
+  registrar();
   process.exit(0);
 }
 
@@ -28,4 +36,5 @@ for (const f of arquivos) {
   );
   console.log(`${f}: ${mb(statSync(entrada).size)} MB → ${mb(statSync(saida).size)} MB`);
 }
+registrar();
 console.log('\nAgora rode `npm run assets:checar`.');
