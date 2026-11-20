@@ -55,6 +55,8 @@ Cada lição tem: cena 3D própria + painel com 3 abas:
 
 > **Parada 4 (20/11/2026):** feita como roteiro (formato da parada 1, escolha do George), sem o mini-jogo "perigoso ou normal?": nenhuma fonte oficial diz o que é "normal". Sinais usados, todos com fonte: rachaduras e trincas no chão e nas paredes, saliências, muro estufado, árvores e postes inclinados, raízes expostas e água barrenta (F1, F2, F3, F10). Portas emperrando e estalos ficaram de fora por falta de fonte.
 >
+> **Parada 5 (20/11/2026):** roteiro no bairro, só com o Plano Emergencial Familiar (F2): saídas da casa acessíveis, saída mais segura para quem tem dificuldade de locomoção, ponto de encontro fora do bairro, rota de fuga externa, crianças na conversa, contato de apoio e revisão a cada seis meses com simulação das rotas. Casas e cenário em código (casa-realista.js, cenario-detalhes.js), sem créditos.
+>
 > **Validação (20/11/2026):** os textos de `data/licoes.json` foram reescritos com base em fontes oficiais (lista em `_fontes`), citadas no rodapé do guia. Falta a revisão da Defesa Civil SC.
 >
 > **IMPORTANTE:** os procedimentos acima são rascunho de concepção. Antes de publicar, validar o conteúdo com material oficial da Defesa Civil SC (defesacivil.sc.gov.br) e da Defesa Civil Nacional. Não inventar protocolo.

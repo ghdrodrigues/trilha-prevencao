@@ -163,25 +163,30 @@ export function criarPersonagensRisco({
       agente.tocar(acaoAgente ?? 'parado', { reduzido });
     }
     if (vizinho) {
+      // vizinhoPara: [x, z] (linha reta a partir de casa) ou [[x, z], ...] (caminho)
+      const caminho = vizinhoPara ? (Array.isArray(vizinhoPara[0]) ? vizinhoPara : [vizinhoPara]) : null;
+      const fim = caminho?.[caminho.length - 1];
       const chegou = caminhada && caminhada.t >= caminhada.dur;
-      const mesmoDestino = vizinhoPara && caminhada && caminhada.para.x === vizinhoPara[0] && caminhada.para.y === vizinhoPara[1];
+      const mesmoDestino = fim && caminhada && caminhada.fim[0] === fim[0] && caminhada.fim[1] === fim[1];
       if (mesmoDestino) {
         // subpasso seguinte com o mesmo destino: segue andando ou só troca a ação
         caminhada.acao = acaoVizinho ?? 'parado';
         if (chegou || reduzido) {
           caminhada.t = caminhada.dur;
-          noChao(vizinho.raiz, vizinhoPara);
+          noChao(vizinho.raiz, fim);
           vizinho.tocar(caminhada.acao, { reduzido });
         }
         return;
       }
       caminhada = null;
-      if (vizinhoPara) {
-        const de = new THREE.Vector2(...vizinho.casa);
-        const para = new THREE.Vector2(...vizinhoPara);
-        caminhada = { de, para, t: 0, dur: de.distanceTo(para) / velocidadeAndar, acao: acaoVizinho ?? 'acenar' };
+      if (caminho) {
+        const pts = [vizinho.casa, ...caminho].map(([x, z]) => new THREE.Vector2(x, z));
+        const marcos = [0];
+        for (let i = 1; i < pts.length; i++) marcos.push(marcos[i - 1] + pts[i].distanceTo(pts[i - 1]));
+        const total = marcos[marcos.length - 1];
+        caminhada = { pts, marcos, fim, t: 0, dur: total / velocidadeAndar, acao: acaoVizinho ?? 'acenar' };
         if (reduzido) caminhada.t = caminhada.dur;
-        noChao(vizinho.raiz, reduzido ? vizinhoPara : vizinho.casa);
+        noChao(vizinho.raiz, reduzido ? fim : vizinho.casa);
         vizinho.tocar(reduzido ? caminhada.acao : 'andar', { reduzido });
       } else {
         noChao(vizinho.raiz, vizinho.casa);
@@ -196,9 +201,15 @@ export function criarPersonagensRisco({
     const c = caminhada;
     if (c.t >= c.dur) return false;
     c.t = Math.min(c.t + dt, c.dur);
-    p2.lerpVectors(c.de, c.para, c.t / c.dur);
+    const d = (c.t / c.dur) * c.marcos[c.marcos.length - 1];
+    let i = 1;
+    while (i < c.marcos.length - 1 && c.marcos[i] < d) i++;
+    const a = c.pts[i - 1];
+    const b = c.pts[i];
+    const k = (d - c.marcos[i - 1]) / Math.max(c.marcos[i] - c.marcos[i - 1], 1e-6);
+    p2.lerpVectors(a, b, Math.min(Math.max(k, 0), 1));
     noChao(vizinho.raiz, [p2.x, p2.y]);
-    vizinho.raiz.rotation.y = Math.atan2(c.para.x - c.de.x, c.para.y - c.de.y);
+    vizinho.raiz.rotation.y = Math.atan2(b.x - a.x, b.y - a.y);
     if (c.t >= c.dur) vizinho.tocar(c.acao);
     return true;
   }
