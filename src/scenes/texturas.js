@@ -405,3 +405,51 @@ export const anelZona = () =>
     g.arc(c, c, c * 0.88, 0, Math.PI * 2);
     g.stroke();
   });
+
+// ---------- Parada 4: sinais de perigo ----------
+
+// Muro de arrimo em blocos de concreto, com juntas e manchas de umidade.
+export const blocos = () =>
+  textura('blocos', 512, 128, (g, w, h) => {
+    const r = aleatorio(71);
+    g.fillStyle = '#a9a496';
+    g.fillRect(0, 0, w, h);
+    const bh = h / 4;
+    const bw = w / 12;
+    for (let linha = 0; linha < 4; linha++) {
+      const off = (linha % 2) * (bw / 2);
+      for (let x = -bw; x < w + bw; x += bw) {
+        const v = r() * 22 - 11;
+        g.fillStyle = `rgb(${178 + v},${173 + v},${160 + v})`;
+        g.fillRect(x + off + 2, linha * bh + 2, bw - 4, bh - 4);
+      }
+    }
+    for (let i = 0; i < 900; i++) {
+      g.fillStyle = `rgba(90,85,70,${r() * 0.18})`;
+      g.fillRect(r() * w, r() * h, 2, 2);
+    }
+    // escorrido de umidade na base
+    const grad = g.createLinearGradient(0, h * 0.55, 0, h);
+    grad.addColorStop(0, 'rgba(80,70,50,0)');
+    grad.addColorStop(1, 'rgba(80,70,50,0.35)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, w, h);
+  }, { repetir: [2, 1] });
+
+// Água barrenta: faixas de lama clara e escura que escorrem (offset em v).
+export const barrenta = () =>
+  textura('barrenta', 64, 256, (g, w, h) => {
+    const r = aleatorio(81);
+    g.fillStyle = '#7d5a35';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 70; i++) {
+      g.strokeStyle = r() > 0.5 ? `rgba(196,160,110,${0.25 + r() * 0.35})` : `rgba(70,45,25,${0.2 + r() * 0.3})`;
+      g.lineWidth = 1 + r() * 2;
+      const x = r() * w;
+      const y = r() * h;
+      g.beginPath();
+      g.moveTo(x, y);
+      g.lineTo(x + (r() - 0.5) * 6, y + 10 + r() * 24);
+      g.stroke();
+    }
+  }, { repetir: [1, 3] });
