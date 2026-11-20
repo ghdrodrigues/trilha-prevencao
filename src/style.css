@@ -16,7 +16,7 @@
   --cinza-2: #e7e7e7;
   --cinza-texto: #4a4f57;
   --branco: #ffffff;
-  --raio: 6px;
+  --raio: 0;
   --sombra: 0 10px 30px rgb(6 16 24 / 0.28);
   --topo-h: 60px;
   --titulo: 'Montserrat', system-ui, sans-serif;
@@ -74,7 +74,7 @@ button { font: inherit; color: inherit; }
   top: 0;
   padding: 6px 12px 6px 10px;
   border-left: 4px solid var(--laranja);
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--branco);
   color: var(--indigo-3);
   font-family: var(--titulo);
@@ -116,7 +116,7 @@ button { font: inherit; color: inherit; }
   padding: 0 24px;
   margin-top: 12px;
   border: 2px solid var(--indigo-2);
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--branco);
   color: var(--indigo-2);
   font-family: var(--titulo);
@@ -177,7 +177,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.progresso-barra { width: 80px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.2); overflow: hidden; }
+.progresso-barra { width: 80px; height: 6px; border-radius: 0; background: rgb(255 255 255 / 0.2); overflow: hidden; }
 .progresso-barra span { display: block; height: 100%; width: 0; background: var(--laranja); transition: width 0.4s; }
 
 .alerta {
@@ -186,7 +186,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   gap: 10px;
   min-height: 44px;
   padding: 4px 16px 4px 14px;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--vermelho);
   color: var(--branco);
   text-decoration: none;
@@ -269,7 +269,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   letter-spacing: 0.06em;
   color: var(--cinza-texto);
 }
-.guia-alca-barra { width: 36px; height: 4px; border-radius: 2px; background: var(--cinza-2); }
+.guia-alca-barra { width: 36px; height: 4px; border-radius: 0; background: var(--cinza-2); }
 .guia-corpo { overflow-y: auto; padding: 0 16px 14px; }
 .guia.recolhido .abas,
 .guia.recolhido .guia-rodape,
@@ -307,7 +307,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 .aba-conteudo li { margin-bottom: 6px; }
 
 .subpassos { list-style: none; padding: 0 !important; display: grid; gap: 4px; }
-.subpassos li { display: grid; gap: 0; border-left: 4px solid transparent; border-radius: 3px; background: var(--cinza-1); padding: 2px 4px 8px; margin: 0 !important; }
+.subpassos li { display: grid; gap: 0; border-left: 4px solid transparent; border-radius: 0; background: var(--cinza-1); padding: 2px 4px 8px; margin: 0 !important; }
 .subpassos li.atual { border-left-color: var(--laranja); background: var(--laranja-claro); }
 .subpasso {
   display: flex;
@@ -330,7 +330,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 .visto .sp-marca { border-color: var(--indigo-1); background: var(--indigo-1); }
 .tenho { display: flex; align-items: center; gap: 8px; margin-left: 28px; font-size: 0.8rem; color: var(--cinza-texto); cursor: pointer; }
 .tenho input { width: 20px; height: 20px; accent-color: var(--indigo-2); }
-.final { margin-top: 12px; padding: 14px; border-left: 4px solid var(--laranja); border-radius: 3px; background: var(--laranja-claro); }
+.final { margin-top: 12px; padding: 14px; border-left: 4px solid var(--laranja); border-radius: 0; background: var(--laranja-claro); }
 .final-titulo { font-family: var(--titulo); font-weight: 900; font-size: 1.15rem; color: var(--indigo-3); }
 .contagem-kit { margin: 12px 0 0; font-family: var(--titulo); font-size: 0.75rem; font-weight: 800; color: var(--indigo-2); text-transform: uppercase; letter-spacing: 0.04em; }
 .em-breve { margin: 10px 0 0; font-size: 0.8rem; font-weight: 700; color: var(--laranja-escuro); }
@@ -367,7 +367,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   padding: 8px 10px;
   border: 0;
   border-top: 3px solid transparent;
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--cinza-1);
   color: var(--indigo-3);
   text-align: left;
@@ -425,7 +425,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   align-items: center;
   padding: 14px;
   border: 2px solid transparent;
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--cinza-1);
   text-align: left;
   cursor: pointer;
