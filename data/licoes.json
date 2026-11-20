@@ -838,17 +838,251 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Defina as rotas de saída da casa e deixe as saídas livres.",
-          "Escolham um ponto de encontro fora do bairro.",
-          "Vejam por onde é mais seguro sair com quem tem dificuldade de locomoção, e incluam as crianças na conversa.",
-          "Combinem um familiar ou amigo para todos procurarem se houver desencontro."
+          "Elabore rotas de fuga dentro de casa e assegure que todas as saídas estejam acessíveis.",
+          "Escolham um lugar fora do bairro para ser o ponto de encontro da família.",
+          "Vejam por onde é mais seguro sair se houver na família pessoas com dificuldade de locomoção, e não deixem as crianças fora da conversa.",
+          "Compartilhem o contato de um familiar ou amigo que poderá apoiar."
         ],
-        "porque": "Em um desastre podem acontecer desencontros. Um plano combinado antes diz para onde cada um vai.",
-        "dica": "A cada seis meses, revê o plano com a família e faz o trajeto até o ponto de encontro, com calma."
+        "porque": "Em um desastre podem acontecer desencontros. Um plano combinado antes diz por onde sair e onde se encontrar.",
+        "dica": "A cada seis meses, revê o plano com a família e faz a simulação das rotas de fuga."
       },
       "perfil_variacoes": {},
       "fontes": [
         "F2"
+      ],
+      "tipo": "roteiro",
+      "cena": "plano",
+      "letreiro": "Plano de fuga",
+      "resumo": "Combinar com a família por onde sair, onde se encontrar e a quem procurar.",
+      "final": {
+        "titulo": "Plano combinado",
+        "texto": "Próximo passo: o que fazer durante a emergência."
+      },
+      "etapas": [
+        {
+          "id": "saidas",
+          "titulo": "As saídas da casa",
+          "curto": "Saídas",
+          "icone": "rota",
+          "resumo": "Elabore rotas de fuga dentro de casa.",
+          "subpassos": [
+            {
+              "texto": "Elabore rotas de fuga dentro de casa",
+              "foco": "casa",
+              "efeito": "saidas",
+              "ancora": "frente",
+              "etiqueta": "Saída da frente",
+              "agente": "apontar"
+            },
+            {
+              "texto": "Assegure que todas as saídas estejam acessíveis",
+              "foco": "casa",
+              "efeito": "liberar",
+              "ancora": "frente",
+              "etiqueta": "Saída livre",
+              "agente": "apontar",
+              "vizinho": {
+                "encosta": "examinar"
+              },
+              "pausa": 2.2
+            },
+            {
+              "texto": "Veja por onde é mais seguro sair se alguém da família tiver dificuldade de locomoção",
+              "foco": "casa",
+              "ancora": "lado",
+              "etiqueta": "Qual saída é mais segura?",
+              "agente": "apontar",
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar da Defesa Civil de SC orienta elaborar rotas de fuga dentro de casa, ver por onde é mais seguro sair se houver pessoas na família com dificuldade de locomoção e assegurar que todas as saídas estejam acessíveis."
+          ],
+          "dicas": [
+            "Assegure que todas as saídas estejam acessíveis, sem nada no caminho."
+          ],
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "id": "encontro",
+          "titulo": "Ponto de encontro",
+          "curto": "Encontro",
+          "icone": "mapa",
+          "base": [
+            "liberar"
+          ],
+          "resumo": "Um lugar fora do bairro e o caminho até ele.",
+          "subpassos": [
+            {
+              "texto": "Escolham um lugar fora do bairro para ser o ponto de encontro",
+              "foco": "encontro",
+              "efeito": "ponto",
+              "ancora": "encontro",
+              "etiqueta": "Ponto de encontro",
+              "agente": "acenar"
+            },
+            {
+              "texto": "Rota de fuga externa: o caminho até o ponto de encontro",
+              "foco": "rota",
+              "efeito": "rota",
+              "ancora": "rota",
+              "etiqueta": "Rota de fuga externa",
+              "agente": "apontar",
+              "vizinhoPara": [
+                [
+                  -4.15,
+                  -0.05
+                ],
+                [
+                  -4.0,
+                  0.8
+                ],
+                [
+                  -1.0,
+                  0.8
+                ],
+                [
+                  2.2,
+                  0.8
+                ],
+                [
+                  3.4,
+                  0.2
+                ],
+                [
+                  4.2,
+                  -0.9
+                ],
+                [
+                  4.9,
+                  -1.8
+                ]
+              ],
+              "vizinho": "acenar",
+              "pausa": 8
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar pede que a família escolha um lugar fora do bairro para ser o ponto de encontro e anote a rota de fuga externa até ele."
+          ],
+          "dicas": [
+            "O ponto de encontro fica fora do seu bairro."
+          ],
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "id": "combinados",
+          "titulo": "Combinados da família",
+          "curto": "Combinados",
+          "icone": "telefone",
+          "base": [
+            "liberar",
+            "ponto",
+            "rota"
+          ],
+          "resumo": "Todos na conversa e um contato para os desencontros.",
+          "subpassos": [
+            {
+              "texto": "Não deixem as crianças fora dessa conversa",
+              "foco": "casa",
+              "ancora": "casa",
+              "etiqueta": "Toda a família",
+              "agente": "acenar",
+              "vizinho": "acenar"
+            },
+            {
+              "texto": "Compartilhem o contato de um familiar ou amigo que poderá apoiar",
+              "foco": "contato",
+              "efeito": "contato",
+              "ancora": "contato",
+              "etiqueta": "Contato de apoio",
+              "agente": "radio",
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "Em um desastre podem acontecer desencontros. Por isso o Plano Emergencial Familiar orienta compartilhar o contato de um familiar ou amigo que poderá apoiar a família."
+          ],
+          "dicas": [
+            "Compartilhem o contato de apoio com todos da família."
+          ],
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "id": "atualizado",
+          "titulo": "Plano atualizado",
+          "curto": "A cada 6 meses",
+          "icone": "check",
+          "base": [
+            "liberar",
+            "ponto",
+            "rota",
+            "contato",
+            "saidas"
+          ],
+          "resumo": "Rever o plano e simular as rotas de fuga.",
+          "subpassos": [
+            {
+              "texto": "A cada seis meses, revejam o plano com a família",
+              "foco": "geral",
+              "agente": "acenar"
+            },
+            {
+              "texto": "Façam a simulação das rotas de fuga",
+              "foco": "rota",
+              "ancora": "encontro",
+              "etiqueta": "Simulação",
+              "agente": "apontar",
+              "vizinhoPara": [
+                [
+                  -4.15,
+                  -0.05
+                ],
+                [
+                  -4.0,
+                  0.8
+                ],
+                [
+                  -1.0,
+                  0.8
+                ],
+                [
+                  2.2,
+                  0.8
+                ],
+                [
+                  3.4,
+                  0.2
+                ],
+                [
+                  4.2,
+                  -0.9
+                ],
+                [
+                  4.9,
+                  -1.8
+                ]
+              ],
+              "vizinho": "acenar",
+              "pausa": 8
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar recomenda rever o plano com a família a cada seis meses, fazer a simulação das rotas de fuga e conferir a validade de alimentos, água e outros itens do kit."
+          ],
+          "dicas": [
+            "Aproveita a revisão do plano para conferir a validade do kit."
+          ],
+          "fontes": [
+            "F2"
+          ]
+        }
       ]
     },
     {

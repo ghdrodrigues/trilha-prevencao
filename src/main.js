@@ -14,6 +14,7 @@ import { criarLicaoMontagem } from './licoes/montagem.js';
 import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
+import { criarCenaPlano, relevo as relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO } from './scenes/cena5-plano.js';
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
@@ -112,10 +113,31 @@ const cenaSinais = {
     personagensSinais.animar(t, dt, r);
   },
 };
+// Cena da parada 5: bairro com rota de fuga e ponto de encontro.
+const plano = criarCenaPlano({ palco });
+const personagensPlano = criarPersonagensRisco({
+  palco,
+  relevo: relevoPlano,
+  posicoesAgente: POSICOES_AGENTE_PLANO,
+  vizinhos: VIZINHOS_PLANO,
+  alturaAtor: 1.1,
+});
+plano.raiz.add(personagensPlano.grupo);
+const cenaPlano = {
+  raiz: plano.raiz,
+  alvos: [],
+  enquadramento: ENQUADRAMENTOS_PLANO.geral,
+  animar: (t, dt, r) => {
+    plano.efeitos.animar(t, dt, r);
+    personagensPlano.animar(t, dt, r);
+  },
+};
+
 // Cada lição do tipo roteiro escolhe a cena pelo campo "cena".
 const CENAS_ROTEIRO = {
   terreno: { cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS },
   sinais: { cena: cenaSinais, efeitos: sinais.efeitos, personagens: personagensSinais, enquadramentos: ENQUADRAMENTOS_SINAIS },
+  plano: { cena: cenaPlano, efeitos: plano.efeitos, personagens: personagensPlano, enquadramentos: ENQUADRAMENTOS_PLANO },
 };
 
 // No celular, o kit vira uma grade com as colunas que deixam os itens maiores
