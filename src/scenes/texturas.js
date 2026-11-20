@@ -233,3 +233,137 @@ export const sombraContato = () =>
     g.fillStyle = grad;
     g.fillRect(0, 0, w, h);
   });
+
+// ---------- Mapa da trilha ----------
+
+// Grama: manchas e tufos em tons claros (multiplica a cor dos vértices).
+export const grama = () =>
+  textura('grama', 512, 512, (g, w, h) => {
+    const r = aleatorio(21);
+    g.fillStyle = '#e9efe2';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 40; i++) {
+      const x = r() * w;
+      const y = r() * h;
+      const rad = 60 + r() * 120;
+      const grad = g.createRadialGradient(x, y, 0, x, y, rad);
+      const claro = r() > 0.5;
+      grad.addColorStop(0, claro ? 'rgba(255,255,230,0.18)' : 'rgba(150,170,120,0.14)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = grad;
+      g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    for (let i = 0; i < 5000; i++) {
+      const v = r();
+      g.fillStyle = v > 0.6 ? 'rgba(255,255,240,0.5)' : 'rgba(110,140,80,0.45)';
+      const x = r() * w;
+      const y = r() * h;
+      g.fillRect(x, y, 1, 2 + r() * 3);
+    }
+  }, { repetir: [5, 4] });
+
+// Camadas de solo na lateral do diorama.
+export const solo = () =>
+  textura('solo', 512, 128, (g, w, h) => {
+    const r = aleatorio(31);
+    const faixas = [
+      [0, 0.12, '#5b7f3a'],
+      [0.12, 0.45, '#8a6440'],
+      [0.45, 0.75, '#74512f'],
+      [0.75, 1, '#5e4126'],
+    ];
+    for (const [a, b, cor] of faixas) {
+      g.fillStyle = cor;
+      g.beginPath();
+      g.moveTo(0, a * h);
+      for (let x = 0; x <= w; x += 16) g.lineTo(x, a * h + (a ? Math.sin(x / 37 + a * 9) * 3 : 0));
+      g.lineTo(w, b * h);
+      g.lineTo(0, b * h);
+      g.fill();
+    }
+    // pedras e raízes
+    for (let i = 0; i < 90; i++) {
+      const v = 120 + r() * 60;
+      g.fillStyle = `rgba(${v},${v - 15},${v - 35},0.8)`;
+      g.beginPath();
+      g.ellipse(r() * w, h * (0.2 + r() * 0.78), 2 + r() * 5, 1.5 + r() * 3, r() * 3, 0, Math.PI * 2);
+      g.fill();
+    }
+  }, { repetir: [4, 1] });
+
+// Parede de reboco com janelas (e porta na fachada).
+export const parede = (comPorta) =>
+  textura(`parede-${comPorta}`, 256, 256, (g, w, h) => {
+    const r = aleatorio(comPorta ? 41 : 43);
+    g.fillStyle = '#f3ede2';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 600; i++) {
+      g.fillStyle = `rgba(150,130,100,${r() * 0.08})`;
+      g.fillRect(r() * w, r() * h, 2, 2);
+    }
+    // barra de sujeira perto do chão
+    const grad = g.createLinearGradient(0, h * 0.8, 0, h);
+    grad.addColorStop(0, 'rgba(120,95,60,0)');
+    grad.addColorStop(1, 'rgba(120,95,60,0.35)');
+    g.fillStyle = grad;
+    g.fillRect(0, h * 0.8, w, h * 0.2);
+    const janela = (x, y, jw, jh) => {
+      g.fillStyle = '#e2d6bf';
+      g.fillRect(x - 6, y - 6, jw + 12, jh + 12);
+      g.fillStyle = '#3d5a73';
+      g.fillRect(x, y, jw, jh);
+      g.fillStyle = 'rgba(255,255,255,0.35)';
+      g.fillRect(x + 4, y + 4, jw * 0.35, jh * 0.4);
+      g.fillStyle = '#e2d6bf';
+      g.fillRect(x + jw / 2 - 2, y, 4, jh);
+      g.fillRect(x, y + jh / 2 - 2, jw, 4);
+    };
+    if (comPorta) {
+      g.fillStyle = '#7a4a2a';
+      g.fillRect(w * 0.18, h * 0.42, w * 0.22, h * 0.58);
+      g.fillStyle = '#e8c96a';
+      g.fillRect(w * 0.35, h * 0.72, 6, 6);
+      janela(w * 0.56, h * 0.36, w * 0.28, h * 0.26);
+    } else {
+      janela(w * 0.34, h * 0.32, w * 0.32, h * 0.3);
+    }
+  });
+
+// Telhas cerâmicas em fileiras.
+export const telhas = () =>
+  textura('telhas', 256, 256, (g, w, h) => {
+    const r = aleatorio(51);
+    g.fillStyle = '#b84a32';
+    g.fillRect(0, 0, w, h);
+    const lh = 22;
+    for (let y = 0; y < h; y += lh) {
+      for (let x = ((y / lh) % 2) * 14; x < w; x += 28) {
+        const v = r() * 30 - 15;
+        g.fillStyle = `rgb(${196 + v},${86 + v / 2},${60 + v / 2})`;
+        g.beginPath();
+        g.ellipse(x + 14, y + lh * 0.55, 13, lh * 0.55, 0, 0, Math.PI);
+        g.fill();
+      }
+      g.fillStyle = 'rgba(60,20,10,0.35)';
+      g.fillRect(0, y + lh - 3, w, 3);
+    }
+  }, { repetir: [2, 2] });
+
+// Água do rio: ondulações claras sobre azul.
+export const agua = () =>
+  textura('agua', 256, 256, (g, w, h) => {
+    const r = aleatorio(61);
+    g.fillStyle = '#3f86b8';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 140; i++) {
+      g.strokeStyle = `rgba(220,240,255,${0.15 + r() * 0.3})`;
+      g.lineWidth = 1 + r() * 1.5;
+      const x = r() * w;
+      const y = r() * h;
+      const l = 10 + r() * 30;
+      g.beginPath();
+      g.moveTo(x, y);
+      g.quadraticCurveTo(x + l / 2, y - 3, x + l, y);
+      g.stroke();
+    }
+  }, { repetir: [8, 1] });
