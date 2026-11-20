@@ -1,0 +1,154 @@
+{
+  "_aviso": "RASCUNHO DE CONCEPÇÃO. Textos retirados do BRIEF.md §3.2. Validar com material oficial da Defesa Civil SC e da Defesa Civil Nacional antes de publicar. Não inventar protocolo.",
+  "perfis": {
+    "encosta": { "titulo": "Encosta ou morro", "enfase": "deslizamento" },
+    "baixada": { "titulo": "Beira de rio ou baixada", "enfase": "enchente" },
+    "aberto": { "titulo": "Área aberta ou interior", "enfase": "vendaval e granizo" }
+  },
+  "licoes": [
+    {
+      "id": 1,
+      "titulo": "Conheça seu risco",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Identifique o tipo de terreno onde você mora: encosta, beira de rio ou área aberta.",
+          "Pergunte a vizinhos antigos sobre o histórico do bairro: já alagou? Já deslizou?",
+          "Consulte o mapa de risco do seu município na Defesa Civil municipal."
+        ],
+        "porque": "Chuva intensa responde por cerca de 90% dos óbitos em eventos climáticos em SC. 207 dos 295 municípios do estado (70,1%) estão entre os mais suscetíveis a deslizamentos, enxurradas e inundações.",
+        "dica": "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
+      },
+      "perfil_variacoes": {
+        "encosta": {
+          "porque": "Quem mora em encosta convive com risco de deslizamento. Saber disso antes da chuva é o que dá tempo de sair."
+        },
+        "baixada": {
+          "porque": "Quem mora na beira do rio ou na baixada é o primeiro a receber a água. Conhecer até onde a água já chegou ajuda a decidir quando sair."
+        },
+        "aberto": {
+          "porque": "Em área aberta, o risco maior vem de vendaval e granizo. Telhado, árvores e fiação são os pontos a observar."
+        }
+      }
+    },
+    {
+      "id": 2,
+      "titulo": "Cadastre o alerta",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Envie o seu CEP por SMS para o número 40199.",
+          "Aprenda o que significa cada tipo de aviso.",
+          "Siga apenas os canais oficiais da Defesa Civil."
+        ],
+        "porque": "SC lidera a adesão ao alerta por SMS: 10,51% da população cadastrada, mais que o dobro da média nacional.",
+        "dica": "Cadastra o CEP de casa, do trabalho e da escola das crianças. Cada CEP é um SMS separado."
+      },
+      "perfil_variacoes": {}
+    },
+    {
+      "id": 3,
+      "titulo": "Monte o kit 72h",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Água.",
+          "Alimentos não perecíveis.",
+          "Documentos em saco plástico.",
+          "Lanterna e rádio a pilha.",
+          "Medicamentos de uso contínuo.",
+          "Apito.",
+          "Carregador de celular."
+        ],
+        "porque": "Nas primeiras horas de uma emergência, o socorro pode demorar a chegar até você. O kit garante o básico enquanto isso.",
+        "dica": "Deixa a mochila perto da porta, não no fundo do armário. Na hora, ninguém procura nada."
+      },
+      "perfil_variacoes": {}
+    },
+    {
+      "id": 4,
+      "titulo": "Leia os sinais de perigo",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Trincas novas em paredes e no chão.",
+          "Portas e janelas emperrando.",
+          "Água barrenta minando do morro.",
+          "Árvores e postes inclinados.",
+          "Estalos vindos do terreno ou da casa."
+        ],
+        "porque": "O terreno costuma avisar antes de ceder. Quem reconhece os sinais ganha minutos para sair.",
+        "dica": "Viu um desses sinais? Não espera piorar para ter certeza. Sai e liga 199."
+      },
+      "perfil_variacoes": {
+        "encosta": {
+          "dica": "Na encosta, água barrenta saindo do barranco e estalo no terreno são sinais de sair na hora."
+        },
+        "baixada": {
+          "dica": "Na baixada, observa o nível e a cor do rio. Subida rápida e água barrenta são sinais de preparar a saída."
+        },
+        "aberto": {
+          "dica": "Em área aberta, árvore inclinada e fiação baixa perto de casa viram perigo no vendaval."
+        }
+      }
+    },
+    {
+      "id": 5,
+      "titulo": "Plano de fuga da família",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Defina a rota de saída da casa.",
+          "Combine um ponto de encontro.",
+          "Decida quem busca quem: crianças, idosos e pets.",
+          "Combine o que fazer se o celular não funcionar."
+        ],
+        "porque": "Na emergência, decidir na hora custa tempo. Um plano combinado antes tira a dúvida do caminho.",
+        "dica": "Faz o trajeto até o ponto de encontro uma vez com a família, de dia, com calma."
+      },
+      "perfil_variacoes": {}
+    },
+    {
+      "id": 6,
+      "titulo": "Durante a emergência",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Nunca atravesse água em movimento.",
+          "Desligue a energia.",
+          "Suba para um lugar alto. Não saia de carro.",
+          "Em deslizamento: saia na hora e avise os vizinhos.",
+          "Ligue 199."
+        ],
+        "porque": "Pouca água em movimento já derruba uma pessoa e arrasta um carro.",
+        "dica": "Carro não é abrigo em enchente. Se a água subiu, sobe você também."
+      },
+      "perfil_variacoes": {
+        "encosta": {
+          "dica": "Na encosta, a regra é uma só: sinal de deslizamento, sai na hora e avisa quem mora do lado."
+        },
+        "baixada": {
+          "dica": "Na baixada, desliga a energia antes de a água entrar e sobe para o ponto mais alto."
+        },
+        "aberto": {
+          "dica": "No vendaval, fica longe de janelas, árvores e fiação."
+        }
+      }
+    },
+    {
+      "id": 7,
+      "titulo": "Depois da água baixar",
+      "rascunho": true,
+      "abas": {
+        "passo": [
+          "Só volte para casa com liberação da Defesa Civil.",
+          "Cuidado com água contaminada e animais.",
+          "Fotografe as perdas para documentação."
+        ],
+        "porque": "O perigo não termina quando a água baixa: estrutura danificada, contaminação e animais continuam ali.",
+        "dica": "Antes de limpar, fotografa tudo. Essas fotos ajudam na documentação das perdas."
+      },
+      "perfil_variacoes": {}
+    }
+  ]
+}
