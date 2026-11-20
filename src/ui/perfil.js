@@ -1,6 +1,6 @@
 // Seletor de perfil de risco: "Onde você mora?" (BRIEF §3.1, passo 2).
 
-const ICONES = { encosta: '⛰️', baixada: '🌊', aberto: '🌬️' };
+import { icone } from './icones.js';
 
 export function criarSeletorPerfil({ elemento, perfis, aoEscolher }) {
   const botoes = [];
@@ -10,7 +10,7 @@ export function criarSeletorPerfil({ elemento, perfis, aoEscolher }) {
     b.className = 'cartao-perfil';
     b.dataset.perfil = chave;
     b.setAttribute('aria-pressed', 'false');
-    b.innerHTML = `<span class="icone" aria-hidden="true">${ICONES[chave] ?? ''}</span>
+    b.innerHTML = `<span class="icone">${icone(chave)}</span>
       <strong></strong><span class="enfase"></span>`;
     b.querySelector('strong').textContent = p.titulo;
     b.querySelector('.enfase').textContent = `Ênfase em ${p.enfase}`;

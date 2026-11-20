@@ -11,6 +11,9 @@ import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
 import { criarLicaoMontagem } from './licoes/montagem.js';
+import { aplicarIcones, icone } from './ui/icones.js';
+
+aplicarIcones();
 
 const $ = (s) => document.querySelector(s);
 const CHAVE_PERFIL = 'trilha.perfil';
@@ -114,12 +117,14 @@ $('#abrir-menu').addEventListener('click', () => {
 });
 $('#fechar-menu').addEventListener('click', fecharMenu);
 document.addEventListener('keydown', (e) => e.key === 'Escape' && fecharMenu());
+const ICONES_MENU = ['mapa', 'celular', 'mochila', 'alerta', 'rota', 'chuva', 'sol'];
 for (const l of dados.licoes) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = `?parada=${l.id}`;
   a.className = 'menu-item';
-  a.textContent = `${l.id}. ${l.titulo}${l.etapas ? ' · 3D' : ''}`;
+  a.innerHTML = `${icone(ICONES_MENU[l.id - 1])} <span></span>`;
+  a.querySelector('span').textContent = `${l.id}. ${l.titulo}${l.etapas ? ' · 3D' : ''}`;
   li.appendChild(a);
   $('#menu-paradas').appendChild(li);
 }
@@ -148,7 +153,7 @@ $('.controles').addEventListener('click', (e) => {
     palco.pausado = !palco.pausado;
     b.setAttribute('aria-pressed', String(palco.pausado));
     b.setAttribute('aria-label', palco.pausado ? 'Continuar' : 'Pausar');
-    b.textContent = palco.pausado ? '▶' : '⏸';
+    b.innerHTML = icone(palco.pausado ? 'tocar' : 'pausar');
   }
   if (acao === 'velocidade') {
     const v = VELOCIDADES[(VELOCIDADES.indexOf(palco.velocidade) + 1) % VELOCIDADES.length];
@@ -167,7 +172,8 @@ function progresso({ rotulo, feitas, total }) {
 }
 
 // ---------- Modos ----------
-const ICONES_PARADA = ['🗺️', '📱', '🎒', '⚠️', '🏃', '🌧️', '☀️'];
+const ICONES_PARADA = ['mapa', 'celular', 'mochila', 'alerta', 'rota', 'chuva', 'sol'];
+const letreiro = document.getElementById('letreiro');
 
 function irParaParada(id) {
   if (id < 1 || id > dados.licoes.length) return;
@@ -177,6 +183,7 @@ function irParaParada(id) {
 
 function mostrarTrilha(selecionada = null) {
   document.body.dataset.modo = 'trilha';
+  letreiro.textContent = 'Prepare-se';
   palco.definirCena(cena1);
   cena1.selecionar(selecionada);
   cena1.aoTocar = (n) => irParaParada(n);
@@ -236,6 +243,7 @@ function mostrarLicaoSimples(l) {
 
 function mostrarLicaoMontagem(l) {
   document.body.dataset.modo = 'licao';
+  letreiro.textContent = l.letreiro ?? l.titulo;
   if (!desktop.matches) guia.recolher(true);
   palco.definirCena(cenaKit);
   licaoAtiva = criarLicaoMontagem({
@@ -260,7 +268,7 @@ function rotear() {
   etiquetas.limpar();
   palco.pausado = false;
   const bp = document.querySelector('[data-acao=pausar]');
-  bp.textContent = '⏸';
+  bp.innerHTML = icone('pausar');
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
   if (!l) return mostrarTrilha();

@@ -178,7 +178,7 @@ export function criarLicaoMontagem({ licao, cena, palco, guia, linhaTempo, etiqu
       const b = botao('Próxima etapa →', () => irPara(etapa + 1), 'botao primario pulsar');
       el.appendChild(b);
     } else if (fim && !final) {
-      el.appendChild(botao('🎒 Guardar tudo na mochila', guardar, 'botao primario pulsar'));
+      el.appendChild(botao('Guardar tudo na mochila', guardar, 'botao primario pulsar'));
     }
     if (final) {
       const div = document.createElement('div');

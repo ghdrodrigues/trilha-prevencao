@@ -1,6 +1,8 @@
 // Linha do tempo na base da tela: cartões de etapa (ou de parada, no mapa)
 // com anterior/próxima. No celular vira uma faixa com rolagem horizontal.
 
+import { icone } from './icones.js';
+
 export function criarLinhaTempo(elemento, { aoEscolher }) {
   let itens = [];
   let atual = 0;
@@ -9,8 +11,8 @@ export function criarLinhaTempo(elemento, { aoEscolher }) {
     <p class="lt-rotulo"></p>
     <div class="lt-trilho"><ol class="lt-itens"></ol></div>
     <div class="lt-nav">
-      <button type="button" class="icone-botao lt-anterior" aria-label="Anterior">‹</button>
-      <button type="button" class="icone-botao lt-proxima primario" aria-label="Próxima">›</button>
+      <button type="button" class="icone-botao lt-anterior" aria-label="Anterior">${icone('anterior')}</button>
+      <button type="button" class="icone-botao lt-proxima primario" aria-label="Próxima">${icone('proxima')}</button>
     </div>`;
   const ol = elemento.querySelector('.lt-itens');
   const rotulo = elemento.querySelector('.lt-rotulo');
@@ -30,7 +32,7 @@ export function criarLinhaTempo(elemento, { aoEscolher }) {
       b.type = 'button';
       b.className = 'lt-cartao';
       b.innerHTML = `<span class="lt-icone" aria-hidden="true"></span><span class="lt-texto"><span class="lt-num">${i + 1}.</span> <span class="lt-titulo"></span></span><span class="lt-marca"></span>`;
-      b.querySelector('.lt-icone').textContent = it.icone ?? '';
+      b.querySelector('.lt-icone').innerHTML = it.icone ? icone(it.icone) : '';
       b.querySelector('.lt-titulo').textContent = it.titulo;
       b.querySelector('.lt-marca').textContent = it.marca ?? '';
       b.addEventListener('click', () => aoEscolher(i));

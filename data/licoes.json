@@ -68,7 +68,7 @@
           "id": "mochila",
           "titulo": "A mochila",
           "curto": "Mochila",
-          "icone": "🎒",
+          "icone": "mochila",
           "resumo": "O kit cabe numa mochila que você pega em segundos.",
           "subpassos": [
             {
@@ -97,7 +97,7 @@
           "id": "agua",
           "titulo": "Água",
           "curto": "Água",
-          "icone": "💧",
+          "icone": "agua",
           "resumo": "Água para beber é o primeiro item do kit.",
           "subpassos": [
             {
@@ -120,7 +120,7 @@
           "id": "comida",
           "titulo": "Comida",
           "curto": "Comida",
-          "icone": "🥫",
+          "icone": "lata",
           "resumo": "Alimentos que não estragam e não precisam de preparo.",
           "subpassos": [
             {
@@ -152,7 +152,7 @@
           "id": "documentos",
           "titulo": "Documentos",
           "curto": "Documentos",
-          "icone": "📄",
+          "icone": "documento",
           "resumo": "Documentos da família protegidos da água.",
           "subpassos": [
             {
@@ -181,7 +181,7 @@
           "id": "luz",
           "titulo": "Luz e comunicação",
           "curto": "Luz e rádio",
-          "icone": "🔦",
+          "icone": "lanterna",
           "resumo": "Para enxergar e se informar sem energia elétrica.",
           "subpassos": [
             {
@@ -217,7 +217,7 @@
           "id": "saude",
           "titulo": "Saúde e sinal",
           "curto": "Saúde e apito",
-          "icone": "💊",
+          "icone": "saude",
           "resumo": "Remédios de quem precisa e um jeito de pedir socorro.",
           "subpassos": [
             {
@@ -242,7 +242,8 @@
             "Anote numa folha os remédios e as doses de cada pessoa da família e guarde no kit."
           ]
         }
-      ]
+      ],
+      "letreiro": "Kit 72h"
     },
     {
       "id": 4,
