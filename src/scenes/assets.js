@@ -27,6 +27,11 @@ export const MODELOS = {
   kitCarregador: 'kit-carregador.glb',
   kitRemedios: 'kit-remedios.glb',
   kitApito: 'kit-apito.glb',
+  // Personagens animados (Agente + um vizinho por perfil)
+  agente: 'personagem-agente.glb',
+  vizinhoEncosta: 'personagem-encosta.glb',
+  vizinhoBaixada: 'personagem-baixada.glb',
+  vizinhoAberto: 'personagem-interior.glb',
   casaSinais: 'casa-sinais.glb', // 4. Casa com sinais (cena 4)
   bairro: 'bairro-rota.glb', // 5. Bairro com rota (cena 5)
   ruaAlagada: 'rua-alagada.glb', // 6. Rua alagada (cena 6)
@@ -122,4 +127,19 @@ function encaixar(modelo, placeholder, grupo, fator = 1) {
   modelo.position.x += centroAlvo.x - centro.x;
   modelo.position.z += centroAlvo.z - centro.z;
   modelo.position.y += alvo.min.y - depois.min.y;
+}
+
+/**
+ * Carrega um GLB inteiro (com esqueleto e animações), sem encaixe em primitiva.
+ * Resolve com o gltf, ou null se o arquivo não estiver em disponiveis.json.
+ */
+export function carregarModelo(chave) {
+  const arquivo = MODELOS[chave];
+  return disponiveis.then((lista) => {
+    if (!arquivo || !lista.has(arquivo)) return null;
+    return loader.loadAsync(`${base}models/${arquivo}`).catch(() => {
+      console.warn(`Modelo ${arquivo} não carregou.`);
+      return null;
+    });
+  });
 }

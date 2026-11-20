@@ -13,6 +13,7 @@ import { criarSeletorPerfil } from './ui/perfil.js';
 import { criarLicaoMontagem } from './licoes/montagem.js';
 import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
+import { criarPersonagensRisco } from './scenes/personagens-risco.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
 aplicarIcones();
@@ -77,6 +78,8 @@ const cenaKit = criarCenaKit();
 cenaKit.conectar(palco);
 const efeitosRisco = criarEfeitosRisco({ cena1, palco });
 cena1.raiz.add(efeitosRisco.grupo);
+const personagensRisco = criarPersonagensRisco({ palco });
+cena1.raiz.add(personagensRisco.grupo);
 // Cena da parada 1: o mesmo mapa, sem marcadores, com os efeitos de risco.
 const cenaRisco = {
   raiz: cena1.raiz,
@@ -85,6 +88,7 @@ const cenaRisco = {
   animar: (t, dt, r) => {
     cena1.animar(t, dt, r);
     efeitosRisco.animar(t, dt, r);
+    personagensRisco.animar(t, dt, r);
   },
 };
 
@@ -214,6 +218,7 @@ function mostrarTrilha(selecionada = null) {
   document.body.dataset.modo = 'trilha';
   letreiro.textContent = 'Prepare-se';
   efeitosRisco.limpar();
+  personagensRisco.sair();
   cena1.mostrarTrilha(true);
   palco.definirCena(cena1);
   cena1.selecionar(selecionada);
@@ -304,6 +309,7 @@ function mostrarLicaoRoteiro(l) {
     licao: l,
     perfil,
     efeitos: efeitosRisco,
+    personagens: personagensRisco,
     enquadramentos: ENQUADRAMENTOS,
     palco,
     guia,
