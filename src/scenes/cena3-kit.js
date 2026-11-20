@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { assetTrocavel } from './assets.js';
 import { easing } from '../motor/tween.js';
+import * as TX from './texturas.js';
 
 const COR = {
   laranja: 0xf77f00,
@@ -28,8 +29,9 @@ const COR = {
 // Materiais: sombreamento suave e brilho moderado (o ambiente do palco dá reflexos).
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.6, ...extra });
 const plastico = (color) => mat(color, { roughness: 0.45 });
-const tecido = (color) => mat(color, { roughness: 0.9 });
-const metal = (color) => mat(color, { roughness: 0.3, metalness: 0.75 });
+const tecido = (color, rep = [6, 6]) => mat(color, { roughness: 0.88, bumpMap: TX.tramaTecido(rep), bumpScale: 1.5 });
+const metal = (color) => mat(color, { roughness: 0.45, metalness: 0.8, roughnessMap: TX.metalEscovado() });
+const comMapa = (map, extra = {}) => mat(0xffffff, { map, roughness: 0.5, ...extra });
 
 function malha(geo, material, pos = [0, 0, 0], rot = [0, 0, 0]) {
   const m = new THREE.Mesh(geo, material);
@@ -84,7 +86,7 @@ function garrafa() {
   // água dentro
   g.add(malha(torno([[0, 0.03], [0.3, 0.03], [0.3, 1.0], [0, 1.0]]), mat(0x5fb3e6, { roughness: 0.1, transparent: true, opacity: 0.55 })));
   g.add(malha(new THREE.CylinderGeometry(0.19, 0.19, 0.2, 24), plastico(COR.tampa), [0, 1.55, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.335, 0.335, 0.38, 32, 1, true), plastico(COR.branco), [0, 0.68, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.335, 0.335, 0.38, 32, 1, true), comMapa(TX.rotuloGarrafa(), { roughness: 0.35 }), [0, 0.68, 0]));
   return g;
 }
 
@@ -94,8 +96,7 @@ function lata() {
   // corpo com frisos e bordas
   g.add(malha(torno([[0, 0], [0.3, 0], [0.34, 0.03], [0.34, 0.6], [0.3, 0.63], [0, 0.63]]), aco));
   for (const y of [0.05, 0.58]) g.add(malha(new THREE.TorusGeometry(0.335, 0.015, 6, 32), aco, [0, y, 0], [Math.PI / 2, 0, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.343, 0.343, 0.4, 32, 1, true), mat(COR.vermelho, { roughness: 0.5 }), [0, 0.31, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.345, 0.345, 0.08, 32, 1, true), mat(COR.amarelo), [0, 0.31, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.343, 0.343, 0.46, 40, 1, true), comMapa(TX.rotuloLata(), { roughness: 0.4 }), [0, 0.31, 0]));
   // anel de abertura
   g.add(malha(new THREE.TorusGeometry(0.08, 0.015, 6, 16), aco, [0.12, 0.64, 0], [Math.PI / 2, 0, 0]));
   return g;
@@ -103,8 +104,7 @@ function lata() {
 
 function barra() {
   const g = new THREE.Group();
-  g.add(malha(caixa(1.0, 0.16, 0.36, 0.06, 3), plastico(COR.amarelo), [0, 0.08, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.42, 0.165, 0.365), plastico(COR.verde), [0, 0.08, 0]));
+  g.add(malha(new THREE.BoxGeometry(1.0, 0.16, 0.36), comMapa(TX.embalagemBarra(), { roughness: 0.3, metalness: 0.15 }), [0, 0.08, 0]));
   // pontas seladas da embalagem
   for (const x of [-0.53, 0.53]) g.add(malha(new THREE.BoxGeometry(0.08, 0.04, 0.38), plastico(COR.amarelo), [x, 0.08, 0]));
   return g;
@@ -113,9 +113,9 @@ function barra() {
 function documentos() {
   const g = new THREE.Group();
   // carteira de identidade, carteira de trabalho e folha
-  g.add(malha(caixa(1.0, 0.06, 1.35, 0.02, 2), mat(COR.papel), [0, 0.04, 0]));
-  g.add(malha(caixa(0.6, 0.08, 0.85, 0.03, 2), mat(0x2f5f9e), [-0.12, 0.1, -0.12], [0, 0.12, 0]));
-  g.add(malha(caixa(0.55, 0.05, 0.36, 0.02, 2), mat(0x3f8f5a), [0.2, 0.15, 0.3], [0, -0.2, 0]));
+  g.add(malha(new THREE.BoxGeometry(1.0, 0.04, 1.35), comMapa(TX.folhaPapel(), { roughness: 0.9 }), [0, 0.03, 0]));
+  g.add(malha(new THREE.BoxGeometry(0.6, 0.06, 0.85), comMapa(TX.capaDocumento('#2f5f9e', 'DOCUMENTO'), { roughness: 0.7 }), [-0.12, 0.09, -0.12], [0, 0.12, 0]));
+  g.add(malha(new THREE.BoxGeometry(0.55, 0.04, 0.36), comMapa(TX.capaDocumento('#3f8f5a', 'CARTÃO'), { roughness: 0.6 }), [0.2, 0.14, 0.3], [0, -0.2, 0]));
   // saco plástico com fecho
   g.add(
     malha(
@@ -144,9 +144,8 @@ function radio() {
   const g = new THREE.Group();
   g.add(malha(caixa(1.4, 0.9, 0.5, 0.12, 4), plastico(0x3d6e4a), [0, 0.45, 0]));
   // alto-falante com furos
-  g.add(malha(new THREE.CylinderGeometry(0.28, 0.28, 0.04, 32), mat(COR.preto, { roughness: 0.8 }), [-0.32, 0.45, 0.25], [Math.PI / 2, 0, 0]));
-  const furo = new THREE.SphereGeometry(0.025, 6, 4);
-  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) g.add(malha(furo, mat(0x111111), [-0.44 + i * 0.08, 0.33 + j * 0.08, 0.27]));
+  g.add(malha(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 40), metal(COR.metalEscuro), [-0.32, 0.45, 0.25], [Math.PI / 2, 0, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.27, 0.27, 0.045, 40), comMapa(TX.gradeAltoFalante(), { roughness: 0.7 }), [-0.32, 0.45, 0.255], [Math.PI / 2, 0, 0]));
   // visor e botões
   g.add(malha(caixa(0.5, 0.24, 0.04, 0.03, 2), mat(0xf3e9c6, { emissive: 0x403410, emissiveIntensity: 0.3 }), [0.3, 0.58, 0.25]));
   g.add(malha(new THREE.BoxGeometry(0.02, 0.18, 0.045), mat(COR.vermelho), [0.36, 0.58, 0.26]));
@@ -209,7 +208,7 @@ function apito() {
 
 function lona() {
   const g = new THREE.Group();
-  const l = malha(new THREE.BoxGeometry(13, 0.08, 8.5), mat(COR.lona, { roughness: 0.95 }), [0, -0.04, 0.4]);
+  const l = malha(new THREE.BoxGeometry(13, 0.08, 8.5), mat(0xffffff, { map: TX.lonaCor(), roughness: 0.95, bumpMap: TX.tramaTecido([40, 26]), bumpScale: 0.6 }), [0, -0.04, 0.4]);
   l.castShadow = false;
   g.add(l);
   // costura tracejada na borda
@@ -267,6 +266,8 @@ export function criarCenaKit() {
 
   const objetos = {};
   const ancoras = {};
+  const sombras = {};
+  const texSombra = TX.sombraContato();
   for (const [id, def] of Object.entries(OBJETOS)) {
     const grupo = assetTrocavel(def.glb, def.fabrica());
     const [x, z, r] = def.pos;
@@ -283,6 +284,22 @@ export function criarCenaKit() {
     ancora.position.set(0, caixa.max.y - caixa.min.y + 0.1, 0);
     grupo.add(ancora);
     ancoras[id] = ancora;
+    // Sombra de contato: mancha escura colada na lona, do tamanho da base.
+    const larg = (caixa.max.x - caixa.min.x) * 1.35;
+    const prof = (caixa.max.z - caixa.min.z) * 1.35;
+    const sombra = new THREE.Mesh(
+      new THREE.PlaneGeometry(1, 1),
+      new THREE.MeshBasicMaterial({ map: texSombra, transparent: true, opacity: 0.5, depthWrite: false, color: 0x2a2010 }),
+    );
+    sombra.rotation.x = -Math.PI / 2;
+    sombra.position.set((caixa.max.x + caixa.min.x) / 2, 0.006, (caixa.max.z + caixa.min.z) / 2);
+    sombra.userData.base = [larg, prof];
+    sombra.userData.desvio = [sombra.position.x - x, sombra.position.z - z];
+    sombra.scale.set(larg, prof, 1);
+    sombra.visible = false;
+    sombra.renderOrder = 1;
+    raiz.add(sombra);
+    sombras[id] = sombra;
   }
 
   let palco = null;
@@ -400,6 +417,20 @@ export function criarCenaKit() {
 
   function animar(tempo, dt, reduzido) {
     for (const [id, o] of Object.entries(objetos)) {
+      // A sombra de contato acompanha o objeto: some e abre conforme ele sobe.
+      const s = sombras[id];
+      s.visible = o.visible;
+      if (o.visible) {
+        const alt = Math.max(o.position.y - o.userData.casa.y, 0);
+        const k = Math.max(0, 1 - alt / 4);
+        const [lw, lp] = s.userData.base;
+        const abre = 1 + alt * 0.25;
+        const esc = o.scale.x;
+        s.scale.set(lw * abre * esc, lp * abre * esc, 1);
+        s.material.opacity = 0.5 * k * k;
+        s.position.x = o.position.x + s.userData.desvio[0] * esc;
+        s.position.z = o.position.z + s.userData.desvio[1] * esc;
+      }
       if (!o.visible) continue;
       const casaY = o.userData.casa.y;
       if (flutuando.has(id) && !reduzido) {
