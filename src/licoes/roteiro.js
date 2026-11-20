@@ -2,9 +2,10 @@
 // subpasso leva a câmera a um ponto da cena (foco), dispara um efeito e mostra
 // uma etiqueta. Usada na parada 1 ("Conheça seu risco") sobre o mapa.
 
+import * as THREE from 'three';
 import { paragrafos, lista, avisoRascunho } from '../ui/guia.js';
 
-export function criarLicaoRoteiro({ licao, perfil, efeitos, enquadramentos, palco, guia, linhaTempo, etiquetas, progresso, aoTerminar }) {
+export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadramentos, palco, guia, linhaTempo, etiquetas, progresso, aoTerminar }) {
   // Etapas marcadas com ordenarPorPerfil mostram primeiro o perfil de quem usa.
   const etapas = licao.etapas.map((e) => {
     if (!e.ordenarPorPerfil || !perfil) return e;
@@ -38,6 +39,16 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, enquadramentos, palc
     etapas[ei].subpassos.slice(0, si).forEach((s) => efeitos.aplicar(s.efeito, { instantaneo: true }));
   }
 
+  // Personagens: a Agente vai para o foco e indica a âncora; o vizinho acena
+  // quando a zona dele aparece. Ações vêm do subpasso (agente, vizinho).
+  function encenar(s, foco) {
+    if (!personagens) return;
+    const ancora = s.ancora && efeitos.ancoras[s.ancora];
+    const mira = ancora ? ancora.getWorldPosition(new THREE.Vector3()) : null;
+    const vizinho = s.perfil && s.perfil === perfil ? 'acenar' : typeof s.vizinho === 'object' ? s.vizinho?.[perfil] : s.vizinho;
+    personagens.encenar({ foco, mira, agente: s.agente, vizinho });
+  }
+
   async function tocarSubpasso(ei, si, meu) {
     const s = etapas[ei].subpassos[si];
     sub = si;
@@ -49,6 +60,7 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, enquadramentos, palc
       await palco.enquadrar(enquadramentos[foco]);
       if (meu !== token) return false;
     }
+    encenar(s, foco);
     const efeito = efeitos.aplicar(s.efeito);
     if (s.ancora && efeitos.ancoras[s.ancora]) {
       etiquetas.adicionar('atual', { ancora: efeitos.ancoras[s.ancora], texto: textoEtiqueta(s) });
@@ -90,6 +102,7 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, enquadramentos, palc
 
   function parar() {
     token++;
+    personagens?.sair();
     efeitos.limpar();
     etiquetas.limpar();
   }
@@ -175,6 +188,7 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, enquadramentos, palc
       itens: etapas.map((e) => ({ icone: e.icone, titulo: e.curto ?? e.titulo })),
       atual: 0,
     });
+    personagens?.entrar(perfil);
     tocarEtapa(0, 0);
   }
 

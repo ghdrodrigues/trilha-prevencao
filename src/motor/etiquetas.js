@@ -63,9 +63,10 @@ export function criarEtiquetas(camada, palco) {
     v.project(palco.camera);
     const x = (v.x * 0.5 + 0.5) * w;
     const y = (-v.y * 0.5 + 0.5) * h;
-    // etiqueta vira para a esquerda perto da borda direita
-    const dx = x + e.dx + 180 > w ? -Math.abs(e.dx) : e.dx;
-    const lx = x + dx;
+    // etiqueta vira para a esquerda perto da borda direita e nunca sai da tela
+    const larg = e.el.offsetWidth || 180;
+    const dx = x + e.dx + larg > w - 8 ? -Math.abs(e.dx) : e.dx;
+    const lx = dx < 0 ? Math.max(x + dx, larg + 8) : Math.min(x + dx, w - larg - 8);
     const ly = Math.max(y + e.dy, margemTopo() + 18);
     e.el.style.transform = `translate(${lx}px, ${ly}px) translate(${dx < 0 ? '-100%' : '0'}, -50%)`;
     e.linha.setAttribute('x1', x);

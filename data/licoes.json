@@ -58,7 +58,8 @@
               "foco": "encosta",
               "efeito": "zona:encosta",
               "ancora": "encosta",
-              "etiqueta": "Encosta"
+              "etiqueta": "Encosta",
+              "agente": "apontar"
             },
             {
               "texto": "Beira de rio ou baixada: risco de enchente",
@@ -66,7 +67,8 @@
               "foco": "baixada",
               "efeito": "zona:baixada",
               "ancora": "baixada",
-              "etiqueta": "Baixada"
+              "etiqueta": "Baixada",
+              "agente": "apontar"
             },
             {
               "texto": "Área aberta ou interior: risco de vendaval e granizo",
@@ -74,12 +76,14 @@
               "foco": "aberto",
               "efeito": "zona:aberto",
               "ancora": "aberto",
-              "etiqueta": "Área aberta"
+              "etiqueta": "Área aberta",
+              "agente": "apontar"
             },
             {
               "texto": "Identifique o tipo de terreno onde você mora",
               "foco": "geral",
-              "efeito": "zonas"
+              "efeito": "zonas",
+              "agente": "acenar"
             }
           ],
           "explicacao": [
@@ -101,28 +105,35 @@
               "foco": "geral",
               "efeito": "chuva",
               "ancora": "chuva",
-              "etiqueta": "Chuva forte e contínua"
+              "etiqueta": "Chuva forte e contínua",
+              "agente": "radio"
             },
             {
               "texto": "Na encosta, a terra encharcada pode escorregar",
               "foco": "encosta",
               "efeito": "deslizamento",
               "ancora": "deslizamento",
-              "etiqueta": "Deslizamento"
+              "etiqueta": "Deslizamento",
+              "agente": "apontar",
+              "vizinho": {
+                "encosta": "examinar"
+              }
             },
             {
               "texto": "Na baixada, o rio sobe e chega às casas",
               "foco": "baixada",
               "efeito": "enchente",
               "ancora": "enchente",
-              "etiqueta": "Enchente"
+              "etiqueta": "Enchente",
+              "agente": "apontar"
             },
             {
               "texto": "Na área aberta, o vento forte verga árvores",
               "foco": "aberto",
               "efeito": "vento",
               "ancora": "vento",
-              "etiqueta": "Vendaval"
+              "etiqueta": "Vendaval",
+              "agente": "apontar"
             }
           ],
           "explicacao": [
@@ -144,13 +155,15 @@
               "foco": "baixada",
               "efeito": "marca",
               "ancora": "marca",
-              "etiqueta": "Até aqui a água já chegou"
+              "etiqueta": "Até aqui a água já chegou",
+              "agente": "apontar"
             },
             {
               "texto": "Pergunte a vizinhos antigos: já alagou? Já deslizou?",
               "foco": "baixada",
               "ancora": "vizinho",
-              "etiqueta": "Converse com o vizinho mais antigo"
+              "etiqueta": "Converse com o vizinho mais antigo",
+              "agente": "acenar"
             }
           ],
           "explicacao": [
@@ -172,12 +185,14 @@
               "foco": "geral",
               "efeito": "mapa",
               "ancora": "mapa",
-              "etiqueta": "Mapa de risco (ilustrativo)"
+              "etiqueta": "Mapa de risco (ilustrativo)",
+              "agente": "apontar"
             },
             {
               "texto": "Consulte o mapa de risco na Defesa Civil municipal",
               "foco": "geral",
-              "efeito": "mapa"
+              "efeito": "mapa",
+              "agente": "parado"
             }
           ],
           "nota": "As cores desta cena são ilustrativas. Não são o mapa oficial do seu município.",
