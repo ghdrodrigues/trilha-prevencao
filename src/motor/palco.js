@@ -3,6 +3,7 @@
 // lição (pausa e velocidade) e toque nos objetos.
 
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { Tweens, easing } from './tween.js';
 
 const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,15 +14,23 @@ export function criarPalco(container, { areaLivre }) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  // sombras com borda suave
   renderer.domElement.setAttribute('aria-hidden', 'true');
   container.appendChild(renderer.domElement);
 
   const cena = new THREE.Scene();
-  cena.add(new THREE.HemisphereLight(0xfff4e6, 0x6b5a48, 1.5));
+  // Ambiente de estúdio para reflexos suaves (plástico, metal, vidro).
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  cena.environmentIntensity = 0.35;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.92;
+  cena.add(new THREE.HemisphereLight(0xfff4e6, 0x6b5a48, 1.1));
   const sol = new THREE.DirectionalLight(0xffffff, 2.3);
   sol.castShadow = true;
   sol.shadow.mapSize.set(2048, 2048);
   sol.shadow.bias = -0.0005;
+  sol.shadow.radius = 4;
   Object.assign(sol.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 0.5, far: 60 });
   cena.add(sol, sol.target);
 

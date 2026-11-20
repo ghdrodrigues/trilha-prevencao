@@ -3,6 +3,7 @@
 // Cada subpasso da lição faz seus objetos entrarem voando e pousarem na lona.
 
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { assetTrocavel } from './assets.js';
 import { easing } from '../motor/tween.js';
 
@@ -24,7 +25,11 @@ const COR = {
   amarelo: 0xf4c20d,
 };
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.75, flatShading: true, ...extra });
+// Materiais: sombreamento suave e brilho moderado (o ambiente do palco dá reflexos).
+const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.6, ...extra });
+const plastico = (color) => mat(color, { roughness: 0.45 });
+const tecido = (color) => mat(color, { roughness: 0.9 });
+const metal = (color) => mat(color, { roughness: 0.3, metalness: 0.75 });
 
 function malha(geo, material, pos = [0, 0, 0], rot = [0, 0, 0]) {
   const m = new THREE.Mesh(geo, material);
@@ -35,111 +40,176 @@ function malha(geo, material, pos = [0, 0, 0], rot = [0, 0, 0]) {
   return m;
 }
 
-// ---------- Objetos (blockout em primitivas) ----------
+const caixa = (w, h, d, r = 0.06, seg = 3) => new RoundedBoxGeometry(w, h, d, seg, r);
+// Perfil girado (garrafas, latas, apito): pontos [raio, altura].
+const torno = (pts, seg = 32) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), seg);
+
+// ---------- Objetos (blockout refinado; o GLB do Tripo substitui cada um) ----------
 
 function mochila() {
   const g = new THREE.Group();
-  const corpo = mat(COR.laranja);
-  g.add(malha(new THREE.BoxGeometry(1.8, 2.3, 1.1), corpo, [0, 1.15, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.55, 0.55, 1.8, 12, 1, false, 0, Math.PI), corpo, [0, 2.3, 0], [0, 0, Math.PI / 2]));
-  g.add(malha(new THREE.BoxGeometry(1.3, 0.9, 0.35), mat(COR.laranjaEscuro), [0, 0.75, 0.68]));
-  for (const x of [-0.55, 0.55]) {
-    g.add(malha(new THREE.BoxGeometry(0.18, 2.2, 0.12), mat(COR.azul), [x, 1.3, -0.6]));
-  }
-  g.add(malha(new THREE.TorusGeometry(0.22, 0.05, 6, 12, Math.PI), mat(COR.azul), [0, 2.85, 0]));
+  const corpo = tecido(COR.laranja);
+  const escuro = tecido(COR.laranjaEscuro);
+  const alca = tecido(COR.azul);
+  // corpo arredondado, mais estreito em cima
+  g.add(malha(caixa(1.8, 2.2, 1.05, 0.32, 5), corpo, [0, 1.12, 0]));
+  g.add(malha(caixa(1.6, 0.5, 0.95, 0.24, 5), corpo, [0, 2.25, -0.02]));
+  // bolso frontal com zíper
+  g.add(malha(caixa(1.3, 1.0, 0.36, 0.14, 4), escuro, [0, 0.72, 0.62]));
+  g.add(malha(new THREE.BoxGeometry(1.1, 0.03, 0.02), metal(COR.metalEscuro), [0, 1.18, 0.81]));
+  g.add(malha(caixa(0.12, 0.2, 0.05, 0.02, 2), metal(COR.metal), [0.48, 1.12, 0.82]));
+  // zíper da tampa
+  g.add(malha(new THREE.TorusGeometry(0.62, 0.018, 6, 40, Math.PI), metal(COR.metalEscuro), [0, 2.2, 0.49]));
+  // bolsos laterais
+  for (const x of [-0.98, 0.98]) g.add(malha(caixa(0.3, 0.8, 0.7, 0.12, 3), escuro, [x, 0.6, 0.05]));
+  // alças nas costas e alça de mão
+  for (const x of [-0.5, 0.5]) g.add(malha(caixa(0.22, 2.0, 0.1, 0.05, 2), alca, [x, 1.25, -0.58]));
+  g.add(malha(new THREE.TorusGeometry(0.2, 0.05, 8, 16, Math.PI), alca, [0, 2.5, -0.05]));
+  // faixa refletiva
+  g.add(malha(new THREE.BoxGeometry(1.32, 0.08, 0.02), mat(0xe9eef2, { roughness: 0.2, metalness: 0.5 }), [0, 0.95, 0.81]));
   return g;
 }
 
 function garrafa() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.CylinderGeometry(0.32, 0.32, 1.3, 16), mat(COR.agua, { transparent: true, opacity: 0.85, roughness: 0.2 }), [0, 0.65, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.32, 0.18, 0.25, 16), mat(COR.agua, { transparent: true, opacity: 0.85, roughness: 0.2 }), [0, 1.42, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.19, 0.19, 0.18, 16), mat(COR.tampa), [0, 1.62, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.325, 0.325, 0.4, 16), mat(COR.branco), [0, 0.7, 0]));
+  const vidro = new THREE.MeshPhysicalMaterial({
+    color: 0xcfe9f7,
+    roughness: 0.08,
+    transmission: 0.6,
+    thickness: 0.4,
+    transparent: true,
+    opacity: 0.75,
+  });
+  g.add(malha(torno([[0, 0], [0.3, 0], [0.33, 0.06], [0.33, 1.05], [0.3, 1.2], [0.2, 1.38], [0.17, 1.45], [0, 1.45]]), vidro));
+  // água dentro
+  g.add(malha(torno([[0, 0.03], [0.3, 0.03], [0.3, 1.0], [0, 1.0]]), mat(0x5fb3e6, { roughness: 0.1, transparent: true, opacity: 0.55 })));
+  g.add(malha(new THREE.CylinderGeometry(0.19, 0.19, 0.2, 24), plastico(COR.tampa), [0, 1.55, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.335, 0.335, 0.38, 32, 1, true), plastico(COR.branco), [0, 0.68, 0]));
   return g;
 }
 
 function lata() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.CylinderGeometry(0.34, 0.34, 0.62, 18), mat(COR.metal, { metalness: 0.4, roughness: 0.4 }), [0, 0.31, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.345, 0.345, 0.38, 18), mat(COR.vermelho), [0, 0.31, 0]));
+  const aco = metal(0xc9ced4);
+  // corpo com frisos e bordas
+  g.add(malha(torno([[0, 0], [0.3, 0], [0.34, 0.03], [0.34, 0.6], [0.3, 0.63], [0, 0.63]]), aco));
+  for (const y of [0.05, 0.58]) g.add(malha(new THREE.TorusGeometry(0.335, 0.015, 6, 32), aco, [0, y, 0], [Math.PI / 2, 0, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.343, 0.343, 0.4, 32, 1, true), mat(COR.vermelho, { roughness: 0.5 }), [0, 0.31, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.345, 0.345, 0.08, 32, 1, true), mat(COR.amarelo), [0, 0.31, 0]));
+  // anel de abertura
+  g.add(malha(new THREE.TorusGeometry(0.08, 0.015, 6, 16), aco, [0.12, 0.64, 0], [Math.PI / 2, 0, 0]));
   return g;
 }
 
 function barra() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.BoxGeometry(1.0, 0.16, 0.36), mat(COR.amarelo), [0, 0.08, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.4, 0.165, 0.365), mat(COR.verde), [0, 0.08, 0]));
+  g.add(malha(caixa(1.0, 0.16, 0.36, 0.06, 3), plastico(COR.amarelo), [0, 0.08, 0]));
+  g.add(malha(new THREE.BoxGeometry(0.42, 0.165, 0.365), plastico(COR.verde), [0, 0.08, 0]));
+  // pontas seladas da embalagem
+  for (const x of [-0.53, 0.53]) g.add(malha(new THREE.BoxGeometry(0.08, 0.04, 0.38), plastico(COR.amarelo), [x, 0.08, 0]));
   return g;
 }
 
 function documentos() {
   const g = new THREE.Group();
-  const cores = [0x3b6fb6, COR.verde, COR.papel];
-  cores.forEach((c, i) => {
-    g.add(malha(new THREE.BoxGeometry(1.05 - i * 0.12, 0.05, 1.4 - i * 0.15), mat(c), [i * 0.06, 0.04 + i * 0.05, i * 0.04], [0, 0.08 * i, 0]));
-  });
-  // Saco plástico: caixa transparente por cima.
+  // carteira de identidade, carteira de trabalho e folha
+  g.add(malha(caixa(1.0, 0.06, 1.35, 0.02, 2), mat(COR.papel), [0, 0.04, 0]));
+  g.add(malha(caixa(0.6, 0.08, 0.85, 0.03, 2), mat(0x2f5f9e), [-0.12, 0.1, -0.12], [0, 0.12, 0]));
+  g.add(malha(caixa(0.55, 0.05, 0.36, 0.02, 2), mat(0x3f8f5a), [0.2, 0.15, 0.3], [0, -0.2, 0]));
+  // saco plástico com fecho
   g.add(
-    malha(new THREE.BoxGeometry(1.35, 0.26, 1.75), new THREE.MeshStandardMaterial({ color: 0xe8f4fb, transparent: true, opacity: 0.35, roughness: 0.1 }), [0.05, 0.13, 0.03]),
+    malha(
+      caixa(1.35, 0.28, 1.75, 0.1, 3),
+      new THREE.MeshPhysicalMaterial({ color: 0xeaf6fd, roughness: 0.05, transmission: 0.7, transparent: true, opacity: 0.35 }),
+      [0.03, 0.14, 0.03],
+    ),
   );
-  g.add(malha(new THREE.BoxGeometry(1.36, 0.06, 0.08), mat(COR.azul), [0.05, 0.27, -0.84]));
+  g.add(malha(caixa(1.36, 0.06, 0.1, 0.02, 2), plastico(COR.azul), [0.03, 0.27, -0.82]));
   return g;
 }
 
 function lanterna() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.CylinderGeometry(0.17, 0.17, 1.0, 12), mat(COR.preto), [0, 0.2, 0], [0, 0, Math.PI / 2]));
-  g.add(malha(new THREE.CylinderGeometry(0.3, 0.18, 0.35, 12), mat(COR.laranja), [0.66, 0.3, 0], [0, 0, Math.PI / 2]));
-  g.add(malha(new THREE.CylinderGeometry(0.27, 0.27, 0.03, 16), mat(0xfff7c2, { emissive: 0xffe680, emissiveIntensity: 0.6 }), [0.84, 0.3, 0], [0, 0, Math.PI / 2]));
+  // perfil: corpo, empunhadura e cabeça
+  const perfil = torno([[0, -0.55], [0.15, -0.55], [0.17, -0.5], [0.17, 0.15], [0.2, 0.2], [0.28, 0.42], [0.3, 0.5], [0, 0.5]], 28);
+  const corpo = malha(perfil, mat(COR.preto, { roughness: 0.4 }), [0, 0.3, 0], [0, 0, -Math.PI / 2]);
+  g.add(corpo);
+  for (const x of [-0.35, -0.2, -0.05]) g.add(malha(new THREE.TorusGeometry(0.172, 0.018, 6, 24), mat(COR.laranja), [x, 0.3, 0], [0, Math.PI / 2, 0]));
+  g.add(malha(new THREE.CylinderGeometry(0.27, 0.27, 0.02, 28), mat(0xfff7c2, { emissive: 0xffe680, emissiveIntensity: 0.8 }), [0.5, 0.3, 0], [0, 0, Math.PI / 2]));
+  g.add(malha(caixa(0.12, 0.05, 0.1, 0.02, 2), plastico(COR.laranja), [-0.15, 0.48, 0]));
   return g;
 }
 
 function radio() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.BoxGeometry(1.4, 0.9, 0.5), mat(COR.verde), [0, 0.45, 0]));
-  g.add(malha(new THREE.CylinderGeometry(0.28, 0.28, 0.06, 16), mat(COR.preto), [-0.32, 0.45, 0.26], [Math.PI / 2, 0, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.5, 0.25, 0.05), mat(COR.papel), [0.32, 0.55, 0.26]));
-  g.add(malha(new THREE.CylinderGeometry(0.03, 0.03, 1.1, 6), mat(COR.metalEscuro), [0.55, 1.25, -0.1], [0, 0, -0.35]));
+  g.add(malha(caixa(1.4, 0.9, 0.5, 0.12, 4), plastico(0x3d6e4a), [0, 0.45, 0]));
+  // alto-falante com furos
+  g.add(malha(new THREE.CylinderGeometry(0.28, 0.28, 0.04, 32), mat(COR.preto, { roughness: 0.8 }), [-0.32, 0.45, 0.25], [Math.PI / 2, 0, 0]));
+  const furo = new THREE.SphereGeometry(0.025, 6, 4);
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) g.add(malha(furo, mat(0x111111), [-0.44 + i * 0.08, 0.33 + j * 0.08, 0.27]));
+  // visor e botões
+  g.add(malha(caixa(0.5, 0.24, 0.04, 0.03, 2), mat(0xf3e9c6, { emissive: 0x403410, emissiveIntensity: 0.3 }), [0.3, 0.58, 0.25]));
+  g.add(malha(new THREE.BoxGeometry(0.02, 0.18, 0.045), mat(COR.vermelho), [0.36, 0.58, 0.26]));
+  for (const x of [0.15, 0.45]) g.add(malha(new THREE.CylinderGeometry(0.07, 0.07, 0.08, 16), metal(COR.metal), [x, 0.27, 0.27], [Math.PI / 2, 0, 0]));
+  // antena telescópica
+  g.add(malha(new THREE.CylinderGeometry(0.025, 0.035, 1.1, 8), metal(COR.metal), [0.5, 1.4, -0.1], [0, 0, -0.35]));
+  g.add(malha(new THREE.SphereGeometry(0.045, 10, 8), metal(COR.metal), [0.69, 1.92, -0.1]));
+  // alça
+  g.add(malha(new THREE.TorusGeometry(0.42, 0.04, 8, 24, Math.PI), plastico(COR.preto), [0, 0.9, -0.05]));
   return g;
 }
 
 function carregador() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.BoxGeometry(0.6, 0.18, 1.0), mat(COR.azul), [0, 0.09, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.3, 0.03, 0.08), mat(0x7cf28a, { emissive: 0x3cc45a, emissiveIntensity: 0.5 }), [0, 0.19, 0.3]));
-  g.add(malha(new THREE.TorusGeometry(0.32, 0.035, 6, 20), mat(COR.preto), [0.55, 0.04, -0.2], [Math.PI / 2, 0, 0]));
+  g.add(malha(caixa(0.6, 0.18, 1.0, 0.07, 3), plastico(COR.azul), [0, 0.09, 0]));
+  for (let i = 0; i < 4; i++) {
+    g.add(malha(new THREE.CylinderGeometry(0.025, 0.025, 0.02, 10), mat(0x7cf28a, { emissive: 0x3cc45a, emissiveIntensity: i < 3 ? 0.9 : 0 }), [-0.12 + i * 0.08, 0.185, 0.3]));
+  }
+  // cabo enrolado
+  const pts = [];
+  for (let i = 0; i <= 60; i++) {
+    const a = (i / 60) * Math.PI * 3.2;
+    pts.push(new THREE.Vector3(0.62 + Math.cos(a) * 0.28, 0.03 + i * 0.0006, -0.15 + Math.sin(a) * 0.28));
+  }
+  pts.push(new THREE.Vector3(0.3, 0.06, -0.42));
+  pts.push(new THREE.Vector3(0.05, 0.09, -0.5));
+  g.add(malha(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 120, 0.025, 6), plastico(COR.preto)));
   return g;
 }
 
 function remedios() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.BoxGeometry(1.2, 0.55, 0.8), mat(COR.branco), [0, 0.28, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.42, 0.04, 0.13), mat(COR.vermelho), [0, 0.57, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.13, 0.04, 0.42), mat(COR.vermelho), [0, 0.57, 0]));
-  g.add(malha(new THREE.BoxGeometry(0.5, 0.08, 0.1), mat(COR.metalEscuro), [0, 0.6, -0.3]));
+  g.add(malha(caixa(1.2, 0.55, 0.8, 0.1, 4), plastico(COR.branco), [0, 0.28, 0]));
+  g.add(malha(new THREE.BoxGeometry(1.21, 0.04, 0.81), plastico(0xd8d8d8), [0, 0.42, 0]));
+  g.add(malha(caixa(0.42, 0.03, 0.13, 0.015, 2), mat(COR.vermelho), [0, 0.56, 0]));
+  g.add(malha(caixa(0.13, 0.03, 0.42, 0.015, 2), mat(COR.vermelho), [0, 0.56, 0]));
+  g.add(malha(new THREE.TorusGeometry(0.16, 0.035, 8, 16, Math.PI), plastico(COR.metalEscuro), [0, 0.55, -0.3], [-Math.PI / 2, 0, 0]));
+  // cartela de comprimidos ao lado
+  g.add(malha(caixa(0.5, 0.03, 0.3, 0.01, 2), metal(0xdfe3e7), [0.85, 0.02, 0.3], [0, 0.4, 0]));
   return g;
 }
 
 function apito() {
   const g = new THREE.Group();
-  g.add(malha(new THREE.CylinderGeometry(0.17, 0.17, 0.55, 12), mat(COR.laranja), [0, 0.17, 0], [0, 0, Math.PI / 2]));
-  g.add(malha(new THREE.BoxGeometry(0.4, 0.12, 0.22), mat(COR.laranja), [0.4, 0.22, 0]));
-  g.add(malha(new THREE.TorusGeometry(0.12, 0.03, 6, 12), mat(COR.azul), [-0.32, 0.17, 0], [0, Math.PI / 2, 0]));
-  // cordão
+  const laranja = plastico(COR.laranja);
+  g.add(malha(new THREE.CylinderGeometry(0.17, 0.17, 0.5, 24), laranja, [0, 0.17, 0], [0, 0, Math.PI / 2]));
+  g.add(malha(caixa(0.4, 0.12, 0.22, 0.04, 2), laranja, [0.38, 0.13, 0]));
+  g.add(malha(new THREE.BoxGeometry(0.1, 0.06, 0.18), mat(0x111111), [0.1, 0.33, 0]));
+  g.add(malha(new THREE.TorusGeometry(0.1, 0.025, 8, 16), metal(COR.metal), [-0.3, 0.17, 0], [0, Math.PI / 2, 0]));
   const curva = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.42, 0.05, 0),
+    new THREE.Vector3(-0.38, 0.12, 0),
     new THREE.Vector3(-0.9, 0.03, 0.4),
-    new THREE.Vector3(-0.6, 0.03, 0.9),
-    new THREE.Vector3(-0.1, 0.03, 0.6),
+    new THREE.Vector3(-0.6, 0.03, 0.95),
+    new THREE.Vector3(-0.05, 0.03, 0.65),
+    new THREE.Vector3(-0.35, 0.05, 0.1),
   ]);
-  g.add(malha(new THREE.TubeGeometry(curva, 24, 0.025, 5), mat(COR.azul)));
+  g.add(malha(new THREE.TubeGeometry(curva, 48, 0.025, 6), tecido(COR.azul)));
   return g;
 }
 
 function lona() {
   const g = new THREE.Group();
-  const l = malha(new THREE.BoxGeometry(13, 0.08, 8.5), mat(COR.lona, { flatShading: false }), [0, -0.04, 0.4]);
+  const l = malha(new THREE.BoxGeometry(13, 0.08, 8.5), mat(COR.lona, { roughness: 0.95 }), [0, -0.04, 0.4]);
   l.castShadow = false;
   g.add(l);
   // costura tracejada na borda
@@ -218,27 +288,53 @@ export function criarCenaKit() {
   let palco = null;
   const flutuando = new Set();
 
-  // Entrada: cai do alto girando e pousa no lugar com um quique.
+  // Entrada: cai do alto (aceleração da gravidade), achata no impacto,
+  // dá um quique curto e assenta. Nunca passa abaixo da lona.
   function entrar(id, { atraso = 0, reduzido = false } = {}) {
     const o = objetos[id];
     const casa = o.userData.casa;
+    const giroFinal = OBJETOS[id].pos[2];
     o.visible = true;
     if (reduzido) {
       o.position.copy(casa);
       o.scale.setScalar(1);
+      o.rotation.y = giroFinal;
       return Promise.resolve();
     }
-    const giro = o.rotation.y;
-    o.position.set(casa.x, 7, casa.z);
-    o.scale.setScalar(0.001);
+    const ALTURA = 6;
+    const QUEDA = 0.55; // fração do tempo em queda
+    o.position.set(casa.x, casa.y + ALTURA, casa.z);
+    o.scale.setScalar(0.6);
     return palco.tweens.animar({
-      duracao: 0.85,
+      duracao: 1.0,
       atraso,
-      ease: easing.pouso,
+      ease: easing.linear,
       aoAtualizar: (p) => {
-        o.position.y = 7 * (1 - p);
-        o.scale.setScalar(Math.max(0.001, Math.min(1, p * 1.6)));
-        o.rotation.y = giro + (1 - p) * Math.PI;
+        let y;
+        let sx = 1;
+        let sy = 1;
+        if (p < QUEDA) {
+          const t = p / QUEDA;
+          y = ALTURA * (1 - t * t);
+          const s = 0.6 + 0.4 * Math.min(t * 1.5, 1);
+          sx = s;
+          sy = s * (1 + 0.12 * t); // estica um pouco na queda
+        } else {
+          const t = (p - QUEDA) / (1 - QUEDA);
+          // quique amortecido acima do chão
+          y = Math.abs(Math.sin(t * Math.PI * 2)) * 0.35 * (1 - t) ** 2;
+          // achata no impacto e volta
+          const impacto = Math.max(0, 1 - t * 4);
+          sy = 1 - 0.22 * impacto;
+          sx = 1 + 0.12 * impacto;
+        }
+        o.position.y = casa.y + Math.max(y, 0);
+        o.scale.set(sx, sy, sx);
+        o.rotation.y = giroFinal + (1 - Math.min(p / QUEDA, 1)) * Math.PI * 0.6;
+        if (p >= 1) {
+          o.scale.setScalar(1);
+          o.rotation.y = giroFinal;
+        }
       },
     });
   }
