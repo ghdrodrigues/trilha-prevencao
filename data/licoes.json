@@ -1,5 +1,67 @@
 {
-  "_aviso": "RASCUNHO DE CONCEPÇÃO. Textos retirados do BRIEF.md §3.2. Validar com material oficial da Defesa Civil SC e da Defesa Civil Nacional antes de publicar. Não inventar protocolo. Lição 3: itens do BRIEF.md §3.2; explicações e dicas são placeholder sem fonte oficial.",
+  "_aviso": "RASCUNHO VALIDADO CONTRA FONTES OFICIAIS EM 20/11/2026 (ver _fontes e o campo fontes de cada lição/etapa). Continua rascunho até revisão da Defesa Civil SC. Não inventar protocolo: texto novo precisa de fonte em _fontes. 'sem_fonte' marca dica de voz sem protocolo ou dado de imprensa/pesquisa.",
+  "_fontes": {
+    "F1": {
+      "titulo": "Fenômeno Climático: Orientações e Perguntas Frequentes",
+      "orgao": "Defesa Civil SC",
+      "url": "https://www.defesacivil.sc.gov.br/fenomeno-climatico/"
+    },
+    "F2": {
+      "titulo": "Plano Emergencial Familiar",
+      "orgao": "Defesa Civil SC",
+      "url": "https://defesacivil.sc.gov.br/wp-content/uploads/2024/06/PLANO-EMERGENCIAL-FAMILIAR.pdf"
+    },
+    "F3": {
+      "titulo": "Saiba como agir: Chuvas Intensas",
+      "orgao": "SEDEC / Defesa Civil Nacional",
+      "url": "https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/informacoes-uteis/centro-nacional-de-gerenciamento-de-riscos-e-desastres-cenad/chuvasintensas.pdf"
+    },
+    "F4": {
+      "titulo": "Saiba como agir: Enxurradas",
+      "orgao": "SEDEC / Defesa Civil Nacional",
+      "url": "https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/informacoes-uteis/centro-nacional-de-gerenciamento-de-riscos-e-desastres-cenad/Enxurradas.pdf"
+    },
+    "F5": {
+      "titulo": "Saiba como agir: Tornados",
+      "orgao": "SEDEC / Defesa Civil Nacional",
+      "url": "https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/informacoes-uteis/centro-nacional-de-gerenciamento-de-riscos-e-desastres-cenad/Tornados.pdf"
+    },
+    "F6": {
+      "titulo": "Solicitar cadastro para recebimento de avisos e alertas de desastres",
+      "orgao": "gov.br / MIDR",
+      "url": "https://www.gov.br/pt-br/servicos/solicitar-cadastro-para-recebimento-de-avisos-e-alertas-de-desastres"
+    },
+    "F7": {
+      "titulo": "MIDR esclarece que kit de emergência é medida preventiva (07/11/2026)",
+      "orgao": "MIDR / Agência Gov",
+      "url": "https://agenciagov.ebc.com.br/noticias/202611/midr-esclarece-que-kit-de-emergencia-e-medida-preventiva-e-nao-tem-relacao-com-alerta-nacional"
+    },
+    "F8": {
+      "titulo": "Defesa Civil Alerta",
+      "orgao": "Anatel",
+      "url": "https://www.gov.br/anatel/pt-br/dados/utilidade-publica/alertas-de-desastres/defesa-civil-alerta"
+    },
+    "F9": {
+      "titulo": "Enchentes: cuidados com animais peçonhentos, água e alimentos",
+      "orgao": "Ministério da Saúde",
+      "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/e/enchentes"
+    },
+    "F10": {
+      "titulo": "Cartilhas Deslizamentos e Vendavais: como agir",
+      "orgao": "Defesa Civil de Joinville (SC)",
+      "url": "https://www.joinville.sc.gov.br/wp-content/uploads/2025/04/Cartilha-Deslizamentos-como-agir.pdf"
+    },
+    "REF-PR": {
+      "titulo": "Kit de Emergência pessoal (comparação, outro estado)",
+      "orgao": "Defesa Civil PR",
+      "url": "https://www.defesacivil.pr.gov.br/Pagina/Kit-de-Emergencia-pessoal"
+    },
+    "BRIEF": {
+      "titulo": "Dados de imprensa e pesquisa citados no BRIEF.md §2",
+      "orgao": "não oficial da Defesa Civil",
+      "url": ""
+    }
+  },
   "perfis": {
     "encosta": {
       "titulo": "Encosta ou morro",
@@ -21,9 +83,8 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Identifique o tipo de terreno onde você mora: encosta, beira de rio ou área aberta.",
-          "Pergunte a vizinhos antigos sobre o histórico do bairro: já alagou? Já deslizou?",
-          "Consulte o mapa de risco do seu município na Defesa Civil municipal."
+          "Identifique se sua casa está em área de risco: encosta, beira de rio ou área aberta.",
+          "Procure a Defesa Civil do seu município para saber se sua rua está em área de risco."
         ],
         "porque": "Chuva intensa responde por cerca de 90% dos óbitos em eventos climáticos em SC. 207 dos 295 municípios do estado (70,1%) estão entre os mais suscetíveis a deslizamentos, enxurradas e inundações.",
         "dica": "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
@@ -80,7 +141,7 @@
               "agente": "apontar"
             },
             {
-              "texto": "Identifique o tipo de terreno onde você mora",
+              "texto": "Identifique se sua casa está em área de risco",
               "foco": "geral",
               "efeito": "zonas",
               "agente": "acenar"
@@ -91,6 +152,10 @@
           ],
           "dicas": [
             "Olhe a rua de casa com outros olhos: tem barranco atrás? O rio passa perto? A casa fica exposta ao vento?"
+          ],
+          "fontes": [
+            "F10",
+            "BRIEF"
           ]
         },
         {
@@ -140,7 +205,10 @@
             "A mesma chuva causa problemas diferentes conforme o terreno. Saber qual é o seu ajuda a reconhecer o perigo cedo."
           ],
           "dicas": [
-            "Chuva que não para por horas pede atenção, mesmo que pareça fraca."
+            "Chuva forte por muitas horas? Acompanha os alertas, e só pelos canais oficiais da Defesa Civil."
+          ],
+          "fontes": [
+            "F1"
           ]
         },
         {
@@ -171,6 +239,9 @@
           ],
           "dicas": [
             "Ninguém conhece seu bairro melhor que quem mora nele há 30 anos. Puxa conversa com o vizinho mais antigo da rua."
+          ],
+          "fontes": [
+            "sem_fonte"
           ]
         },
         {
@@ -189,7 +260,7 @@
               "agente": "apontar"
             },
             {
-              "texto": "Consulte o mapa de risco na Defesa Civil municipal",
+              "texto": "Procure a Defesa Civil do seu município",
               "foco": "geral",
               "efeito": "mapa",
               "agente": "parado"
@@ -197,12 +268,20 @@
           ],
           "nota": "As cores desta cena são ilustrativas. Não são o mapa oficial do seu município.",
           "explicacao": [
-            "O mapa oficial mostra se a sua rua está em área de risco e ajuda a planejar a saída."
+            "A Defesa Civil do município sabe quais ruas estão em área de risco e ajuda a planejar a saída."
           ],
           "dicas": [
-            "Peça na Defesa Civil do seu município o mapa de risco do bairro. É um serviço público."
+            "Na dúvida se a sua rua é área de risco, pergunta para a Defesa Civil do seu município."
+          ],
+          "fontes": [
+            "F10"
           ]
         }
+      ],
+      "fontes": [
+        "F10",
+        "F1",
+        "BRIEF"
       ]
     },
     {
@@ -211,14 +290,22 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Envie o seu CEP por SMS para o número 40199.",
-          "Aprenda o que significa cada tipo de aviso.",
+          "Envie o CEP da sua casa por SMS para o número 40199. É gratuito.",
+          "No WhatsApp, mande um “olá” para (61) 2034-4611 e cadastre a sua área.",
+          "O Defesa Civil Alerta chega sozinho em celulares 4G e 5G, sem cadastro, e toca mesmo no silencioso.",
           "Siga apenas os canais oficiais da Defesa Civil."
         ],
-        "porque": "SC lidera a adesão ao alerta por SMS: 10,51% da população cadastrada, mais que o dobro da média nacional.",
-        "dica": "Cadastra o CEP de casa, do trabalho e da escola das crianças. Cada CEP é um SMS separado."
+        "porque": "A Defesa Civil de SC emite avisos com até 72 horas de antecedência. SC lidera a adesão ao alerta por SMS: 10,51% da população cadastrada, mais que o dobro da média nacional.",
+        "dica": "Chegou alerta? Lê com calma e faz o que a Defesa Civil orienta. Mensagem repassada em grupo não é alerta oficial."
       },
-      "perfil_variacoes": {}
+      "perfil_variacoes": {},
+      "fontes": [
+        "F1",
+        "F6",
+        "F7",
+        "F8",
+        "BRIEF"
+      ]
     },
     {
       "id": 3,
@@ -242,20 +329,17 @@
                 "mochila"
               ],
               "etiqueta": "Mochila do kit"
-            },
-            {
-              "texto": "Deixe a mochila perto da porta",
-              "destaque": [
-                "mochila"
-              ],
-              "etiqueta": "Perto da porta"
             }
           ],
           "explicacao": [
-            "Na emergência, o tempo para sair é curto. Com a mochila pronta, ninguém procura item por item enquanto a água sobe ou o morro dá sinal."
+            "Na emergência, o tempo para sair é curto. Com a mochila pronta, ninguém procura item por item enquanto a água sobe ou o morro dá sinal.",
+            "A lista da Defesa Civil de SC também inclui cobertor leve e quente e sacolas plásticas."
           ],
           "dicas": [
-            "Deixa a mochila perto da porta, não no fundo do armário. Na hora, ninguém procura nada."
+            "A cada seis meses, confere o kit: comida, água e remédio não podem passar da validade."
+          ],
+          "fontes": [
+            "F2"
           ]
         },
         {
@@ -279,6 +363,9 @@
           ],
           "dicas": [
             "Confirme com a Defesa Civil a quantidade recomendada para cada pessoa da sua família."
+          ],
+          "fontes": [
+            "F2"
           ]
         },
         {
@@ -289,28 +376,32 @@
           "resumo": "Alimentos que não estragam e não precisam de preparo.",
           "subpassos": [
             {
-              "texto": "Enlatados",
+              "texto": "Alimentos não perecíveis",
               "objetos": [
                 "lata1",
                 "lata2",
                 "lata3"
               ],
-              "etiqueta": "Enlatados"
+              "etiqueta": "Não perecíveis"
             },
             {
-              "texto": "Barras e outros alimentos não perecíveis",
+              "texto": "Chocolate e barra de cereais",
               "objetos": [
                 "barra1",
                 "barra2"
               ],
-              "etiqueta": "Não perecíveis"
+              "etiqueta": "Chocolate e barra de cereais"
             }
           ],
           "explicacao": [
             "Sem energia, a geladeira para e o fogão pode não funcionar. O kit precisa de comida que dure e que se coma sem preparo."
           ],
           "dicas": [
-            "Se levar enlatado, lembre do abridor."
+            "Prefere o que se come sem preparo, como barra de cereais e chocolate."
+          ],
+          "fontes": [
+            "F2",
+            "F10"
           ]
         },
         {
@@ -339,7 +430,11 @@
             "Documentos molhados ou perdidos atrasam o atendimento depois do desastre."
           ],
           "dicas": [
-            "Guarde também uma cópia de cada documento."
+            "Junta uma foto recente da família, dinheiro e as chaves de casa e do carro."
+          ],
+          "fontes": [
+            "F2",
+            "F3"
           ]
         },
         {
@@ -364,18 +459,22 @@
               "etiqueta": "Rádio a pilha"
             },
             {
-              "texto": "Carregador de celular",
+              "texto": "Carregador portátil para o celular",
               "objetos": [
                 "carregador"
               ],
-              "etiqueta": "Carregador"
+              "etiqueta": "Carregador portátil"
             }
           ],
           "explicacao": [
-            "Quando a energia cai, a lanterna mostra o caminho e o rádio a pilha continua trazendo os avisos oficiais."
+            "Quando a energia cai, a lanterna mostra o caminho e o rádio a pilha continua trazendo os avisos oficiais.",
+            "Fósforo e velas também estão na lista da Defesa Civil de SC."
           ],
           "dicas": [
             "Guarde pilhas reserva junto com a lanterna e o rádio."
+          ],
+          "fontes": [
+            "F2"
           ]
         },
         {
@@ -401,14 +500,24 @@
             }
           ],
           "explicacao": [
-            "Remédios de uso contínuo não podem faltar nos primeiros dias. O apito ajuda equipes de resgate a encontrar você."
+            "Remédios de uso contínuo não podem faltar nos primeiros dias. O apito serve para pedir socorro."
           ],
           "dicas": [
-            "Anote numa folha os remédios e as doses de cada pessoa da família e guarde no kit."
+            "Completa com a maleta de primeiros socorros, álcool em gel, protetor solar e repelente."
+          ],
+          "fontes": [
+            "F2",
+            "REF-PR"
           ]
         }
       ],
-      "letreiro": "Kit 72h"
+      "letreiro": "Kit 72h",
+      "fontes": [
+        "F2",
+        "F3",
+        "F10",
+        "REF-PR"
+      ]
     },
     {
       "id": 4,
@@ -416,26 +525,30 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Trincas novas em paredes e no chão.",
-          "Portas e janelas emperrando.",
-          "Água barrenta minando do morro.",
-          "Árvores e postes inclinados.",
-          "Estalos vindos do terreno ou da casa."
+          "Rachaduras ou trincas novas no chão e nas paredes.",
+          "Água barrenta surgindo no barranco ou no morro.",
+          "Árvores, postes ou muros inclinados.",
+          "Muros estufados."
         ],
-        "porque": "O terreno costuma avisar antes de ceder. Quem reconhece os sinais ganha minutos para sair.",
+        "porque": "Esses são os sinais que a Defesa Civil de SC aponta para deslizamento. Ao perceber um deles, a orientação é sair da área na hora.",
         "dica": "Viu um desses sinais? Não espera piorar para ter certeza. Sai e liga 199."
       },
       "perfil_variacoes": {
         "encosta": {
-          "dica": "Na encosta, água barrenta saindo do barranco e estalo no terreno são sinais de sair na hora."
+          "dica": "Na encosta, água barrenta saindo do barranco ou muro estufado é sinal de sair na hora."
         },
         "baixada": {
-          "dica": "Na baixada, observa o nível e a cor do rio. Subida rápida e água barrenta são sinais de preparar a saída."
+          "dica": "Na baixada, fica de olho no nível da água e não espera ficar ilhado para sair."
         },
         "aberto": {
-          "dica": "Em área aberta, árvore inclinada e fiação baixa perto de casa viram perigo no vendaval."
+          "dica": "Em área aberta, galho perto do telhado ou da fiação vira perigo no vendaval. Poda antes."
         }
-      }
+      },
+      "fontes": [
+        "F1",
+        "F2",
+        "F10"
+      ]
     },
     {
       "id": 5,
@@ -443,15 +556,18 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Defina a rota de saída da casa.",
-          "Combine um ponto de encontro.",
-          "Decida quem busca quem: crianças, idosos e pets.",
-          "Combine o que fazer se o celular não funcionar."
+          "Defina as rotas de saída da casa e deixe as saídas livres.",
+          "Escolham um ponto de encontro fora do bairro.",
+          "Vejam por onde é mais seguro sair com quem tem dificuldade de locomoção, e incluam as crianças na conversa.",
+          "Combinem um familiar ou amigo para todos procurarem se houver desencontro."
         ],
-        "porque": "Na emergência, decidir na hora custa tempo. Um plano combinado antes tira a dúvida do caminho.",
-        "dica": "Faz o trajeto até o ponto de encontro uma vez com a família, de dia, com calma."
+        "porque": "Em um desastre podem acontecer desencontros. Um plano combinado antes diz para onde cada um vai.",
+        "dica": "A cada seis meses, revê o plano com a família e faz o trajeto até o ponto de encontro, com calma."
       },
-      "perfil_variacoes": {}
+      "perfil_variacoes": {},
+      "fontes": [
+        "F2"
+      ]
     },
     {
       "id": 6,
@@ -459,26 +575,33 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Nunca atravesse água em movimento.",
-          "Desligue a energia.",
-          "Suba para um lugar alto. Não saia de carro.",
-          "Em deslizamento: saia na hora e avise os vizinhos.",
-          "Ligue 199."
+          "Não atravesse ruas alagadas nem pontes cobertas de água.",
+          "Desligue a energia elétrica, feche o gás e o registro de água.",
+          "Vá para um local seguro.",
+          "Se o carro pode ser levado pela água, abandone e vá para um local seguro.",
+          "Deslizamento: saia na hora e avise os vizinhos.",
+          "Em risco, ligue 199 (Defesa Civil) ou 193 (Bombeiros)."
         ],
-        "porque": "Pouca água em movimento já derruba uma pessoa e arrasta um carro.",
-        "dica": "Carro não é abrigo em enchente. Se a água subiu, sobe você também."
+        "porque": "Evite contato com a água da enchente: ela pode estar contaminada e provocar doenças.",
+        "dica": "Carro não é abrigo em enchente. Se a água pode levar o carro, sai dele e procura um local seguro."
       },
       "perfil_variacoes": {
         "encosta": {
           "dica": "Na encosta, a regra é uma só: sinal de deslizamento, sai na hora e avisa quem mora do lado."
         },
         "baixada": {
-          "dica": "Na baixada, desliga a energia antes de a água entrar e sobe para o ponto mais alto."
+          "dica": "Na baixada, desliga a energia e o gás antes de a água entrar e vai para um local seguro."
         },
         "aberto": {
-          "dica": "No vendaval, fica longe de janelas, árvores e fiação."
+          "dica": "No vendaval, fica num cômodo central da casa, longe das janelas. Na rua, longe de árvores, placas e postes."
         }
-      }
+      },
+      "fontes": [
+        "F1",
+        "F2",
+        "F3",
+        "F10"
+      ]
     },
     {
       "id": 7,
@@ -486,14 +609,23 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Só volte para casa com liberação da Defesa Civil.",
-          "Cuidado com água contaminada e animais.",
-          "Fotografe as perdas para documentação."
+          "Só volte para casa quando as autoridades disserem que é seguro.",
+          "Não beba água de poço ou de fonte natural depois da enchente. Para tratar a água: 2 gotas de hipoclorito de sódio 2,5% por litro e espere 30 minutos.",
+          "Jogue fora alimento que teve contato com a água da enchente.",
+          "Ao voltar, sacuda roupas e sapatos e mexa nos móveis com um cabo de vassoura: pode ter cobra, aranha ou rato.",
+          "Avalie os danos da casa e informe as autoridades, como a Defesa Civil do município."
         ],
-        "porque": "O perigo não termina quando a água baixa: estrutura danificada, contaminação e animais continuam ali.",
-        "dica": "Antes de limpar, fotografa tudo. Essas fotos ajudam na documentação das perdas."
+        "porque": "Depois que a água baixa, a casa pode ter estrutura danificada, água e comida contaminadas e animais peçonhentos.",
+        "dica": "Voltou? Usa bota e luva para tirar a lama e não anda descalço."
       },
-      "perfil_variacoes": {}
+      "perfil_variacoes": {},
+      "fontes": [
+        "F3",
+        "F4",
+        "F5",
+        "F9",
+        "F10"
+      ]
     }
   ]
 }
