@@ -1,6 +1,8 @@
 // Guia: painel compacto com abas. Desktop: coluna à direita, por cima do palco.
 // Celular: bottom-sheet recolhível acima da linha do tempo (a cena fica livre).
 
+import dados from '../../data/licoes.json';
+
 export function criarGuia(elemento, { aoMudarTamanho } = {}) {
   elemento.innerHTML = `
     <button type="button" class="guia-alca" aria-expanded="true" aria-controls="guia-corpo">
@@ -112,5 +114,26 @@ export function avisoRascunho(el) {
   const p = document.createElement('p');
   p.className = 'aviso-rascunho';
   p.textContent = 'Conteúdo em rascunho. Será validado com a Defesa Civil SC antes de publicar.';
+  el.appendChild(p);
+}
+
+// Fontes oficiais da etapa ou da lição (códigos de _fontes no licoes.json),
+// mostradas como links no rodapé do guia.
+export function citarFontes(el, codigos) {
+  const cat = dados._fontes ?? {};
+  const itens = (codigos ?? []).map((c) => cat[c]).filter((f) => f?.url);
+  if (!itens.length) return;
+  const p = document.createElement('p');
+  p.className = 'fontes';
+  p.append('Fontes: ');
+  itens.forEach((f, i) => {
+    if (i) p.append(' · ');
+    const a = document.createElement('a');
+    a.href = f.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = `${f.titulo} (${f.orgao})`;
+    p.appendChild(a);
+  });
   el.appendChild(p);
 }

@@ -335,6 +335,9 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 .contagem-kit { margin: 12px 0 0; font-family: var(--titulo); font-size: 0.75rem; font-weight: 800; color: var(--indigo-2); text-transform: uppercase; letter-spacing: 0.04em; }
 .em-breve { margin: 10px 0 0; font-size: 0.8rem; font-weight: 700; color: var(--laranja-escuro); }
 .aviso-rascunho { margin: 8px 0 0; font-size: 0.72rem; color: var(--cinza-texto); }
+.fontes { margin: 8px 0 0; font-size: 0.72rem; line-height: 1.45; color: var(--cinza-texto); }
+.fontes a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.fontes a:hover, .fontes a:focus-visible { color: var(--laranja-escuro); }
 
 /* ---------- Linha do tempo ---------- */
 .linha-tempo {

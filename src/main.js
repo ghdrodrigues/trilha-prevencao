@@ -7,7 +7,7 @@ import { criarPalco } from './motor/palco.js';
 import { criarEtiquetas } from './motor/etiquetas.js';
 import { criarCena1, DESTAQUES_PERFIL } from './scenes/cena1-terreno.js';
 import { criarCenaKit, colunasPara } from './scenes/cena3-kit.js';
-import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
+import { criarGuia, paragrafos, lista, avisoRascunho, citarFontes } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
 import { criarLicaoMontagem } from './licoes/montagem.js';
@@ -272,6 +272,7 @@ function mostrarLicaoSimples(l) {
       p.className = 'em-breve';
       p.textContent = 'Cena animada desta parada: em produção.';
       el.appendChild(p);
+      citarFontes(el, l.fontes);
       if (l.rascunho) avisoRascunho(el);
     },
   });

@@ -1,8 +1,8 @@
-// Lição do tipo "montagem" (Kit 72h): etapas → subpassos. Cada subpasso faz
+// Lição do tipo "montagem" (Kit de emergência): etapas → subpassos. Cada subpasso faz
 // seus objetos entrarem na cena e mostra uma etiqueta. Reprodução automática
 // dos subpassos da etapa, com pausa e velocidade do palco.
 
-import { paragrafos, lista, avisoRascunho } from '../ui/guia.js';
+import { paragrafos, lista, avisoRascunho, citarFontes } from '../ui/guia.js';
 
 const CHAVE_TENHO = 'trilha.kit.tenho';
 
@@ -226,6 +226,7 @@ export function criarLicaoMontagem({ licao, cena, palco, guia, linhaTempo, etiqu
         p.className = 'contagem-kit';
         el.appendChild(p);
         renderContagem();
+        citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes);
         if (licao.rascunho) avisoRascunho(el);
       },
     });
