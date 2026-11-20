@@ -453,3 +453,87 @@ export const barrenta = () =>
       g.stroke();
     }
   }, { repetir: [1, 3] });
+
+// ---------- Casa realista (paradas 4 e 5) ----------
+
+// Reboco pintado, sem janelas (as esquadrias são geometria).
+export const reboco = (cor = '#efe6d6', semente = 91) =>
+  textura(`reboco-${cor}-${semente}`, 512, 512, (g, w, h) => {
+    const r = aleatorio(semente);
+    g.fillStyle = cor;
+    g.fillRect(0, 0, w, h);
+    // manchas largas e suaves de pintura gasta
+    for (let i = 0; i < 26; i++) {
+      const x = r() * w;
+      const y = r() * h;
+      const rad = 40 + r() * 110;
+      const grad = g.createRadialGradient(x, y, 0, x, y, rad);
+      grad.addColorStop(0, `rgba(${r() > 0.5 ? '255,255,250' : '150,130,105'},0.07)`);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = grad;
+      g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    // grão do reboco
+    for (let i = 0; i < 16000; i++) {
+      const v = r();
+      g.fillStyle = v > 0.5 ? `rgba(255,255,255,${r() * 0.12})` : `rgba(110,95,75,${r() * 0.1})`;
+      g.fillRect(r() * w, r() * h, 1 + r() * 1.5, 1 + r() * 1.5);
+    }
+    // escorridos de chuva sob o beiral e respingo de barro no rodapé
+    for (let i = 0; i < 18; i++) {
+      const x = r() * w;
+      const grad = g.createLinearGradient(0, 0, 0, h * (0.15 + r() * 0.25));
+      grad.addColorStop(0, 'rgba(90,80,65,0.16)');
+      grad.addColorStop(1, 'rgba(90,80,65,0)');
+      g.fillStyle = grad;
+      g.fillRect(x, 0, 3 + r() * 6, h * 0.4);
+    }
+    const base = g.createLinearGradient(0, h * 0.84, 0, h);
+    base.addColorStop(0, 'rgba(120,90,55,0)');
+    base.addColorStop(1, 'rgba(120,90,55,0.45)');
+    g.fillStyle = base;
+    g.fillRect(0, h * 0.84, w, h * 0.16);
+  }, { repetir: [1, 1] });
+
+// Telhas cerâmicas tipo colonial, com sombra entre fiadas e variação de queima.
+export const telhasColonial = () =>
+  textura('telhas-colonial', 512, 512, (g, w, h) => {
+    const r = aleatorio(97);
+    g.fillStyle = '#8f3a24';
+    g.fillRect(0, 0, w, h);
+    const cw = 32;
+    const lh = 40;
+    for (let y = -lh; y < h + lh; y += lh) {
+      for (let x = 0; x < w; x += cw) {
+        const v = r() * 34 - 17;
+        const grad = g.createLinearGradient(x, 0, x + cw, 0);
+        grad.addColorStop(0, `rgb(${150 + v},${62 + v / 2},${40 + v / 3})`);
+        grad.addColorStop(0.5, `rgb(${200 + v},${96 + v / 2},${66 + v / 3})`);
+        grad.addColorStop(1, `rgb(${140 + v},${58 + v / 2},${38 + v / 3})`);
+        g.fillStyle = grad;
+        g.fillRect(x + 1, y, cw - 2, lh + 6);
+        // limo e sujeira
+        if (r() > 0.8) {
+          g.fillStyle = `rgba(60,70,40,${0.15 + r() * 0.2})`;
+          g.fillRect(x + 4, y + lh * 0.5, cw - 8, lh * 0.4);
+        }
+      }
+      g.fillStyle = 'rgba(40,12,5,0.45)';
+      g.fillRect(0, y + lh - 2, w, 6);
+    }
+  }, { repetir: [3, 2] });
+
+// Calçada de cimento com juntas.
+export const cimento = () =>
+  textura('cimento', 256, 256, (g, w, h) => {
+    const r = aleatorio(101);
+    g.fillStyle = '#b9b3a7';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 5000; i++) {
+      g.fillStyle = r() > 0.5 ? `rgba(255,255,255,${r() * 0.12})` : `rgba(70,65,55,${r() * 0.12})`;
+      g.fillRect(r() * w, r() * h, 1.5, 1.5);
+    }
+    g.fillStyle = 'rgba(70,65,55,0.35)';
+    g.fillRect(0, h / 2 - 1, w, 2);
+    g.fillRect(w / 2 - 1, 0, 2, h);
+  }, { repetir: [2, 2] });

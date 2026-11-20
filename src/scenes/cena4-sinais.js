@@ -5,6 +5,8 @@
 
 import * as THREE from 'three';
 import * as TX from './texturas.js';
+import { criarCasa } from './casa-realista.js';
+import { grama, cerca, varal, bananeira, arbusto, pedras, copaRealista } from './cenario-detalhes.js';
 
 const LARGURA = 12;
 const PROFUNDIDADE = 10;
@@ -151,51 +153,11 @@ function sombra(x, z, larg, prof, opacidade = 0.4) {
   return m;
 }
 
-function casa({ x, z, w, h, d }, escala = 1) {
-  const g = new THREE.Group();
-  const lateral = new THREE.MeshStandardMaterial({ map: TX.parede(false), roughness: 0.9 });
-  const fachada = new THREE.MeshStandardMaterial({ map: TX.parede(true), roughness: 0.9 });
-  const tampa = new THREE.MeshStandardMaterial({ color: 0xe9e2d4 });
-  const corpo = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [lateral, lateral, tampa, tampa, fachada, lateral]);
-  corpo.position.y = h / 2;
-  const baldrame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.08, 0.14, d + 0.08), new THREE.MeshStandardMaterial({ color: 0x9a8b75, roughness: 1 }));
-  baldrame.position.y = 0.05;
-  const perfil = new THREE.Shape();
-  perfil.moveTo(-(d / 2 + 0.14), 0);
-  perfil.lineTo(d / 2 + 0.14, 0);
-  perfil.lineTo(0, d * 0.42);
-  perfil.closePath();
-  const geoTelhado = new THREE.ExtrudeGeometry(perfil, { depth: w + 0.24, bevelEnabled: false });
-  geoTelhado.translate(0, 0, -(w + 0.24) / 2);
-  const telhado = new THREE.Mesh(geoTelhado, [
-    new THREE.MeshStandardMaterial({ color: 0xe9e2d4, roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ map: TX.telhas(), roughness: 0.8 }),
-  ]);
-  // cumeeira paralela à fachada: as águas caem para a frente e para os fundos
-  telhado.rotation.y = Math.PI / 2;
-  telhado.position.y = h;
-  for (const m of [corpo, baldrame, telhado]) {
-    m.castShadow = true;
-    m.receiveShadow = true;
-    g.add(m);
-  }
+function casa({ x, z, w, h, d, cor, semente, rot = 0, caixaDagua = true }) {
+  const g = criarCasa({ w, h, d, cor, semente, caixaDagua });
   g.position.set(x, relevo(x, z), z);
-  g.scale.setScalar(escala);
+  g.rotation.y = rot;
   return g;
-}
-
-function copa(g, alturaTronco, tons) {
-  [
-    [0, 0.0, 0, 0.62],
-    [0.36, -0.12, 0.12, 0.44],
-    [-0.34, -0.1, -0.1, 0.46],
-    [0.06, 0.36, -0.06, 0.42],
-  ].forEach(([dx, dy, dz, r], i) => {
-    const c = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), new THREE.MeshStandardMaterial({ color: tons[i % tons.length], roughness: 0.85 }));
-    c.position.set(dx, alturaTronco + 0.3 + dy, dz);
-    c.castShadow = true;
-    g.add(c);
-  });
 }
 
 // Árvore do barranco: o grupo gira na base (inclina) e as raízes sobem da terra.
@@ -209,7 +171,7 @@ function arvoreBarranco() {
   tronco.position.y = 0.75;
   tronco.castShadow = true;
   pivo.add(tronco);
-  copa(pivo, 1.5, [0x3f7d4a, 0x4b8b45, 0x356e3f, 0x5a9a4c]);
+  copaRealista(pivo, 1.5, { raio: 0.8, semente: 4 });
   const topo = new THREE.Object3D();
   topo.position.y = 2.2;
   pivo.add(topo);
@@ -244,8 +206,7 @@ function arvorePequena(x, z, esc, semente) {
   tronco.position.y = 0.35;
   tronco.castShadow = true;
   g.add(tronco);
-  const tons = [0x4b8b45, 0x356e3f, 0x5a9a4c, 0x3f7d4a];
-  copa(g, 0.55, tons.slice(semente % 2));
+  copaRealista(g, 0.6, { raio: 0.6, semente: semente + 9 });
   g.scale.setScalar(esc);
   g.position.set(x, relevo(x, z), z);
   return g;
@@ -320,11 +281,11 @@ function trincaParede(casaGrupo) {
   // coordenadas (u, v) da fachada: sai do canto da janela, como costuma aparecer
   const noPlano = ([u, v]) => new THREE.Vector3((u - 0.5) * w, v * h, d / 2 + 0.004);
   const n = new THREE.Vector3(0, 0, 1);
-  const principal = fenda(zigue([0.56, 0.38], [0.47, 0.04], 16, 0.05, 1).map(noPlano), n, 0.05);
-  const ramo = fenda(zigue([0.84, 0.64], [0.95, 0.97], 12, 0.06, 3).map(noPlano), n, 0.04);
+  const principal = fenda(zigue([0.84, 0.37], [0.93, 0.12], 16, 0.05, 1).map(noPlano), n, 0.055);
+  const ramo = fenda(zigue([0.56, 0.65], [0.5, 0.97], 12, 0.06, 3).map(noPlano), n, 0.045);
   casaGrupo.add(principal, ramo);
   const ancora = new THREE.Object3D();
-  ancora.position.copy(noPlano([0.5, 0.22]));
+  ancora.position.copy(noPlano([0.88, 0.25]));
   casaGrupo.add(ancora);
   return { fendas: [principal, ramo], ancora };
 }
@@ -503,8 +464,42 @@ export function criarCenaSinais({ palco }) {
   const casaGrupo = casa(CASA);
   raiz.add(casaGrupo, sombra(CASA.x, CASA.z, CASA.w + 0.8, CASA.d + 0.8, 0.35));
   // vizinhança no alto do barranco
-  raiz.add(casa({ x: -3.4, z: -3.9, w: 1.5, h: 1.0, d: 1.2 }), casa({ x: 0.6, z: -4.1, w: 1.4, h: 0.95, d: 1.2 }));
-  raiz.add(arvorePequena(-5.2, 3.6, 0.9, 0), arvorePequena(5.2, 0.8, 0.8, 1), arvorePequena(-5.0, -2.9, 1.0, 1), arvorePequena(4.9, -4.2, 0.9, 0));
+  raiz.add(
+    casa({ x: -3.4, z: -3.9, w: 1.7, h: 1.1, d: 1.4, cor: '#e9dcc0', semente: 93, caixaDagua: false }),
+    casa({ x: 0.7, z: -4.1, w: 1.6, h: 1.05, d: 1.3, cor: '#d8e2e6', semente: 95 }),
+  );
+  raiz.add(arvorePequena(-5.2, 3.9, 0.9, 0), arvorePequena(5.2, 0.8, 0.8, 1), arvorePequena(-5.0, -2.9, 1.0, 1), arvorePequena(4.9, -4.2, 0.9, 0));
+
+  // Quintal: cerca com portão, varal, bananeira, arbustos e pedras no corte.
+  const noQuintal = (x, z) => x > -3.8 && x < 1.4 && z > 0.85 && z < 2.75;
+  const naCasa = (x, z) => x > -3.5 && x < -0.5 && z > -1.25 && z < 1.25;
+  const naAgua = (x, z) => x > 2.0 && x < 3.5 && z > -2.2 && z < -0.15; // fita e poça da água barrenta
+  raiz.add(
+    grama(relevo, {
+      area: [-LARGURA / 2, LARGURA / 2, -PROFUNDIDADE / 2, PROFUNDIDADE / 2],
+      quantidade: 9000,
+      pode: (x, z) => !noQuintal(x, z) && !naCasa(x, z) && !naAgua(x, z) && inclinacao(x, z) < 0.75 && Math.abs(x) < LARGURA / 2 - 0.05 && Math.abs(z) < PROFUNDIDADE / 2 - 0.05,
+    }),
+    cerca(relevo, [-3.9, 2.8], [1.5, 2.8], { vao: [0.74, 0.93] }),
+    varal(relevo, [-4.5, -0.6], [-4.5, 1.4]),
+    bananeira(relevo, -5.0, 2.2, 1.1, 3),
+    bananeira(relevo, 5.1, -2.6, 0.9, 8),
+    arbusto(relevo, 1.6, 2.5, 1.1, 2),
+    arbusto(relevo, -4.0, 2.5, 1.2, 4),
+    arbusto(relevo, 5.3, 3.4, 1.0, 6),
+    arbusto(relevo, -5.3, -1.2, 1.2, 8),
+    arbusto(relevo, 2.0, -3.6, 1.0, 10),
+    arbusto(relevo, -0.4, 1.35, 0.8, 12),
+    pedras(relevo, [
+      [1.8, -1.95, 0.12],
+      [3.2, -2.05, 0.16],
+      [4.4, -1.9, 0.1],
+      [5.3, -2.1, 0.14],
+      [3.9, -1.75, 0.08],
+      [-5.4, 0.4, 0.12],
+      [4.6, 1.6, 0.09],
+    ]),
+  );
 
   const tParede = trincaParede(casaGrupo);
   const tChao = trincaChao();
@@ -524,7 +519,7 @@ export function criarCenaSinais({ palco }) {
   raiz.add(objChuva);
 
   // Fio do poste até a casa (refeito quando o poste inclina).
-  const pontoCasa = new THREE.Vector3(CASA.x + CASA.w / 2 - 0.15, CASA.h + 0.05, CASA.z + CASA.d / 2 - 0.1);
+  const pontoCasa = casaGrupo.userData.pontoFio.clone().add(casaGrupo.position);
   const fioGeo = new THREE.BufferGeometry().setFromPoints(Array.from({ length: 17 }, () => new THREE.Vector3()));
   const fio = new THREE.Line(fioGeo, new THREE.LineBasicMaterial({ color: 0x2a2a2a }));
   fio.frustumCulled = false;
