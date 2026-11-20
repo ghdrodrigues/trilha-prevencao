@@ -253,28 +253,45 @@ export const OBJETOS = {
   apito: { fabrica: apito, glb: 'kitApito', pos: [4.5, -1.1, 0.6] },
 };
 
-// Celular em pé: grade de 2 colunas na tela. Posições em [u, v, rotY], com u
-// para a direita e v para baixo na tela (vista isométrica a 45°).
-const RETRATO = {
-  mochila: [-1.4, -6.0, 0.35],
-  garrafa1: [1.1, -6.2, 0],
-  garrafa2: [1.9, -5.6, 0],
-  lata1: [-2.0, -3.2, 0],
-  lata2: [-1.2, -3.0, 0],
-  lata3: [-1.6, -2.4, 0],
-  barra1: [1.4, -3.3, 0.3],
-  barra2: [1.6, -2.6, 0.2],
-  documentos: [-1.5, -0.2, -0.25],
-  lanterna: [1.5, -0.3, 0.5],
-  radio: [-1.5, 3.0, -0.2],
-  carregador: [1.5, 2.6, 0.4],
-  remedios: [-1.5, 5.6, -0.2],
-  apito: [1.5, 5.4, 0.6],
-};
+// Celular: grade na tela, com 2 a 4 colunas conforme o formato da área livre.
+// Cada grupo ocupa uma célula. Deslocamentos em [u, v, rotY], com u para a
+// direita e v para baixo na tela (vista isométrica a 45°).
+const GRUPOS = [
+  [['mochila', 0, 0, 0.35]],
+  [['garrafa1', -0.4, -0.3, 0], ['garrafa2', 0.4, 0.3, 0]],
+  [['lata1', -0.4, -0.3, 0], ['lata2', 0.4, -0.1, 0], ['lata3', 0, 0.5, 0]],
+  [['barra1', -0.1, -0.35, 0.3], ['barra2', 0.1, 0.35, 0.2]],
+  [['documentos', 0, 0, -0.25]],
+  [['lanterna', 0, 0, 0.5]],
+  [['radio', 0, 0, -0.2]],
+  [['carregador', 0, 0, 0.4]],
+  [['remedios', 0, 0, -0.2]],
+  [['apito', 0, 0, 0.6]],
+];
+const CEL_U = 3.0; // largura da célula na tela
+const CEL_V = 3.2; // profundidade da célula no chão (encurta na tela)
+const SEN_ELEV = Math.sin(Math.atan(1 / Math.SQRT2));
 const R2 = Math.SQRT1_2;
 const daTela = ([u, v, r]) => [(u + v) * R2, (v - u) * R2, r];
 const ENQ_PAISAGEM = { centro: [0, 0.6, 0.8], largura: 15, altura: 10 };
-const ENQ_RETRATO = { centro: [-0.5, 1.0, -0.5], largura: 6.4, altura: 12 };
+
+// Tamanho na tela (unidades de mundo) de uma grade com essas colunas.
+function medidasGrade(colunas) {
+  const linhas = Math.ceil(GRUPOS.length / colunas);
+  return { colunas, linhas, largura: colunas * CEL_U + 0.4, altura: linhas * CEL_V * SEN_ELEV + 1.8 };
+}
+
+// Escolhe as colunas que deixam os itens maiores na área livre (em pixels).
+export function colunasPara(largura, altura) {
+  let melhor = 2;
+  let escala = 0;
+  for (const c of [2, 3, 4]) {
+    const m = medidasGrade(c);
+    const e = Math.min(largura / m.largura, altura / m.altura);
+    if (e > escala + 0.5) [melhor, escala] = [c, e];
+  }
+  return melhor;
+}
 
 export function criarCenaKit() {
   const raiz = new THREE.Group();
@@ -439,25 +456,49 @@ export function criarCenaKit() {
     }
   }
 
-  // Troca a disposição: lona horizontal (desktop) ou vertical em 2 colunas (celular em pé).
-  let retratoAtual = false;
-  function layout(retrato) {
-    if (retrato === retratoAtual) return false;
-    retratoAtual = retrato;
-    // A lona gira 45° para alinhar com a tela e fica mais estreita.
-    objLona.rotation.y = retrato ? -Math.PI / 4 : 0;
-    objLona.scale.set(retrato ? 1.16 : 1, 1, retrato ? 0.7 : 1);
-    objLona.position.set(retrato ? 0.28 : 0, 0, retrato ? -0.28 : 0);
-    for (const [id, o] of Object.entries(objetos)) {
-      const [x, z, r] = retrato ? daTela(RETRATO[id]) : OBJETOS[id].pos;
-      o.userData.casa.set(x, 0, z);
-      o.userData.giro = r;
-      o.position.x = x;
-      o.position.z = z;
-      o.rotation.y = r;
+  // Troca a disposição: lona horizontal (desktop, colunas = 0) ou grade de
+  // 2 a 4 colunas alinhada à tela (celular).
+  let colunasAtual = 0;
+  function layout(colunas) {
+    if (colunas === colunasAtual) return false;
+    colunasAtual = colunas;
+    if (!colunas) {
+      objLona.rotation.y = 0;
+      objLona.scale.set(1, 1, 1);
+      objLona.position.set(0, 0, 0);
+      for (const [id, o] of Object.entries(objetos)) posicionar(o, OBJETOS[id].pos);
+      api.enquadramento = ENQ_PAISAGEM;
+      return true;
     }
-    api.enquadramento = retrato ? ENQ_RETRATO : ENQ_PAISAGEM;
+    const m = medidasGrade(colunas);
+    // Distribui os grupos por igual entre as linhas (10 em 4 linhas: 3, 3, 2, 2),
+    // com as linhas mais curtas centralizadas.
+    let i = 0;
+    for (let lin = 0; lin < m.linhas; lin++) {
+      const naLinha = Math.floor(GRUPOS.length / m.linhas) + (lin < GRUPOS.length % m.linhas ? 1 : 0);
+      const v = (lin - (m.linhas - 1) / 2) * CEL_V;
+      for (let col = 0; col < naLinha; col++, i++) {
+        const u = (col - (naLinha - 1) / 2) * CEL_U;
+        for (const [id, du, dv, r] of GRUPOS[i]) posicionar(objetos[id], daTela([u + du, v + dv, r]));
+      }
+    }
+    // A lona gira 45° para alinhar com a tela: x local segue v, z local segue u.
+    const sx = (m.linhas * CEL_V + 0.6) / 13;
+    const sz = (colunas * CEL_U) / 8.5;
+    objLona.rotation.y = -Math.PI / 4;
+    objLona.scale.set(sx, 1, sz);
+    const desvio = new THREE.Vector3(0, 0, 0.4 * sz).applyAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 4);
+    objLona.position.set(-desvio.x, 0, -desvio.z);
+    api.enquadramento = { centro: [0, 0.9, 0], largura: m.largura, altura: m.altura };
     return true;
+  }
+
+  function posicionar(o, [x, z, r]) {
+    o.userData.casa.set(x, 0, z);
+    o.userData.giro = r;
+    o.position.x = x;
+    o.position.z = z;
+    o.rotation.y = r;
   }
 
   function animar(tempo, dt, reduzido) {

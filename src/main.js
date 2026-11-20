@@ -6,7 +6,7 @@ import dados from '../data/licoes.json';
 import { criarPalco } from './motor/palco.js';
 import { criarEtiquetas } from './motor/etiquetas.js';
 import { criarCena1, DESTAQUES_PERFIL } from './scenes/cena1-terreno.js';
-import { criarCenaKit } from './scenes/cena3-kit.js';
+import { criarCenaKit, colunasPara } from './scenes/cena3-kit.js';
 import { criarGuia, paragrafos, lista, avisoRascunho } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
@@ -88,11 +88,17 @@ const cenaRisco = {
   },
 };
 
-// Celular em pé: o kit muda para a lona vertical em 2 colunas.
-const retrato = () => !desktop.matches && window.innerHeight > window.innerWidth;
-window.addEventListener('resize', () => {
-  if (palco.cena === cenaKit && cenaKit.layout(retrato())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
-});
+// No celular, o kit vira uma grade com as colunas que deixam os itens maiores
+// na área livre. No desktop, fica a lona horizontal.
+function colunasKit() {
+  if (desktop.matches) return 0;
+  const l = areaLivre();
+  return colunasPara(window.innerWidth - l.esquerda - l.direita, window.innerHeight - l.topo - l.base);
+}
+function reorganizarKit() {
+  if (palco.cena === cenaKit && cenaKit.layout(colunasKit())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
+}
+window.addEventListener('resize', reorganizarKit);
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -270,7 +276,7 @@ function mostrarLicaoMontagem(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
   if (!desktop.matches) guia.recolher(true);
-  cenaKit.layout(retrato());
+  cenaKit.layout(colunasKit());
   palco.definirCena(cenaKit);
   licaoAtiva = criarLicaoMontagem({
     licao: l,
@@ -284,6 +290,8 @@ function mostrarLicaoMontagem(l) {
   });
   navegar = (i) => licaoAtiva.irPara(i);
   licaoAtiva.iniciar();
+  // o guia e a linha do tempo já têm a altura final: confere a grade
+  requestAnimationFrame(reorganizarKit);
 }
 
 function mostrarLicaoRoteiro(l) {
