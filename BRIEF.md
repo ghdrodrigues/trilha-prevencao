@@ -192,3 +192,5 @@ trilha-prevencao/
 2. Montar o blockout da cena 1 (terreno com morro/rio) com câmera isométrica fixa e 7 marcadores de parada clicáveis.
 3. Implementar o painel de lição com as 3 abas lendo de `licoes.json` (textos deste brief como placeholder).
 4. Rodar local e ajustar enquadramento antes de gerar qualquer modelo no Tripo.
+
+> **Paradas 2, 6 e 7 (21/11/2026):** feitas como roteiro, com cenas próprias em código (sem créditos): `cena2-alerta.js` (quintal, celular grande com a tela do SMS 40199, WhatsApp e Defesa Civil Alerta, torre de telefonia), `cena6-enchente.js` (baixada com rio, pontilhão, água que sobe, carro, caminho a pé pelo alto até o local seguro) e `cena7-depois.js` (casa com marca de lama, poço, mesa de tratamento da água, alimentos, móveis secando). Textos revalidados: saíram "72 horas de antecedência", "quando as autoridades liberarem", "informe os danos às autoridades" e "placas" (sem fonte). Entraram F9a, F9b e F9c (páginas de enchentes do Ministério da Saúde). As cenas de roteiro agora são montadas só na primeira visita.

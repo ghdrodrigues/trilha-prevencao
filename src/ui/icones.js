@@ -32,6 +32,10 @@ const P = {
   proxima: '<path d="M9 5l7 7-7 7"/>',
   sms: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01"/>',
   telefone: '<path d="M5 3.5h4l1.5 4.5-2.5 1.5a11 11 0 006.5 6.5l1.5-2.5 4.5 1.5v4a2 2 0 01-2 2A17 17 0 013 5.5a2 2 0 012-2z"/>',
+  raio: '<path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z"/>',
+  proibido: '<circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/>',
+  carro: '<path d="M4 16.5v-4l2-5h12l2 5v4z"/><path d="M4 12.5h16"/><circle cx="8" cy="16.5" r="1.8"/><circle cx="16" cy="16.5" r="1.8"/>',
+  casa: '<path d="M3.5 11L12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
 };
 

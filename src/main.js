@@ -15,6 +15,9 @@ import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
 import { criarCenaPlano, relevo as relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO } from './scenes/cena5-plano.js';
+import { criarCenaAlerta, relevo as relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA } from './scenes/cena2-alerta.js';
+import { criarCenaDepois, relevo as relevoDepois, ENQUADRAMENTOS_DEPOIS, POSICOES_AGENTE_DEPOIS, VIZINHOS_DEPOIS } from './scenes/cena7-depois.js';
+import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE } from './scenes/cena6-enchente.js';
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 
@@ -94,50 +97,37 @@ const cenaRisco = {
   },
 };
 
-// Cena da parada 4: casa na encosta com os sinais de perigo.
-const sinais = criarCenaSinais({ palco });
-const personagensSinais = criarPersonagensRisco({
-  palco,
-  relevo: relevoSinais,
-  posicoesAgente: POSICOES_AGENTE_SINAIS,
-  vizinhos: VIZINHOS_SINAIS,
-  alturaAtor: 1.15,
-});
-sinais.raiz.add(personagensSinais.grupo);
-const cenaSinais = {
-  raiz: sinais.raiz,
-  alvos: [],
-  enquadramento: ENQUADRAMENTOS_SINAIS.geral,
-  animar: (t, dt, r) => {
-    sinais.efeitos.animar(t, dt, r);
-    personagensSinais.animar(t, dt, r);
-  },
-};
-// Cena da parada 5: bairro com rota de fuga e ponto de encontro.
-const plano = criarCenaPlano({ palco });
-const personagensPlano = criarPersonagensRisco({
-  palco,
-  relevo: relevoPlano,
-  posicoesAgente: POSICOES_AGENTE_PLANO,
-  vizinhos: VIZINHOS_PLANO,
-  alturaAtor: 1.1,
-});
-plano.raiz.add(personagensPlano.grupo);
-const cenaPlano = {
-  raiz: plano.raiz,
-  alvos: [],
-  enquadramento: ENQUADRAMENTOS_PLANO.geral,
-  animar: (t, dt, r) => {
-    plano.efeitos.animar(t, dt, r);
-    personagensPlano.animar(t, dt, r);
-  },
-};
+// Cenas de roteiro das paradas 2, 4, 5, 6 e 7: montadas só na primeira visita,
+// para não pesar a abertura no celular.
+function cenaRoteiro(criar, relevo, enquadramentos, posicoesAgente, vizinhos, alturaAtor = 1.1) {
+  let pronta = null;
+  return () => {
+    if (pronta) return pronta;
+    const c = criar({ palco });
+    const personagens = criarPersonagensRisco({ palco, relevo, posicoesAgente, vizinhos, alturaAtor });
+    c.raiz.add(personagens.grupo);
+    const cena = {
+      raiz: c.raiz,
+      alvos: [],
+      enquadramento: enquadramentos.geral,
+      animar: (t, dt, r) => {
+        c.efeitos.animar(t, dt, r);
+        personagens.animar(t, dt, r);
+      },
+    };
+    pronta = { cena, efeitos: c.efeitos, personagens, enquadramentos };
+    return pronta;
+  };
+}
 
 // Cada lição do tipo roteiro escolhe a cena pelo campo "cena".
 const CENAS_ROTEIRO = {
-  terreno: { cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS },
-  sinais: { cena: cenaSinais, efeitos: sinais.efeitos, personagens: personagensSinais, enquadramentos: ENQUADRAMENTOS_SINAIS },
-  plano: { cena: cenaPlano, efeitos: plano.efeitos, personagens: personagensPlano, enquadramentos: ENQUADRAMENTOS_PLANO },
+  terreno: () => ({ cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS }),
+  alerta: cenaRoteiro(criarCenaAlerta, relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA),
+  sinais: cenaRoteiro(criarCenaSinais, relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS, 1.15),
+  plano: cenaRoteiro(criarCenaPlano, relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO),
+  enchente: cenaRoteiro(criarCenaEnchente, relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE),
+  depois: cenaRoteiro(criarCenaDepois, relevoDepois, ENQUADRAMENTOS_DEPOIS, POSICOES_AGENTE_DEPOIS, VIZINHOS_DEPOIS),
 };
 
 // No celular, o kit vira uma grade com as colunas que deixam os itens maiores
@@ -257,7 +247,12 @@ const ICONES_PARADA = ['mapa', 'celular', 'mochila', 'alerta', 'rota', 'chuva', 
 const letreiro = document.getElementById('letreiro');
 
 function irParaParada(id) {
-  if (id < 1 || id > dados.licoes.length) return;
+  if (id > dados.licoes.length) {
+    // fim da trilha: volta ao mapa
+    history.pushState(null, '', location.pathname);
+    return rotear();
+  }
+  if (id < 1) return;
   history.pushState(null, '', `?parada=${id}`);
   rotear();
 }
@@ -353,7 +348,7 @@ function mostrarLicaoRoteiro(l) {
   letreiro.textContent = l.letreiro ?? l.titulo;
   if (!desktop.matches) guia.recolher(true);
   cena1.mostrarTrilha(false);
-  const c = CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno;
+  const c = (CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno)();
   palco.definirCena(c.cena);
   licaoAtiva = criarLicaoRoteiro({
     licao: l,
