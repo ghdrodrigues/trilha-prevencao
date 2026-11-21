@@ -16,7 +16,8 @@ import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
 import { criarCenaPlano, relevo as relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO } from './scenes/cena5-plano.js';
 import { criarCenaAlerta, relevo as relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA } from './scenes/cena2-alerta.js';
-import { criarCenaDepois, relevo as relevoDepois, ENQUADRAMENTOS_DEPOIS, POSICOES_AGENTE_DEPOIS, VIZINHOS_DEPOIS } from './scenes/cena7-depois.js';
+import { criarCenaFazer7 } from './scenes/cena7-fazer.js';
+import { criarLicaoFazer } from './licoes/fazer.js';
 import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE } from './scenes/cena6-enchente.js';
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
@@ -130,7 +131,6 @@ const CENAS_ROTEIRO = {
   sinais: cenaRoteiro(criarCenaSinais, relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS, 1.15),
   plano: cenaRoteiro(criarCenaPlano, relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO),
   enchente: cenaRoteiro(criarCenaEnchente, relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE),
-  depois: cenaRoteiro(criarCenaDepois, relevoDepois, ENQUADRAMENTOS_DEPOIS, POSICOES_AGENTE_DEPOIS, VIZINHOS_DEPOIS),
 };
 
 // No celular, o kit vira uma grade com as colunas que deixam os itens maiores
@@ -386,6 +386,36 @@ function mostrarLicaoRoteiro(l) {
   licaoAtiva.iniciar();
 }
 
+// Cenas das lições "fazer": uma ação animada por subpasso, sem personagens.
+const CENAS_FAZER = { depois: criarCenaFazer7 };
+const cenasFazer = {};
+function mostrarLicaoFazer(l) {
+  document.body.dataset.modo = 'licao';
+  document.body.dataset.fazer = 'sim';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  guia.recolher(false);
+  personagensRisco.sair();
+  cenasFazer[l.cena] ??= CENAS_FAZER[l.cena]({ palco });
+  const c = cenasFazer[l.cena];
+  palco.definirCena(c);
+  licaoAtiva = criarLicaoFazer({
+    licao: l,
+    total: dados.licoes.length,
+    perfil,
+    cena: c,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    abrirPlano: () => abrirPlano(),
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+  if (new URLSearchParams(location.search).has('depurar')) window.__trilha = { palco, cena: c, licao: licaoAtiva };
+}
+
 // Vitrines das lições "passos" (palco limpo), montadas na primeira visita.
 const ITENS_VITRINE = { kit: ITENS_KIT, sinais: ITENS_SINAIS };
 const vitrines = {};
@@ -451,8 +481,10 @@ function rotear() {
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
   delete document.body.dataset.vitrine;
+  delete document.body.dataset.fazer;
   if (!l) return mostrarTrilha();
   if (l.tipo === 'passos') return mostrarLicaoPassos(l);
+  if (l.tipo === 'fazer') return mostrarLicaoFazer(l);
   if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
   if (l.etapas) return mostrarLicaoMontagem(l);
   mostrarTrilha(l.id);

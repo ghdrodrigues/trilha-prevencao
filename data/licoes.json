@@ -1571,7 +1571,7 @@
         "F9b",
         "F9c"
       ],
-      "tipo": "roteiro",
+      "tipo": "fazer",
       "cena": "depois",
       "letreiro": "Depois da água baixar",
       "resumo": "Voltar para casa com segurança, cuidar da água, dos alimentos e dos animais escondidos.",
@@ -1585,35 +1585,30 @@
           "titulo": "Voltar com segurança",
           "curto": "Voltar",
           "icone": "casa",
-          "resumo": "Volte só quando a água baixar e o caminho estiver seguro.",
+          "resumo": "Só volte quando a água baixar e o caminho estiver seguro. Volte de dia e confira a casa antes de entrar.",
           "subpassos": [
             {
               "texto": "Não volte para casa até as águas baixarem e o caminho estar seguro",
+              "acao": "baixar",
               "foco": "geral",
-              "ancora": "casa",
               "etiqueta": "A água baixou",
-              "agente": "apontar",
-              "pausa": 2.0
+              "uso": "Só volte com o caminho seguro",
+              "pausa": 1.8
             },
             {
               "texto": "Volte para casa durante o dia",
-              "foco": "casa",
-              "ancora": "marca",
-              "etiqueta": "Marca da água",
-              "agente": "apontar",
-              "pausa": 1.6
+              "acao": "dia",
+              "foco": "geral",
+              "etiqueta": "Volte durante o dia",
+              "pausa": 1.8
             },
             {
               "texto": "Veja se sua casa não corre risco de desabar",
+              "acao": "vistoria",
               "foco": "casa",
-              "efeito": "vistoria",
-              "ancora": "casa",
               "etiqueta": "Risco de desabar?",
-              "agente": "apontar",
-              "vizinho": {
-                "encosta": "examinar"
-              },
-              "pausa": 2.2
+              "uso": "Confira a casa antes de entrar",
+              "pausa": 1.8
             }
           ],
           "explicacao": [
@@ -1632,27 +1627,22 @@
           "titulo": "Proteja-se",
           "curto": "Botas e luvas",
           "icone": "saude",
-          "base": [
-            "vistoria"
-          ],
-          "resumo": "Botas impermeáveis e luvas em áreas inundadas.",
+          "resumo": "Antes de pisar na lama, calce botas impermeáveis e luvas.",
           "subpassos": [
             {
               "texto": "Use sempre botas impermeáveis e luvas ao transitar em áreas inundadas",
-              "foco": "epi",
-              "efeito": "epi",
-              "ancora": "botas",
-              "etiqueta": "Botas e luvas",
-              "agente": "apontar",
-              "pausa": 1.8
+              "acao": "epi",
+              "foco": "caminho",
+              "etiqueta": "Botas impermeáveis e luvas",
+              "uso": "Proteção ao andar em área inundada",
+              "pausa": 2.0
             },
             {
               "texto": "Não ande descalço",
-              "foco": "epi",
-              "ancora": "botas",
+              "acao": "descalco",
+              "foco": "caminho",
               "etiqueta": "Não ande descalço",
-              "agente": "apontar",
-              "pausa": 2.0
+              "pausa": 1.8
             }
           ],
           "explicacao": [
@@ -1672,38 +1662,39 @@
           "titulo": "Cuidado com a água",
           "curto": "Água",
           "icone": "agua",
-          "base": [
-            "vistoria",
-            "epi"
-          ],
           "resumo": "Água de poço e de fonte fica contaminada. Trate a água antes de beber.",
           "subpassos": [
             {
               "texto": "Não use água de poços e fontes naturais depois da enchente",
-              "foco": "agua",
-              "efeito": "poco",
-              "ancora": "poco",
-              "etiqueta": "Poço contaminado",
-              "agente": "apontar",
+              "acao": "poco",
+              "foco": "poco",
+              "etiqueta": "Água de poço contaminada",
+              "uso": "Não use água de poço ou fonte",
               "pausa": 1.8
             },
             {
               "texto": "Para tratar: 2 gotas de hipoclorito de sódio a 2,5% para cada litro de água",
-              "foco": "agua",
-              "efeito": "gotas",
-              "ancora": "mesa",
+              "acao": "gotas",
+              "foco": "mesa",
               "etiqueta": "Hipoclorito de sódio 2,5%",
-              "agente": "apontar",
-              "pausa": 1.4
+              "uso": "Trata a água: 2 gotas por litro",
+              "pausa": 1.8
             },
             {
-              "texto": "Espere 30 minutos antes de beber e consuma em até 24 horas",
-              "foco": "agua",
-              "efeito": "tempo",
-              "ancora": "mesa",
+              "texto": "Espere 30 minutos antes de beber",
+              "acao": "espera",
+              "foco": "mesa",
               "etiqueta": "Espere 30 minutos",
-              "agente": "apontar",
-              "pausa": 2.2
+              "uso": "Beba a água tratada em até 24 horas",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Sem hipoclorito, ferva a água por 5 minutos depois que começar a ferver",
+              "acao": "ferver",
+              "foco": "mesa",
+              "etiqueta": "Sem hipoclorito? Ferva",
+              "uso": "5 minutos depois de começar a ferver",
+              "pausa": 2.0
             }
           ],
           "explicacao": [
@@ -1711,7 +1702,7 @@
             "O Ministério da Saúde orienta adicionar 2 gotas de hipoclorito de sódio a 2,5% para cada 1 litro de água e esperar meia hora antes de consumir. A água tratada deve ser consumida em até 24 horas."
           ],
           "dicas": [
-            "Sem hipoclorito, ferva a água por 5 minutos depois que começar a ferver."
+            "A água tratada com hipoclorito deve ser consumida em até 24 horas."
           ],
           "fontes": [
             "F4",
@@ -1723,23 +1714,15 @@
           "titulo": "Alimentos",
           "curto": "Alimentos",
           "icone": "lata",
-          "base": [
-            "vistoria",
-            "epi",
-            "poco",
-            "gotas",
-            "tempo"
-          ],
           "resumo": "Não utilize alimentos que tiveram contato com a água da enchente.",
           "subpassos": [
             {
               "texto": "Não utilize alimentos que tiveram contato com a água da enchente",
+              "acao": "alimentos",
               "foco": "comida",
-              "efeito": "descarte",
-              "ancora": "comida",
-              "etiqueta": "Teve contato com a água",
-              "agente": "apontar",
-              "pausa": 2.2
+              "etiqueta": "Tocou na água da enchente",
+              "uso": "Não use esse alimento",
+              "pausa": 2.0
             }
           ],
           "explicacao": [
@@ -1757,41 +1740,31 @@
           "titulo": "Animais escondidos",
           "curto": "Animais",
           "icone": "alerta",
-          "base": [
-            "vistoria",
-            "epi",
-            "poco",
-            "gotas",
-            "tempo",
-            "descarte"
-          ],
           "resumo": "Cobras, aranhas e ratos podem estar nos objetos e móveis.",
           "subpassos": [
             {
               "texto": "Sacuda roupas, sapatos, toalhas e lençóis antes de usá-los",
-              "foco": "agua",
-              "efeito": "sacudir",
-              "ancora": "varal",
+              "acao": "sacudir",
+              "foco": "varal",
               "etiqueta": "Sacuda antes de usar",
-              "agente": "apontar",
-              "pausa": 1.6
+              "uso": "Roupas, sapatos, toalhas e lençóis",
+              "pausa": 1.8
             },
             {
               "texto": "Use um cabo de vassoura para mexer em móveis e objetos",
+              "acao": "vassoura",
               "foco": "moveis",
-              "efeito": "vassoura",
-              "ancora": "sofa",
               "etiqueta": "Cabo de vassoura",
-              "agente": "apontar",
-              "pausa": 1.4
+              "uso": "Mexa nos móveis sem pôr a mão",
+              "pausa": 1.8
             },
             {
               "texto": "Cuidado com aranhas, cobras e ratos",
+              "acao": "bichos",
               "foco": "moveis",
-              "ancora": "sofa",
-              "etiqueta": "Cobra escondida",
-              "agente": "apontar",
-              "pausa": 2.2
+              "etiqueta": "Cobras, aranhas e ratos",
+              "uso": "Cuidado ao mexer em objetos e móveis",
+              "pausa": 2.0
             }
           ],
           "explicacao": [
@@ -1811,35 +1784,23 @@
           "titulo": "Limpeza",
           "curto": "Limpeza",
           "icone": "check",
-          "base": [
-            "vistoria",
-            "epi",
-            "poco",
-            "gotas",
-            "tempo",
-            "descarte",
-            "sacudir",
-            "vassoura"
-          ],
           "resumo": "Raspe a lama e desinfete o que teve contato com a água.",
           "subpassos": [
             {
               "texto": "Raspe toda a lama e o lixo do chão, das paredes, dos móveis e utensílios",
-              "foco": "geral",
-              "efeito": "limpar",
-              "ancora": "lama",
+              "acao": "raspar",
+              "foco": "quintal",
               "etiqueta": "Raspe a lama",
-              "agente": "apontar",
-              "pausa": 1.6
+              "uso": "Chão, paredes, móveis e utensílios",
+              "pausa": 1.8
             },
             {
               "texto": "Lave e desinfete os objetos que tiveram contato com a água",
-              "foco": "geral",
-              "ancora": "casa",
+              "acao": "lavar",
+              "foco": "moveis",
               "etiqueta": "Lave e desinfete",
-              "agente": "acenar",
-              "vizinho": "acenar",
-              "pausa": 2.4
+              "uso": "Tudo o que teve contato com a água",
+              "pausa": 2.2
             }
           ],
           "explicacao": [

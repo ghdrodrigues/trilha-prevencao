@@ -88,6 +88,8 @@ button { font: inherit; color: inherit; }
   box-shadow: var(--sombra);
 }
 .etiqueta.visivel { opacity: 1; }
+.etiqueta strong { display: block; font-weight: inherit; }
+.etiqueta span { display: block; margin-top: 2px; font-family: 'Open Sans', system-ui, sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--indigo-1); }
 .etiqueta.secundaria { padding: 3px 8px 3px 7px; border-left-width: 3px; font-size: 0.64rem; color: var(--cinza-texto); box-shadow: none; }
 .etiqueta.secundaria.visivel { opacity: 0.88; }
 
@@ -571,4 +573,18 @@ body[data-vitrine] .guia { max-height: 46vh; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Lição "fazer" (ação animada por subpasso) ---------- */
+.subpassos.fazer li { position: relative; padding: 0 4px 3px; }
+.subpassos.fazer li::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: calc(var(--p, 0) * 100%); background: var(--laranja); }
+.subpassos.fazer li.feito::after { background: var(--indigo-1); }
+.subpassos.fazer li.feito { background: var(--cinza-1); }
+.subpassos.fazer li.atual { background: var(--laranja-claro); }
+.subpassos.fazer .feito .sp-num { background: var(--indigo-1); color: var(--branco); }
+.subpassos.fazer .atual .sp-num { background: var(--laranja); color: var(--indigo-3); }
+.subpassos.fazer .sp-texto { flex: 1 1 auto; min-width: 0; }
+.sp-seta { flex: none; font-size: 1.3rem; line-height: 1; color: var(--indigo-1); }
+@media (max-width: 899px) {
+  body[data-fazer] .guia { max-height: 42vh; }
 }
