@@ -505,7 +505,13 @@
             "F1"
           ]
         }
-      ]
+      ],
+      "acoes": [
+        "sms40199",
+        "whatsapp",
+        "ligar199"
+      ],
+      "acoesTitulo": "Cadastre agora"
     },
     {
       "id": 3,
@@ -514,39 +520,51 @@
       "perfil_variacoes": {},
       "tipo": "montagem",
       "cena": "kit",
-      "resumo": "Os itens que a Defesa Civil de SC indica para o kit de emergência da família.",
+      "resumo": "Os 18 itens do kit de emergência da Defesa Civil de SC. Marque o que você já tem em casa.",
       "etapas": [
         {
-          "id": "mochila",
-          "titulo": "O kit",
-          "curto": "Kit",
-          "icone": "mochila",
-          "resumo": "Monte o kit da família num só lugar.",
+          "id": "documentos",
+          "titulo": "Documentos e dinheiro",
+          "curto": "Documentos",
+          "icone": "documento",
           "subpassos": [
             {
-              "texto": "Monte o kit de emergência",
+              "texto": "Documentos da família numa pasta plástica",
               "objetos": [
-                "mochila"
+                "documentos"
               ],
-              "etiqueta": "Kit de emergência"
+              "etiqueta": "Documentos na pasta plástica"
+            },
+            {
+              "texto": "Foto recente da família",
+              "destaque": [
+                "documentos"
+              ],
+              "etiqueta": "Foto recente da família"
+            },
+            {
+              "texto": "Dinheiro",
+              "etiqueta": "Dinheiro"
+            },
+            {
+              "texto": "Chave de casa e dos veículos",
+              "etiqueta": "Chave de casa e dos veículos"
             }
           ],
           "explicacao": [
-            "A lista da Defesa Civil de SC inclui também cobertor leve e quente, sacolas plásticas, pasta plástica e as chaves de casa e do carro."
+            "A Defesa Civil orienta proteger documentos e objetos de valor em sacos plásticos bem fechados."
           ],
-          "dicas": [
-            "A cada seis meses, confere o kit: comida, água e remédio não podem passar da validade."
-          ],
+          "dicas": [],
           "fontes": [
-            "F2"
+            "F2",
+            "F3"
           ]
         },
         {
           "id": "agua",
-          "titulo": "Água",
-          "curto": "Água",
+          "titulo": "Água e comida",
+          "curto": "Água e comida",
           "icone": "agua",
-          "resumo": "Água está na lista do kit.",
           "subpassos": [
             {
               "texto": "Água",
@@ -555,35 +573,6 @@
                 "garrafa2"
               ],
               "etiqueta": "Água"
-            }
-          ],
-          "explicacao": [
-            "Depois de uma enxurrada, água de poço e de fonte natural fica contaminada."
-          ],
-          "dicas": [
-            "A Defesa Civil do Paraná indica 2 litros por pessoa por dia."
-          ],
-          "fontes": [
-            "F2",
-            "F4",
-            "REF-PR"
-          ]
-        },
-        {
-          "id": "comida",
-          "titulo": "Comida",
-          "curto": "Comida",
-          "icone": "lata",
-          "resumo": "Alimentos não perecíveis.",
-          "subpassos": [
-            {
-              "texto": "Alimentos não perecíveis",
-              "objetos": [
-                "lata1",
-                "lata2",
-                "lata3"
-              ],
-              "etiqueta": "Não perecíveis"
             },
             {
               "texto": "Chocolate e barra de cereais",
@@ -592,50 +581,69 @@
                 "barra2"
               ],
               "etiqueta": "Chocolate e barra de cereais"
+            },
+            {
+              "texto": "Alimentos não perecíveis",
+              "objetos": [
+                "lata1",
+                "lata2",
+                "lata3"
+              ],
+              "etiqueta": "Não perecíveis"
             }
           ],
           "explicacao": [
+            "Depois de uma enxurrada, água de poço e de fonte natural fica contaminada.",
             "A Defesa Civil de SC lista chocolate e barra de cereais. A cartilha de vendavais de Joinville fala em alimentos não perecíveis."
           ],
           "dicas": [
-            "A cada seis meses, confere a validade da comida e da água do kit."
+            "A Defesa Civil do Paraná indica 2 litros de água por pessoa por dia.",
+            "A cada seis meses, confira a validade da comida e da água."
           ],
           "fontes": [
             "F2",
-            "F10b"
+            "F4",
+            "F10b",
+            "REF-PR"
           ]
         },
         {
-          "id": "documentos",
-          "titulo": "Documentos",
-          "curto": "Documentos",
-          "icone": "documento",
-          "resumo": "Documentos da família protegidos da água.",
+          "id": "saude",
+          "titulo": "Saúde e higiene",
+          "curto": "Saúde",
+          "icone": "saude",
           "subpassos": [
             {
-              "texto": "Documentos pessoais da família",
+              "texto": "Remédios de uso da família",
               "objetos": [
-                "documentos"
+                "remedios"
               ],
-              "etiqueta": "Documentos"
+              "etiqueta": "Remédios"
             },
             {
-              "texto": "Tudo dentro de um saco plástico fechado",
+              "texto": "Maleta de primeiros socorros",
               "destaque": [
-                "documentos"
+                "remedios"
               ],
-              "etiqueta": "Saco plástico fechado"
+              "etiqueta": "Maleta de primeiros socorros"
+            },
+            {
+              "texto": "Álcool em gel",
+              "etiqueta": "Álcool em gel"
+            },
+            {
+              "texto": "Protetor solar e repelente",
+              "etiqueta": "Protetor solar e repelente"
             }
           ],
           "explicacao": [
-            "A Defesa Civil orienta proteger documentos e objetos de valor em sacos plásticos bem fechados."
+            "Remédios e maleta de primeiros socorros estão na lista da Defesa Civil de SC."
           ],
           "dicas": [
-            "Junta uma foto recente da família, dinheiro e as chaves de casa e do carro."
+            "Confira a validade dos remédios na revisão do plano."
           ],
           "fontes": [
-            "F2",
-            "F3"
+            "F2"
           ]
         },
         {
@@ -643,36 +651,38 @@
           "titulo": "Luz e comunicação",
           "curto": "Luz e rádio",
           "icone": "lanterna",
-          "resumo": "Lanterna, pilhas, rádio e carregador portátil.",
           "subpassos": [
             {
-              "texto": "Lanterna",
+              "texto": "Lanterna e pilhas",
               "objetos": [
                 "lanterna"
               ],
-              "etiqueta": "Lanterna"
+              "etiqueta": "Lanterna e pilhas"
             },
             {
-              "texto": "Rádio a pilha",
+              "texto": "Rádio",
               "objetos": [
                 "radio"
               ],
               "etiqueta": "Rádio a pilha"
             },
             {
-              "texto": "Carregador portátil para o celular",
+              "texto": "Celular e carregador portátil",
               "objetos": [
                 "carregador"
               ],
               "etiqueta": "Carregador portátil"
+            },
+            {
+              "texto": "Fósforo e velas",
+              "etiqueta": "Fósforo e velas"
             }
           ],
           "explicacao": [
-            "O rádio serve para ouvir informações e instruções. A lanterna ajuda a ver os danos da casa.",
-            "Fósforo e velas também estão na lista da Defesa Civil de SC."
+            "O rádio serve para ouvir informações e instruções. A lanterna ajuda a ver os danos da casa."
           ],
           "dicas": [
-            "Guarde pilhas reserva junto com a lanterna e o rádio."
+            "Tenha lanternas e baterias por perto."
           ],
           "fontes": [
             "F2",
@@ -680,18 +690,18 @@
           ]
         },
         {
-          "id": "saude",
-          "titulo": "Saúde e sinal",
-          "curto": "Saúde e apito",
-          "icone": "saude",
-          "resumo": "Remédios de quem precisa e um jeito de pedir socorro.",
+          "id": "abrigo",
+          "titulo": "Abrigo e sinal",
+          "curto": "Abrigo e apito",
+          "icone": "mochila",
           "subpassos": [
             {
-              "texto": "Remédios",
-              "objetos": [
-                "remedios"
-              ],
-              "etiqueta": "Remédios"
+              "texto": "Cobertor leve e quente",
+              "etiqueta": "Cobertor leve e quente"
+            },
+            {
+              "texto": "Sacolas plásticas",
+              "etiqueta": "Sacolas plásticas"
             },
             {
               "texto": "Apito",
@@ -702,12 +712,9 @@
             }
           ],
           "explicacao": [
-            "Remédios, apito e maleta de primeiros socorros estão na lista da Defesa Civil de SC.",
             "O apito serve para sinalizar e pedir ajuda."
           ],
-          "dicas": [
-            "Completa com a maleta de primeiros socorros, álcool em gel, protetor solar e repelente."
-          ],
+          "dicas": [],
           "fontes": [
             "F2",
             "REF-PR"
@@ -1026,6 +1033,9 @@
             "F10"
           ]
         }
+      ],
+      "acoes": [
+        "ligar199"
       ]
     },
     {
@@ -1198,6 +1208,18 @@
               "etiqueta": "Contato de apoio",
               "agente": "radio",
               "pausa": 2.4
+            },
+            {
+              "texto": "Retire os pets de espaços perigosos",
+              "foco": "casa",
+              "ancora": "casa",
+              "etiqueta": "Pets em lugar seguro"
+            },
+            {
+              "texto": "Tenha lanternas e baterias por perto",
+              "foco": "casa",
+              "ancora": "casa",
+              "etiqueta": "Lanternas e baterias"
             }
           ],
           "explicacao": [
@@ -1279,7 +1301,11 @@
             "F2"
           ]
         }
-      ]
+      ],
+      "acoes": [
+        "plano"
+      ],
+      "acoesTitulo": "Preencha o plano da sua família"
     },
     {
       "id": 6,
@@ -1631,7 +1657,13 @@
             "F3"
           ]
         }
-      ]
+      ],
+      "acoes": [
+        "ligar199",
+        "sms40199",
+        "whatsapp"
+      ],
+      "acoesTitulo": "Tenha à mão"
     },
     {
       "id": 7,

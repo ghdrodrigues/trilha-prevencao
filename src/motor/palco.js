@@ -86,7 +86,9 @@ export function criarPalco(container, { areaLivre }) {
     camera.updateProjectionMatrix();
   }
 
-  function enquadrar({ centro, largura, altura }, { instantaneo = false } = {}) {
+  let camVez = 0; // um enquadramento novo cancela o anterior
+  function enquadrar({ centro, largura, altura }, { instantaneo = false, duracao = 0.9 } = {}) {
+    const vez = ++camVez;
     const de = { ...vista, alvo: vista.alvo.clone() };
     const para = { alvo: new THREE.Vector3(...centro), largura, altura };
     if (instantaneo || movimentoReduzido.matches) {
@@ -96,9 +98,10 @@ export function criarPalco(container, { areaLivre }) {
       return Promise.resolve();
     }
     return tweensUI.animar({
-      duracao: 0.9,
+      duracao,
       ease: easing.entradaSaida,
       aoAtualizar: (p) => {
+        if (vez !== camVez) return;
         vista.alvo.lerpVectors(de.alvo, para.alvo, p);
         vista.largura = de.largura + (para.largura - de.largura) * p;
         vista.altura = de.altura + (para.altura - de.altura) * p;

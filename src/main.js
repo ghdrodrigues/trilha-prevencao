@@ -20,6 +20,7 @@ import { criarCenaDepois, relevo as relevoDepois, ENQUADRAMENTOS_DEPOIS, POSICOE
 import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE } from './scenes/cena6-enchente.js';
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
+import { abrirMeuPlano } from './ui/meu-plano.js';
 
 aplicarIcones();
 
@@ -66,8 +67,6 @@ function areaLivre() {
 const palco = criarPalco($('#palco'), { areaLivre });
 const etiquetas = criarEtiquetas($('#etiquetas'), palco);
 const guia = criarGuia(guiaEl, { aoMudarTamanho: () => requestAnimationFrame(palco.redimensionar) });
-// No celular a cena manda: o guia começa recolhido (título + subpasso atual).
-if (!desktop.matches) guia.recolher(true);
 new ResizeObserver(() => palco.redimensionar()).observe(guiaEl);
 new ResizeObserver(() => {
   document.documentElement.style.setProperty('--lt-h', `${linhaEl.offsetHeight}px`);
@@ -246,6 +245,15 @@ function progresso({ rotulo, feitas, total }) {
 const ICONES_PARADA = ['mapa', 'celular', 'mochila', 'alerta', 'rota', 'chuva', 'sol'];
 const letreiro = document.getElementById('letreiro');
 
+function abrirPlano() {
+  const volta = document.activeElement;
+  abrirMeuPlano({ perfil, aoFechar: () => volta?.focus?.() });
+}
+$('#abrir-plano').addEventListener('click', () => {
+  fecharMenu();
+  abrirPlano();
+});
+
 function irParaParada(id) {
   if (id > dados.licoes.length) {
     // fim da trilha: volta ao mapa
@@ -324,7 +332,7 @@ function mostrarLicaoSimples(l) {
 function mostrarLicaoMontagem(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
-  if (!desktop.matches) guia.recolher(true);
+  guia.recolher(false); // a lista é o conteúdo; a cena ilustra
   cenaKit.layout(colunasKit());
   palco.definirCena(cenaKit);
   licaoAtiva = criarLicaoMontagem({
@@ -335,6 +343,8 @@ function mostrarLicaoMontagem(l) {
     linhaTempo,
     etiquetas,
     progresso,
+    total: dados.licoes.length,
+    abrirPlano: () => abrirPlano(),
     aoTerminar: () => irParaParada(l.id + 1),
   });
   navegar = (i) => licaoAtiva.irPara(i);
@@ -346,7 +356,7 @@ function mostrarLicaoMontagem(l) {
 function mostrarLicaoRoteiro(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
-  if (!desktop.matches) guia.recolher(true);
+  guia.recolher(false);
   cena1.mostrarTrilha(false);
   const c = (CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno)();
   palco.definirCena(c.cena);
@@ -361,6 +371,8 @@ function mostrarLicaoRoteiro(l) {
     linhaTempo,
     etiquetas,
     progresso,
+    total: dados.licoes.length,
+    abrirPlano: () => abrirPlano(),
     aoTerminar: () => irParaParada(l.id + 1),
   });
   navegar = (i) => licaoAtiva.irPara(i);
@@ -372,6 +384,11 @@ function rotear() {
   const l = dados.licoes.find((x) => x.id === id);
   licaoAtiva?.parar();
   licaoAtiva = null;
+  const mp = document.getElementById('meu-plano');
+  if (mp && !mp.hidden) {
+    mp.hidden = true;
+    document.body.classList.remove('com-meu-plano');
+  }
   etiquetas.limpar();
   palco.pausado = false;
   const bp = document.querySelector('[data-acao=pausar]');
