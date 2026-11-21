@@ -119,20 +119,22 @@ export function avisoRascunho(el) {
 
 // Fontes oficiais da etapa ou da lição (códigos de _fontes no licoes.json),
 // mostradas como links no rodapé do guia.
-export function citarFontes(el, codigos) {
+export function citarFontes(el, codigos, { curto = false } = {}) {
   const cat = dados._fontes ?? {};
   const itens = (codigos ?? []).map((c) => cat[c]).filter((f) => f?.url);
   if (!itens.length) return;
   const p = document.createElement('p');
   p.className = 'fontes';
-  p.append('Fontes: ');
+  p.append(itens.length > 1 ? 'Fontes: ' : 'Fonte: ');
   itens.forEach((f, i) => {
     if (i) p.append(' · ');
     const a = document.createElement('a');
     a.href = f.url;
     a.target = '_blank';
     a.rel = 'noopener';
-    a.textContent = `${f.titulo} (${f.orgao})`;
+    const repetido = itens.filter((x) => x.orgao === f.orgao).length > 1;
+    a.textContent = curto ? (repetido ? f.titulo : f.orgao) : `${f.titulo} (${f.orgao})`;
+    if (curto) a.title = f.titulo;
     p.appendChild(a);
   });
   el.appendChild(p);

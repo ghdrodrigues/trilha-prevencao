@@ -88,6 +88,10 @@ button { font: inherit; color: inherit; }
   box-shadow: var(--sombra);
 }
 .etiqueta.visivel { opacity: 1; }
+.etiqueta strong { display: block; font-weight: inherit; }
+.etiqueta span { display: block; margin-top: 2px; font-family: 'Open Sans', system-ui, sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--indigo-1); }
+.etiqueta.secundaria { padding: 3px 8px 3px 7px; border-left-width: 3px; font-size: 0.64rem; color: var(--cinza-texto); box-shadow: none; }
+.etiqueta.secundaria.visivel { opacity: 0.88; }
 
 /* ---------- Botões ---------- */
 .icone-botao {
@@ -339,6 +343,92 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 .fontes a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .fontes a:hover, .fontes a:focus-visible { color: var(--laranja-escuro); }
 
+/* ---------- Lição em lista (opção A) ---------- */
+body[data-modo='licao'] .guia { max-height: 60vh; }
+body[data-vitrine] .guia { max-height: 46vh; }
+.guia-rodape:not(:empty) {
+  position: sticky;
+  bottom: -14px;
+  z-index: 1;
+  margin: 10px -16px -14px;
+  padding: 10px 16px 14px;
+  background: var(--branco);
+  box-shadow: 0 -10px 14px -12px rgb(6 16 24 / 0.35);
+}
+.rodape-botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.rodape-botoes .botao { margin-top: 0; flex: 1 1 auto; padding: 0 14px; min-height: 44px; }
+.guia-rodape .contagem-kit { margin: 0 0 8px; }
+.grupo { margin: 16px 0 0; }
+.grupo:first-child { margin-top: 4px; }
+.grupo-titulo { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-family: var(--titulo); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--indigo-1); }
+.grupo-titulo .ic { color: var(--laranja-escuro); }
+.grupo-dica { margin: 6px 0 0 !important; padding-left: 10px; border-left: 3px solid var(--laranja); font-size: 0.85rem; }
+.grupo .fontes { margin-top: 4px; }
+.dica-perfil { padding: 10px 12px; border-left: 4px solid var(--laranja); background: var(--laranja-claro); font-weight: 600; }
+.subpassos li { padding: 0 4px; }
+.subpassos li.visto { background: var(--cinza-1); }
+.sp-num {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  background: var(--cinza-2);
+  color: var(--indigo-3);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+.visto .sp-num { background: var(--indigo-1); color: var(--branco); }
+.atual .sp-num { background: var(--laranja); color: var(--indigo-3); }
+.subpassos.kit .tenho { margin: 0; min-height: 44px; padding: 4px 6px; font-family: var(--titulo); font-size: 0.92rem; font-weight: 700; color: var(--indigo-3); }
+.subpassos.kit .tenho-sim .sp-num { background: #2e7d32; color: var(--branco); }
+.subpassos.kit li:has(> .subpasso) { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.subpassos.kit li > .tenho { margin: 0; padding: 4px 8px; min-height: 40px; font-size: 0.78rem; font-family: var(--titulo); font-weight: 800; color: var(--indigo-2); text-transform: uppercase; letter-spacing: 0.04em; }
+.acoes { margin: 18px 0 4px; padding: 12px; border-top: 4px solid var(--laranja); background: var(--cinza-1); }
+.acoes-titulo { margin: 0 0 8px; font-family: var(--titulo); font-size: 0.9rem; font-weight: 900; color: var(--indigo-3); }
+.acao { display: flex; align-items: center; gap: 12px; min-height: 52px; margin-top: 8px; padding: 8px 12px; background: var(--laranja); color: var(--indigo-3); text-decoration: none; }
+.acao .ic { width: 1.5em; height: 1.5em; }
+.acao-texto { display: grid; line-height: 1.25; }
+.acao-texto strong { font-family: var(--titulo); font-weight: 800; }
+.acao-texto small { font-size: 0.78rem; }
+.acao:focus-visible, .campo input:focus-visible, .campo textarea:focus-visible { outline: 3px solid var(--indigo-1); outline-offset: 2px; }
+.campo { display: grid; gap: 4px; margin: 0 0 10px; font-size: 0.8rem; font-weight: 700; color: var(--indigo-3); }
+.campo input, .campo textarea { width: 100%; padding: 10px; border: 2px solid var(--cinza-2); border-radius: 0; background: var(--branco); color: var(--texto); font: inherit; font-size: 1rem; font-weight: 400; }
+.campo textarea { resize: vertical; }
+.nota { margin: 4px 0 0; font-size: 0.75rem; color: var(--cinza-texto); }
+
+/* ---------- Meu plano ---------- */
+.meu-plano { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgb(23 26 78 / 0.8); }
+.mp-caixa { width: min(680px, 100%); max-height: 100%; overflow-y: auto; padding: 18px 18px 20px; border-top: 4px solid var(--laranja); background: var(--branco); color: var(--texto); box-shadow: var(--sombra); }
+.mp-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mp-topo h2 { margin: 0; font-family: var(--titulo); font-size: 1.5rem; font-weight: 900; color: var(--indigo-3); }
+.mp-topo .icone-botao { color: var(--indigo-2); background: var(--cinza-1); border-color: var(--cinza-2); }
+.mp-sub { margin: 4px 0 8px; color: var(--cinza-texto); font-size: 0.9rem; }
+.mp-sec { margin-top: 14px; }
+.mp-sec h3 { margin: 0 0 6px; font-family: var(--titulo); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--indigo-1); }
+.mp-sec dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px 14px; margin: 0; }
+.mp-sec dt { font-size: 0.78rem; font-weight: 700; color: var(--cinza-texto); }
+.mp-sec dd { margin: 0 0 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.mp-sec dd.vazio { color: var(--cinza-texto); font-style: italic; }
+.mp-sec p { margin: 0 0 4px; }
+.mp-falta { margin: 0; padding-left: 1.3em; columns: 2 12em; }
+.mp-num { font-family: var(--titulo); font-weight: 800; color: var(--indigo-3); }
+.mp-botoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.mp-botoes .botao { margin-top: 0; flex: 1 1 13em; padding: 8px 14px; line-height: 1.2; text-align: center; text-decoration: none; }
+.mp-botoes { margin: 4px 0 6px; }
+@media (min-width: 640px) {
+  .mp-sec dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+  .mp-sec dd { margin: 0; }
+}
+@media print {
+  body { overflow: visible; background: #fff; }
+  body > *:not(#meu-plano) { display: none !important; }
+  .meu-plano { position: static; display: block; padding: 0; background: none; }
+  .mp-caixa { max-height: none; overflow: visible; box-shadow: none; border-top: 0; }
+  .mp-botoes, .mp-topo button { display: none !important; }
+}
+
 /* ---------- Linha do tempo ---------- */
 .linha-tempo {
   position: fixed;
@@ -468,6 +558,8 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
   }
   .guia-alca { display: none; }
   .guia-corpo { padding: 16px 20px; }
+  .guia-rodape:not(:empty) { bottom: -16px; margin: 10px -20px -16px; padding: 10px 20px 16px; }
+  body[data-modo='licao'] .guia { max-height: calc(100dvh - var(--topo-h) - var(--lt-h, 96px) - 16px); width: 400px; }
   .linha-tempo { padding: 8px 18px 16px; background: none; }
   .lt-itens li { flex: 1 1 0; }
   .lt-trilho { overflow: visible; }
@@ -481,4 +573,18 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Lição "fazer" (ação animada por subpasso) ---------- */
+.subpassos.fazer li { position: relative; padding: 0 4px 3px; }
+.subpassos.fazer li::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: calc(var(--p, 0) * 100%); background: var(--laranja); }
+.subpassos.fazer li.feito::after { background: var(--indigo-1); }
+.subpassos.fazer li.feito { background: var(--cinza-1); }
+.subpassos.fazer li.atual { background: var(--laranja-claro); }
+.subpassos.fazer .feito .sp-num { background: var(--indigo-1); color: var(--branco); }
+.subpassos.fazer .atual .sp-num { background: var(--laranja); color: var(--indigo-3); }
+.subpassos.fazer .sp-texto { flex: 1 1 auto; min-width: 0; }
+.sp-seta { flex: none; font-size: 1.3rem; line-height: 1; color: var(--indigo-1); }
+@media (max-width: 899px) {
+  body[data-fazer] .guia { max-height: 42vh; }
 }

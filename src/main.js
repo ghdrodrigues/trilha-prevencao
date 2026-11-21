@@ -15,8 +15,17 @@ import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
 import { criarCenaPlano, relevo as relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO } from './scenes/cena5-plano.js';
+import { criarCenaAlerta, relevo as relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA } from './scenes/cena2-alerta.js';
+import { criarCenaFazer7 } from './scenes/cena7-fazer.js';
+import { criarLicaoFazer } from './licoes/fazer.js';
+import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE } from './scenes/cena6-enchente.js';
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
+import { abrirMeuPlano } from './ui/meu-plano.js';
+import { criarLicaoPassos } from './licoes/passos.js';
+import { criarVitrine } from './scenes/vitrine.js';
+import { ITENS_KIT } from './scenes/objetos-kit.js';
+import { ITENS_SINAIS } from './scenes/objetos-sinais.js';
 
 aplicarIcones();
 
@@ -63,8 +72,6 @@ function areaLivre() {
 const palco = criarPalco($('#palco'), { areaLivre });
 const etiquetas = criarEtiquetas($('#etiquetas'), palco);
 const guia = criarGuia(guiaEl, { aoMudarTamanho: () => requestAnimationFrame(palco.redimensionar) });
-// No celular a cena manda: o guia começa recolhido (título + subpasso atual).
-if (!desktop.matches) guia.recolher(true);
 new ResizeObserver(() => palco.redimensionar()).observe(guiaEl);
 new ResizeObserver(() => {
   document.documentElement.style.setProperty('--lt-h', `${linhaEl.offsetHeight}px`);
@@ -94,50 +101,36 @@ const cenaRisco = {
   },
 };
 
-// Cena da parada 4: casa na encosta com os sinais de perigo.
-const sinais = criarCenaSinais({ palco });
-const personagensSinais = criarPersonagensRisco({
-  palco,
-  relevo: relevoSinais,
-  posicoesAgente: POSICOES_AGENTE_SINAIS,
-  vizinhos: VIZINHOS_SINAIS,
-  alturaAtor: 1.15,
-});
-sinais.raiz.add(personagensSinais.grupo);
-const cenaSinais = {
-  raiz: sinais.raiz,
-  alvos: [],
-  enquadramento: ENQUADRAMENTOS_SINAIS.geral,
-  animar: (t, dt, r) => {
-    sinais.efeitos.animar(t, dt, r);
-    personagensSinais.animar(t, dt, r);
-  },
-};
-// Cena da parada 5: bairro com rota de fuga e ponto de encontro.
-const plano = criarCenaPlano({ palco });
-const personagensPlano = criarPersonagensRisco({
-  palco,
-  relevo: relevoPlano,
-  posicoesAgente: POSICOES_AGENTE_PLANO,
-  vizinhos: VIZINHOS_PLANO,
-  alturaAtor: 1.1,
-});
-plano.raiz.add(personagensPlano.grupo);
-const cenaPlano = {
-  raiz: plano.raiz,
-  alvos: [],
-  enquadramento: ENQUADRAMENTOS_PLANO.geral,
-  animar: (t, dt, r) => {
-    plano.efeitos.animar(t, dt, r);
-    personagensPlano.animar(t, dt, r);
-  },
-};
+// Cenas de roteiro das paradas 2, 4, 5, 6 e 7: montadas só na primeira visita,
+// para não pesar a abertura no celular.
+function cenaRoteiro(criar, relevo, enquadramentos, posicoesAgente, vizinhos, alturaAtor = 1.1) {
+  let pronta = null;
+  return () => {
+    if (pronta) return pronta;
+    const c = criar({ palco });
+    const personagens = criarPersonagensRisco({ palco, relevo, posicoesAgente, vizinhos, alturaAtor });
+    c.raiz.add(personagens.grupo);
+    const cena = {
+      raiz: c.raiz,
+      alvos: [],
+      enquadramento: enquadramentos.geral,
+      animar: (t, dt, r) => {
+        c.efeitos.animar(t, dt, r);
+        personagens.animar(t, dt, r);
+      },
+    };
+    pronta = { cena, efeitos: c.efeitos, personagens, enquadramentos };
+    return pronta;
+  };
+}
 
 // Cada lição do tipo roteiro escolhe a cena pelo campo "cena".
 const CENAS_ROTEIRO = {
-  terreno: { cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS },
-  sinais: { cena: cenaSinais, efeitos: sinais.efeitos, personagens: personagensSinais, enquadramentos: ENQUADRAMENTOS_SINAIS },
-  plano: { cena: cenaPlano, efeitos: plano.efeitos, personagens: personagensPlano, enquadramentos: ENQUADRAMENTOS_PLANO },
+  terreno: () => ({ cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS }),
+  alerta: cenaRoteiro(criarCenaAlerta, relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA),
+  sinais: cenaRoteiro(criarCenaSinais, relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS, 1.15),
+  plano: cenaRoteiro(criarCenaPlano, relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO),
+  enchente: cenaRoteiro(criarCenaEnchente, relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE),
 };
 
 // No celular, o kit vira uma grade com as colunas que deixam os itens maiores
@@ -150,7 +143,10 @@ function colunasKit() {
 function reorganizarKit() {
   if (palco.cena === cenaKit && cenaKit.layout(colunasKit())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
 }
-window.addEventListener('resize', reorganizarKit);
+window.addEventListener('resize', () => {
+  reorganizarKit();
+  licaoAtiva?.reenquadrar?.();
+});
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -256,8 +252,22 @@ function progresso({ rotulo, feitas, total }) {
 const ICONES_PARADA = ['mapa', 'celular', 'mochila', 'alerta', 'rota', 'chuva', 'sol'];
 const letreiro = document.getElementById('letreiro');
 
+function abrirPlano() {
+  const volta = document.activeElement;
+  abrirMeuPlano({ perfil, aoFechar: () => volta?.focus?.() });
+}
+$('#abrir-plano').addEventListener('click', () => {
+  fecharMenu();
+  abrirPlano();
+});
+
 function irParaParada(id) {
-  if (id < 1 || id > dados.licoes.length) return;
+  if (id > dados.licoes.length) {
+    // fim da trilha: volta ao mapa
+    history.pushState(null, '', location.pathname);
+    return rotear();
+  }
+  if (id < 1) return;
   history.pushState(null, '', `?parada=${id}`);
   rotear();
 }
@@ -329,7 +339,7 @@ function mostrarLicaoSimples(l) {
 function mostrarLicaoMontagem(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
-  if (!desktop.matches) guia.recolher(true);
+  guia.recolher(false); // a lista é o conteúdo; a cena ilustra
   cenaKit.layout(colunasKit());
   palco.definirCena(cenaKit);
   licaoAtiva = criarLicaoMontagem({
@@ -340,6 +350,8 @@ function mostrarLicaoMontagem(l) {
     linhaTempo,
     etiquetas,
     progresso,
+    total: dados.licoes.length,
+    abrirPlano: () => abrirPlano(),
     aoTerminar: () => irParaParada(l.id + 1),
   });
   navegar = (i) => licaoAtiva.irPara(i);
@@ -351,9 +363,9 @@ function mostrarLicaoMontagem(l) {
 function mostrarLicaoRoteiro(l) {
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
-  if (!desktop.matches) guia.recolher(true);
+  guia.recolher(false);
   cena1.mostrarTrilha(false);
-  const c = CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno;
+  const c = (CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno)();
   palco.definirCena(c.cena);
   licaoAtiva = criarLicaoRoteiro({
     licao: l,
@@ -366,6 +378,86 @@ function mostrarLicaoRoteiro(l) {
     linhaTempo,
     etiquetas,
     progresso,
+    total: dados.licoes.length,
+    abrirPlano: () => abrirPlano(),
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+}
+
+// Cenas das lições "fazer": uma ação animada por subpasso, sem personagens.
+const CENAS_FAZER = { depois: criarCenaFazer7 };
+const cenasFazer = {};
+function mostrarLicaoFazer(l) {
+  document.body.dataset.modo = 'licao';
+  document.body.dataset.fazer = 'sim';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  guia.recolher(false);
+  personagensRisco.sair();
+  cenasFazer[l.cena] ??= CENAS_FAZER[l.cena]({ palco });
+  const c = cenasFazer[l.cena];
+  palco.definirCena(c);
+  licaoAtiva = criarLicaoFazer({
+    licao: l,
+    total: dados.licoes.length,
+    perfil,
+    cena: c,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    abrirPlano: () => abrirPlano(),
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+  if (new URLSearchParams(location.search).has('depurar')) window.__trilha = { palco, cena: c, licao: licaoAtiva };
+}
+
+// Vitrines das lições "passos" (palco limpo), montadas na primeira visita.
+const ITENS_VITRINE = { kit: ITENS_KIT, sinais: ITENS_SINAIS };
+const vitrines = {};
+function vitrinePara(l) {
+  if (!vitrines[l.id]) {
+    const itens = ITENS_VITRINE[l.cena];
+    const etapas = l.etapas.map((e) => e.subpassos.map((s) => s.objeto));
+    const usados = Object.fromEntries(etapas.flat().map((id) => [id, itens[id]]));
+    vitrines[l.id] = criarVitrine({ itens: usados, etapas });
+    vitrines[l.id].conectar(palco);
+  }
+  return vitrines[l.id];
+}
+
+// Quantos objetos cabem lado a lado: todos no desktop; 2 em tela estreita.
+function colunasVitrine(n) {
+  const l = areaLivre();
+  const prop = (window.innerWidth - l.esquerda - l.direita) / Math.max(window.innerHeight - l.topo - l.base, 1);
+  if (prop >= 1.3) return Math.min(n, 4);
+  return prop >= 0.85 ? Math.min(n, 3) : Math.min(n, 2);
+}
+
+function mostrarLicaoPassos(l) {
+  document.body.dataset.modo = 'licao';
+  document.body.dataset.vitrine = 'sim';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  guia.recolher(false);
+  personagensRisco.sair();
+  const v = vitrinePara(l);
+  palco.definirCena(v);
+  licaoAtiva = criarLicaoPassos({
+    licao: l,
+    total: dados.licoes.length,
+    perfil,
+    cena: v,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    colunas: colunasVitrine,
+    abrirPlano: () => abrirPlano(),
     aoTerminar: () => irParaParada(l.id + 1),
   });
   navegar = (i) => licaoAtiva.irPara(i);
@@ -377,13 +469,22 @@ function rotear() {
   const l = dados.licoes.find((x) => x.id === id);
   licaoAtiva?.parar();
   licaoAtiva = null;
+  const mp = document.getElementById('meu-plano');
+  if (mp && !mp.hidden) {
+    mp.hidden = true;
+    document.body.classList.remove('com-meu-plano');
+  }
   etiquetas.limpar();
   palco.pausado = false;
   const bp = document.querySelector('[data-acao=pausar]');
   bp.innerHTML = icone('pausar');
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
+  delete document.body.dataset.vitrine;
+  delete document.body.dataset.fazer;
   if (!l) return mostrarTrilha();
+  if (l.tipo === 'passos') return mostrarLicaoPassos(l);
+  if (l.tipo === 'fazer') return mostrarLicaoFazer(l);
   if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
   if (l.etapas) return mostrarLicaoMontagem(l);
   mostrarTrilha(l.id);

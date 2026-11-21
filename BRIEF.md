@@ -192,3 +192,24 @@ trilha-prevencao/
 2. Montar o blockout da cena 1 (terreno com morro/rio) com câmera isométrica fixa e 7 marcadores de parada clicáveis.
 3. Implementar o painel de lição com as 3 abas lendo de `licoes.json` (textos deste brief como placeholder).
 4. Rodar local e ajustar enquadramento antes de gerar qualquer modelo no Tripo.
+
+> **Paradas 2, 6 e 7 (21/11/2026):** feitas como roteiro, com cenas próprias em código (sem créditos): `cena2-alerta.js` (quintal, celular grande com a tela do SMS 40199, WhatsApp e Defesa Civil Alerta, torre de telefonia), `cena6-enchente.js` (baixada com rio, pontilhão, água que sobe, carro, caminho a pé pelo alto até o local seguro) e `cena7-depois.js` (casa com marca de lama, poço, mesa de tratamento da água, alimentos, móveis secando). Textos revalidados: saíram "72 horas de antecedência", "quando as autoridades liberarem", "informe os danos às autoridades" e "placas" (sem fonte). Entraram F9a, F9b e F9c (páginas de enchentes do Ministério da Saúde). As cenas de roteiro agora são montadas só na primeira visita.
+
+## Opção A: lista primeiro, 3D como ilustração (21/11/2026)
+
+Pedido do George depois de testar o PR 10 ("muita firula para pouca informação"):
+- Ao abrir a parada, o guia mostra a lista numerada completa, agrupada por etapa, com a fonte de cada grupo. Nada roda sozinho.
+- Tocar num item leva a câmera ao ponto (0,45 s), aplica o efeito e mostra a etiqueta.
+- Ações práticas no fim das paradas 2, 4, 5 e 6 (SMS 40199 com o CEP, WhatsApp da Defesa Civil, ligar 199, plano da família).
+- Parada 3: os 18 itens do kit do Plano Emergencial Familiar, cada um com "Tenho em casa".
+- "Meu plano" (menu e fim da trilha) reúne CEP, plano e kit para enviar pelo WhatsApp, copiar ou imprimir. Dados só no aparelho.
+
+## Piloto do método backcountry-101: paradas 3 e 4 (21/11/2026)
+
+O George pediu algo tão didático quanto o exemplo da Vercel. Diagnóstico: copiamos o layout, não o método. Piloto só nas paradas 3 e 4 (tipo "passos", src/licoes/passos.js):
+- Palco limpo (src/scenes/vitrine.js): só os objetos da etapa, grandes, em pedestais quadrados. Sem cenário nem personagens.
+- Um objeto por subpasso. Tocar no passo destaca o objeto; tocar no objeto abre o passo.
+- Painel com 3 abas: O que fazer (ou O que ter), Por quê, Dicas (por perfil).
+- Parada 3: 18 itens, 10 com GLB do Tripo e 8 em código (src/scenes/objetos-kit.js). Parada 4: 10 sinais em código (src/scenes/objetos-sinais.js). Zero créditos.
+- Não tem "certo ou errado", porque nenhuma fonte oficial diz o que é "normal".
+As outras 5 paradas continuam em lista até ele decidir.

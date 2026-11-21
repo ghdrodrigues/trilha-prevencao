@@ -60,6 +60,21 @@
       "titulo": "Cartilha Vendavais: como agir",
       "orgao": "Defesa Civil de Joinville, SC",
       "url": "https://www.joinville.sc.gov.br/wp-content/uploads/2025/04/Cartilha-Vendavais-como-agir.pdf"
+    },
+    "F9a": {
+      "titulo": "Enchentes: cuidados com a água",
+      "orgao": "Ministério da Saúde",
+      "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/e/enchentes/cuidados-com-a-agua"
+    },
+    "F9b": {
+      "titulo": "Enchentes: cuidados com a leptospirose",
+      "orgao": "Ministério da Saúde",
+      "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/e/enchentes/cuidados-com-a-leptospirose"
+    },
+    "F9c": {
+      "titulo": "Enchentes: cuidados com animais peçonhentos",
+      "orgao": "Ministério da Saúde",
+      "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/e/enchentes/cuidados-com-animais-peconhentos"
     }
   },
   "perfis": {
@@ -295,13 +310,13 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Envie o CEP da sua casa por SMS para o número 40199. É gratuito.",
-          "No WhatsApp, mande um “olá” para (61) 2034-4611 e cadastre a sua área.",
-          "O Defesa Civil Alerta chega sozinho em celulares 4G e 5G, sem cadastro, e toca mesmo no silencioso.",
-          "Siga apenas os canais oficiais da Defesa Civil."
+          "Envie uma mensagem SMS para o número 40199 com o CEP da área de interesse. O serviço é gratuito.",
+          "No WhatsApp, cadastre o número (61) 2034-4611, mande um “olá” e cadastre as áreas de interesse.",
+          "O Defesa Civil Alerta chega em celulares compatíveis, nas redes 4G ou 5G, sem cadastro prévio, e pode tocar mesmo no modo silencioso.",
+          "Siga as recomendações das autoridades locais."
         ],
-        "porque": "A Defesa Civil de SC emite avisos com até 72 horas de antecedência e manda alertas por SMS, WhatsApp, Defesa Civil Alerta, redes sociais e site oficial.",
-        "dica": "Chegou alerta? Segue o que a Defesa Civil orienta e confere só nos canais oficiais."
+        "porque": "Os alertas chegam com recomendações ou ações emergenciais para a população em situação de risco.",
+        "dica": "Você pode escolher um ou mais canais."
       },
       "perfil_variacoes": {},
       "fontes": [
@@ -309,213 +324,387 @@
         "F6",
         "F7",
         "F8"
-      ]
+      ],
+      "tipo": "roteiro",
+      "cena": "alerta",
+      "letreiro": "Cadastre o alerta",
+      "resumo": "Cadastrar o celular para receber os alertas da Defesa Civil.",
+      "final": {
+        "titulo": "Alerta cadastrado",
+        "texto": "Próximo passo: montar o kit de emergência."
+      },
+      "etapas": [
+        {
+          "id": "sms",
+          "titulo": "Alerta por SMS",
+          "curto": "SMS 40199",
+          "icone": "sms",
+          "resumo": "Envie uma mensagem SMS para 40199 com o CEP da área de interesse.",
+          "subpassos": [
+            {
+              "texto": "Escreva o CEP da área de interesse e envie para 40199",
+              "foco": "celular",
+              "efeito": "sms",
+              "ancora": "celular",
+              "etiqueta": "SMS para 40199",
+              "agente": "apontar",
+              "pausa": 2.0
+            },
+            {
+              "texto": "O serviço é gratuito",
+              "foco": "celular",
+              "ancora": "celular",
+              "etiqueta": "Gratuito",
+              "agente": "acenar",
+              "pausa": 2.0
+            }
+          ],
+          "explicacao": [
+            "O serviço do governo federal orienta enviar uma mensagem para o número 40199 com o CEP da área de interesse. O serviço é gratuito para o cidadão.",
+            "A Defesa Civil de SC divulga o mesmo canal: alertas por SMS no 40199."
+          ],
+          "dicas": [
+            "Você pode escolher um ou mais canais."
+          ],
+          "fontes": [
+            "F6",
+            "F1"
+          ]
+        },
+        {
+          "id": "whatsapp",
+          "titulo": "Alerta por WhatsApp",
+          "curto": "WhatsApp",
+          "icone": "celular",
+          "resumo": "Cadastre o número (61) 2034-4611 e mande um “olá”.",
+          "subpassos": [
+            {
+              "texto": "Cadastre o número (61) 2034-4611 e mande um “olá”",
+              "foco": "celular",
+              "efeito": "whats",
+              "ancora": "celular",
+              "etiqueta": "WhatsApp (61) 2034-4611",
+              "agente": "apontar",
+              "pausa": 1.4
+            },
+            {
+              "texto": "Siga os passos da tela e cadastre as áreas de interesse",
+              "foco": "celular",
+              "ancora": "celular",
+              "etiqueta": "Áreas de interesse",
+              "agente": "apontar",
+              "pausa": 2.0
+            }
+          ],
+          "explicacao": [
+            "Pelo WhatsApp, cadastre o número 61 2034-4611, dê um “olá” para o robô de alertas e siga os passos da tela para cadastrar as áreas de interesse."
+          ],
+          "dicas": [
+            "Cadastre as áreas de interesse."
+          ],
+          "fontes": [
+            "F6"
+          ]
+        },
+        {
+          "id": "cellbroadcast",
+          "titulo": "Defesa Civil Alerta",
+          "curto": "No celular",
+          "icone": "alerta",
+          "base": [
+            "whats"
+          ],
+          "resumo": "O alerta aparece na tela de celulares compatíveis, sem cadastro.",
+          "subpassos": [
+            {
+              "texto": "Celulares compatíveis, nas redes 4G ou 5G, em áreas de risco, recebem o alerta",
+              "foco": "torre",
+              "efeito": "torre",
+              "ancora": "torre",
+              "etiqueta": "Alerta para a área de risco",
+              "agente": "apontar",
+              "pausa": 1.6
+            },
+            {
+              "texto": "Não é necessário cadastro prévio",
+              "foco": "torre",
+              "ancora": "celular",
+              "etiqueta": "Sem cadastro",
+              "agente": "acenar",
+              "pausa": 1.4
+            },
+            {
+              "texto": "A mensagem aparece na tela do celular",
+              "foco": "celular",
+              "efeito": "alerta",
+              "ancora": "celular",
+              "etiqueta": "Mensagem na tela",
+              "agente": "apontar",
+              "pausa": 1.6
+            },
+            {
+              "texto": "Pode tocar mesmo no modo silencioso",
+              "foco": "celular",
+              "efeito": "silencioso",
+              "ancora": "sino",
+              "etiqueta": "Toca no silencioso",
+              "agente": "apontar",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "A Anatel informa que o Defesa Civil Alerta exibe mensagens de texto em formato pop-up diretamente na tela do celular. Os alertas são enviados para celulares compatíveis, conectados às redes 4G ou 5G, localizados em áreas com risco de desastres.",
+            "O Ministério da Integração informa que não é necessário cadastro prévio, que o serviço é gratuito e que os alertas podem tocar mesmo em modo silencioso. Funcionam em Android e iOS lançados a partir de 2020."
+          ],
+          "dicas": [
+            "O recurso não depende de pacote de dados."
+          ],
+          "fontes": [
+            "F8",
+            "F7"
+          ]
+        },
+        {
+          "id": "recebeu",
+          "titulo": "Chegou um alerta",
+          "curto": "O que fazer",
+          "icone": "check",
+          "base": [
+            "whats",
+            "torre",
+            "alerta"
+          ],
+          "resumo": "Siga as recomendações das autoridades locais.",
+          "subpassos": [
+            {
+              "texto": "O alerta traz recomendações para quem está em área de risco",
+              "foco": "celular",
+              "ancora": "celular",
+              "etiqueta": "Recomendações",
+              "agente": "apontar",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Siga as recomendações das autoridades locais",
+              "foco": "geral",
+              "agente": "acenar",
+              "vizinho": "acenar",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "Os avisos e alertas vêm acompanhados de recomendações ou ações emergenciais para a população em situação de risco.",
+            "Devem ser seguidas as recomendações das autoridades locais, especialmente quanto a deslocamentos e evacuação de áreas de risco."
+          ],
+          "dicas": [
+            "Em emergência, ligue 199, a Defesa Civil."
+          ],
+          "fontes": [
+            "F6",
+            "F7",
+            "F1"
+          ]
+        }
+      ],
+      "acoes": [
+        "sms40199",
+        "whatsapp",
+        "ligar199"
+      ],
+      "acoesTitulo": "Cadastre agora"
     },
     {
       "id": 3,
       "titulo": "Monte o kit de emergência",
       "rascunho": true,
       "perfil_variacoes": {},
-      "tipo": "montagem",
+      "tipo": "passos",
       "cena": "kit",
-      "resumo": "Os itens que a Defesa Civil de SC indica para o kit de emergência da família.",
+      "resumo": "Os 18 itens do kit de emergência da Defesa Civil de SC. Marque o que você já tem em casa.",
       "etapas": [
         {
-          "id": "mochila",
-          "titulo": "O kit",
-          "curto": "Kit",
-          "icone": "mochila",
-          "resumo": "Monte o kit da família num só lugar.",
-          "subpassos": [
-            {
-              "texto": "Monte o kit de emergência",
-              "objetos": [
-                "mochila"
-              ],
-              "etiqueta": "Kit de emergência"
-            }
-          ],
-          "explicacao": [
-            "A lista da Defesa Civil de SC inclui também cobertor leve e quente, sacolas plásticas, pasta plástica e as chaves de casa e do carro."
-          ],
-          "dicas": [
-            "A cada seis meses, confere o kit: comida, água e remédio não podem passar da validade."
-          ],
-          "fontes": [
-            "F2"
-          ]
-        },
-        {
-          "id": "agua",
-          "titulo": "Água",
-          "curto": "Água",
-          "icone": "agua",
-          "resumo": "Água está na lista do kit.",
-          "subpassos": [
-            {
-              "texto": "Água",
-              "objetos": [
-                "garrafa1",
-                "garrafa2"
-              ],
-              "etiqueta": "Água"
-            }
-          ],
-          "explicacao": [
-            "Depois de uma enxurrada, água de poço e de fonte natural fica contaminada."
-          ],
-          "dicas": [
-            "A Defesa Civil do Paraná indica 2 litros por pessoa por dia."
-          ],
-          "fontes": [
-            "F2",
-            "F4",
-            "REF-PR"
-          ]
-        },
-        {
-          "id": "comida",
-          "titulo": "Comida",
-          "curto": "Comida",
-          "icone": "lata",
-          "resumo": "Alimentos não perecíveis.",
-          "subpassos": [
-            {
-              "texto": "Alimentos não perecíveis",
-              "objetos": [
-                "lata1",
-                "lata2",
-                "lata3"
-              ],
-              "etiqueta": "Não perecíveis"
-            },
-            {
-              "texto": "Chocolate e barra de cereais",
-              "objetos": [
-                "barra1",
-                "barra2"
-              ],
-              "etiqueta": "Chocolate e barra de cereais"
-            }
-          ],
-          "explicacao": [
-            "A Defesa Civil de SC lista chocolate e barra de cereais. A cartilha de vendavais de Joinville fala em alimentos não perecíveis."
-          ],
-          "dicas": [
-            "A cada seis meses, confere a validade da comida e da água do kit."
-          ],
-          "fontes": [
-            "F2",
-            "F10b"
-          ]
-        },
-        {
           "id": "documentos",
-          "titulo": "Documentos",
+          "titulo": "Documentos e dinheiro",
           "curto": "Documentos",
           "icone": "documento",
-          "resumo": "Documentos da família protegidos da água.",
           "subpassos": [
             {
-              "texto": "Documentos pessoais da família",
-              "objetos": [
-                "documentos"
-              ],
-              "etiqueta": "Documentos"
+              "texto": "Documentos da família numa pasta plástica",
+              "etiqueta": "Documentos na pasta plástica",
+              "objeto": "documentos"
             },
             {
-              "texto": "Tudo dentro de um saco plástico fechado",
-              "destaque": [
-                "documentos"
-              ],
-              "etiqueta": "Saco plástico fechado"
+              "texto": "Foto recente da família",
+              "etiqueta": "Foto recente da família",
+              "objeto": "foto"
+            },
+            {
+              "texto": "Dinheiro",
+              "etiqueta": "Dinheiro",
+              "objeto": "dinheiro"
+            },
+            {
+              "texto": "Chave de casa e dos veículos",
+              "etiqueta": "Chave de casa e dos veículos",
+              "objeto": "chaves"
             }
           ],
           "explicacao": [
             "A Defesa Civil orienta proteger documentos e objetos de valor em sacos plásticos bem fechados."
           ],
-          "dicas": [
-            "Junta uma foto recente da família, dinheiro e as chaves de casa e do carro."
-          ],
+          "dicas": [],
           "fontes": [
             "F2",
             "F3"
-          ]
+          ],
+          "resumo": "Documentos e o que ajuda a família a se identificar e voltar para casa."
+        },
+        {
+          "id": "agua",
+          "titulo": "Água e comida",
+          "curto": "Água e comida",
+          "icone": "agua",
+          "subpassos": [
+            {
+              "texto": "Água",
+              "etiqueta": "Água",
+              "objeto": "agua"
+            },
+            {
+              "texto": "Chocolate e barra de cereais",
+              "etiqueta": "Chocolate e barra de cereais",
+              "objeto": "barras"
+            },
+            {
+              "texto": "Alimentos não perecíveis",
+              "etiqueta": "Não perecíveis",
+              "objeto": "latas"
+            }
+          ],
+          "explicacao": [
+            "Depois de uma enxurrada, água de poço e de fonte natural fica contaminada.",
+            "A Defesa Civil de SC lista chocolate e barra de cereais. A cartilha de vendavais de Joinville fala em alimentos não perecíveis."
+          ],
+          "dicas": [
+            "A Defesa Civil do Paraná indica 2 litros de água por pessoa por dia.",
+            "A cada seis meses, confira a validade da comida e da água."
+          ],
+          "fontes": [
+            "F2",
+            "F4",
+            "F10b",
+            "REF-PR"
+          ],
+          "resumo": "Água e comida que não estraga."
+        },
+        {
+          "id": "saude",
+          "titulo": "Saúde e higiene",
+          "curto": "Saúde",
+          "icone": "saude",
+          "subpassos": [
+            {
+              "texto": "Remédios de uso da família",
+              "etiqueta": "Remédios",
+              "objeto": "comprimidos"
+            },
+            {
+              "texto": "Maleta de primeiros socorros",
+              "etiqueta": "Maleta de primeiros socorros",
+              "objeto": "maleta"
+            },
+            {
+              "texto": "Álcool em gel",
+              "etiqueta": "Álcool em gel",
+              "objeto": "alcool"
+            },
+            {
+              "texto": "Protetor solar e repelente",
+              "etiqueta": "Protetor solar e repelente",
+              "objeto": "protetor"
+            }
+          ],
+          "explicacao": [
+            "Remédios e maleta de primeiros socorros estão na lista da Defesa Civil de SC."
+          ],
+          "dicas": [
+            "Confira a validade dos remédios na revisão do plano."
+          ],
+          "fontes": [
+            "F2"
+          ],
+          "resumo": "Remédios e higiene para os primeiros dias."
         },
         {
           "id": "luz",
           "titulo": "Luz e comunicação",
           "curto": "Luz e rádio",
           "icone": "lanterna",
-          "resumo": "Lanterna, pilhas, rádio e carregador portátil.",
           "subpassos": [
             {
-              "texto": "Lanterna",
-              "objetos": [
-                "lanterna"
-              ],
-              "etiqueta": "Lanterna"
+              "texto": "Lanterna e pilhas",
+              "etiqueta": "Lanterna e pilhas",
+              "objeto": "lanterna"
             },
             {
-              "texto": "Rádio a pilha",
-              "objetos": [
-                "radio"
-              ],
-              "etiqueta": "Rádio a pilha"
+              "texto": "Rádio",
+              "etiqueta": "Rádio a pilha",
+              "objeto": "radio"
             },
             {
-              "texto": "Carregador portátil para o celular",
-              "objetos": [
-                "carregador"
-              ],
-              "etiqueta": "Carregador portátil"
+              "texto": "Celular e carregador portátil",
+              "etiqueta": "Carregador portátil",
+              "objeto": "carregador"
+            },
+            {
+              "texto": "Fósforo e velas",
+              "etiqueta": "Fósforo e velas",
+              "objeto": "fosforo"
             }
           ],
           "explicacao": [
-            "O rádio serve para ouvir informações e instruções. A lanterna ajuda a ver os danos da casa.",
-            "Fósforo e velas também estão na lista da Defesa Civil de SC."
+            "O rádio serve para ouvir informações e instruções. A lanterna ajuda a ver os danos da casa."
           ],
           "dicas": [
-            "Guarde pilhas reserva junto com a lanterna e o rádio."
+            "Tenha lanternas e baterias por perto."
           ],
           "fontes": [
             "F2",
             "F5"
-          ]
+          ],
+          "resumo": "Luz, rádio e celular carregado para receber informação."
         },
         {
-          "id": "saude",
-          "titulo": "Saúde e sinal",
-          "curto": "Saúde e apito",
-          "icone": "saude",
-          "resumo": "Remédios de quem precisa e um jeito de pedir socorro.",
+          "id": "abrigo",
+          "titulo": "Abrigo e sinal",
+          "curto": "Abrigo e apito",
+          "icone": "mochila",
           "subpassos": [
             {
-              "texto": "Remédios",
-              "objetos": [
-                "remedios"
-              ],
-              "etiqueta": "Remédios"
+              "texto": "Cobertor leve e quente",
+              "etiqueta": "Cobertor leve e quente",
+              "objeto": "cobertor"
+            },
+            {
+              "texto": "Sacolas plásticas",
+              "etiqueta": "Sacolas plásticas",
+              "objeto": "sacolas"
             },
             {
               "texto": "Apito",
-              "objetos": [
-                "apito"
-              ],
-              "etiqueta": "Apito"
+              "etiqueta": "Apito",
+              "objeto": "apito"
             }
           ],
           "explicacao": [
-            "Remédios, apito e maleta de primeiros socorros estão na lista da Defesa Civil de SC.",
             "O apito serve para sinalizar e pedir ajuda."
           ],
-          "dicas": [
-            "Completa com a maleta de primeiros socorros, álcool em gel, protetor solar e repelente."
-          ],
+          "dicas": [],
           "fontes": [
             "F2",
             "REF-PR"
-          ]
+          ],
+          "resumo": "Para se aquecer, guardar coisas e pedir ajuda."
         }
       ],
       "letreiro": "Kit de emergência",
@@ -526,7 +715,8 @@
         "F5",
         "F10b",
         "REF-PR"
-      ]
+      ],
+      "marcavel": true
     },
     {
       "id": 4,
@@ -548,10 +738,10 @@
           "dica": "Na encosta, água barrenta saindo do barranco ou muro estufado é sinal de sair na hora."
         },
         "baixada": {
-          "dica": "Na baixada, fica de olho no nível da água e não espera ficar ilhado para sair."
+          "dica": "Na baixada, fique atento ao nível da água e evite ficar isolado."
         },
         "aberto": {
-          "dica": "Em área aberta, galho perto do telhado ou da fiação vira perigo no vendaval. Poda antes."
+          "dica": "No vendaval, evite ficar embaixo de árvores, postes ou fiação elétrica."
         }
       },
       "fontes": [
@@ -561,7 +751,7 @@
         "F10",
         "F10b"
       ],
-      "tipo": "roteiro",
+      "tipo": "passos",
       "cena": "sinais",
       "letreiro": "Sinais de perigo",
       "resumo": "Reconhecer no terreno e na casa os sinais de que a encosta pode deslizar.",
@@ -571,78 +761,38 @@
       },
       "etapas": [
         {
-          "id": "casa",
-          "titulo": "A casa na encosta",
-          "curto": "A casa",
-          "icone": "encosta",
-          "resumo": "Em área de encosta, a chuva intensa pede atenção ao terreno.",
-          "subpassos": [
-            {
-              "texto": "Uma casa na encosta, em dias de chuva intensa",
-              "foco": "geral",
-              "efeito": "chuva",
-              "agente": "acenar"
-            },
-            {
-              "texto": "Fique atento a rachaduras, inclinação de árvores ou postes e movimentação de terra",
-              "foco": "geral",
-              "agente": "apontar"
-            }
-          ],
-          "explicacao": [
-            "Em áreas de encosta, a Defesa Civil de SC orienta ficar atento a rachaduras, inclinação de árvores ou postes e movimentação de terra."
-          ],
-          "dicas": [
-            "Evite permanecer em encostas durante períodos de chuva intensa."
-          ],
-          "fontes": [
-            "F1",
-            "F2",
-            "F10b"
-          ]
-        },
-        {
           "id": "trincas",
           "titulo": "Rachaduras e trincas",
           "curto": "Trincas",
           "icone": "trinca",
-          "base": [
-            "chuva"
-          ],
-          "resumo": "Rachaduras no chão e trincas nas paredes.",
+          "resumo": "Fique atento a rachaduras, inclinação de árvores ou postes e movimentação de terra.",
           "subpassos": [
             {
               "texto": "Rachaduras no chão",
-              "foco": "chao",
-              "efeito": "chao",
-              "ancora": "chao",
               "etiqueta": "Rachadura no chão",
-              "agente": "apontar",
-              "vizinho": {
-                "encosta": "examinar"
-              }
+              "objeto": "chaoRachado"
             },
             {
               "texto": "Trincas nas paredes",
-              "foco": "parede",
-              "efeito": "parede",
-              "ancora": "parede",
               "etiqueta": "Trinca na parede",
-              "agente": "apontar"
+              "objeto": "paredeTrincada"
             }
           ],
           "explicacao": [
+            "Em áreas de encosta, a Defesa Civil de SC orienta ficar atento a rachaduras, inclinação de árvores ou postes e movimentação de terra.",
             "O Plano Emergencial Familiar da Defesa Civil de SC orienta observar rachaduras, trincas ou saliências no chão e nas paredes.",
             "A Defesa Civil Nacional reforça: onde há risco de deslizamento, fique atento a trincas no terreno ou rachaduras nas paredes."
           ],
           "dicas": [
-            "Viu rachadura no chão ou na parede? Avisa os vizinhos e a Defesa Civil: 199."
+            "Evite permanecer em encostas durante períodos de chuva intensa.",
+            "Viu rachadura no chão ou na parede? Avise os vizinhos e a Defesa Civil: 199."
           ],
           "fontes": [
             "F1",
+            "F10",
+            "F10b",
             "F2",
-            "F3",
-            "F10"
+            "F3"
           ]
         },
         {
@@ -650,29 +800,17 @@
           "titulo": "Chão e muro estufados",
           "curto": "Estufados",
           "icone": "estufado",
-          "base": [
-            "chuva"
-          ],
           "resumo": "Saliências no chão e muros que estufam.",
           "subpassos": [
             {
               "texto": "Saliências no chão",
-              "foco": "estufado",
-              "efeito": "saliencia",
-              "ancora": "saliencia",
               "etiqueta": "Chão estufado",
-              "agente": "apontar"
+              "objeto": "chaoEstufado"
             },
             {
               "texto": "Muros estufados",
-              "foco": "estufado",
-              "efeito": "muro",
-              "ancora": "muro",
               "etiqueta": "Muro estufado",
-              "agente": "apontar",
-              "vizinho": {
-                "encosta": "examinar"
-              }
+              "objeto": "muroEstufado"
             }
           ],
           "explicacao": [
@@ -680,7 +818,7 @@
             "O Plano Emergencial Familiar pede atenção a saliências no chão e nas paredes."
           ],
           "dicas": [
-            "Ao perceber sinais de instabilidade, sai imediatamente da área."
+            "Ao perceber sinais de instabilidade, saia imediatamente da área."
           ],
           "fontes": [
             "F1",
@@ -692,26 +830,17 @@
           "titulo": "Árvores e postes inclinados",
           "curto": "Inclinados",
           "icone": "inclinado",
-          "base": [
-            "chuva"
-          ],
           "resumo": "Árvores, postes ou muros com inclinação anormal.",
           "subpassos": [
             {
               "texto": "Árvore inclinada, com raízes expostas",
-              "foco": "inclinado",
-              "efeito": "arvore",
-              "ancora": "arvore",
               "etiqueta": "Árvore inclinada",
-              "agente": "apontar"
+              "objeto": "arvoreInclinada"
             },
             {
               "texto": "Poste com inclinação anormal",
-              "foco": "inclinado",
-              "efeito": "poste",
-              "ancora": "poste",
               "etiqueta": "Poste inclinado",
-              "agente": "apontar"
+              "objeto": "posteInclinado"
             }
           ],
           "explicacao": [
@@ -719,7 +848,7 @@
             "A cartilha de deslizamentos da Defesa Civil de Joinville inclui árvores com raízes expostas."
           ],
           "dicas": [
-            "Se houver qualquer sinal de movimentação no terreno, procura um local seguro."
+            "Se houver qualquer sinal de movimentação no terreno, procure um local seguro."
           ],
           "fontes": [
             "F1",
@@ -733,22 +862,12 @@
           "titulo": "Água barrenta",
           "curto": "Água barrenta",
           "icone": "agua",
-          "base": [
-            "chuva"
-          ],
           "resumo": "Água barrenta surgindo no barranco.",
           "subpassos": [
             {
               "texto": "Água barrenta surgindo no barranco",
-              "foco": "agua",
-              "efeito": "agua",
-              "ancora": "agua",
               "etiqueta": "Água barrenta",
-              "agente": "apontar",
-              "vizinho": {
-                "encosta": "examinar"
-              },
-              "pausa": 2.4
+              "objeto": "barranco"
             }
           ],
           "explicacao": [
@@ -766,55 +885,22 @@
           "titulo": "Viu um sinal? Saia e avise",
           "curto": "Saia e avise",
           "icone": "telefone",
-          "base": [
-            "chuva",
-            "chao",
-            "parede",
-            "saliencia",
-            "muro",
-            "arvore",
-            "poste",
-            "agua"
-          ],
           "resumo": "Ao perceber um sinal: sair, avisar os vizinhos e ligar 199.",
           "subpassos": [
             {
               "texto": "Saia imediatamente da área",
-              "foco": "saida",
-              "vizinhoPara": [
-                3.6,
-                4.0
-              ],
-              "vizinho": "parado",
-              "ancora": "saida",
               "etiqueta": "Saia na hora",
-              "agente": "apontar",
-              "pausa": 5
+              "objeto": "saida"
             },
             {
               "texto": "Avise os vizinhos sobre o perigo",
-              "foco": "saida",
-              "vizinhoPara": [
-                3.6,
-                4.0
-              ],
-              "vizinho": "acenar",
-              "ancora": "saida",
               "etiqueta": "Avise os vizinhos",
-              "agente": "acenar"
+              "objeto": "vizinhos"
             },
             {
               "texto": "Acione a Defesa Civil pelo telefone 199",
-              "foco": "saida",
-              "vizinhoPara": [
-                3.6,
-                4.0
-              ],
-              "vizinho": "parado",
-              "ancora": "telefone",
               "etiqueta": "Defesa Civil: 199",
-              "agente": "radio",
-              "pausa": 2.4
+              "objeto": "telefone199"
             }
           ],
           "explicacao": [
@@ -822,7 +908,7 @@
             "O Plano Emergencial Familiar completa: em condições seguras, saia do local, comunique os vizinhos e avise as autoridades, o Corpo de Bombeiros e a Defesa Civil do município."
           ],
           "dicas": [
-            "Não espera o sinal piorar: sai, avisa os vizinhos e liga 199."
+            "Não espere o sinal piorar: saia, avise os vizinhos e ligue 199."
           ],
           "fontes": [
             "F1",
@@ -830,6 +916,9 @@
             "F10"
           ]
         }
+      ],
+      "acoes": [
+        "ligar199"
       ]
     },
     {
@@ -1002,6 +1091,18 @@
               "etiqueta": "Contato de apoio",
               "agente": "radio",
               "pausa": 2.4
+            },
+            {
+              "texto": "Retire os pets de espaços perigosos",
+              "foco": "casa",
+              "ancora": "casa",
+              "etiqueta": "Pets em lugar seguro"
+            },
+            {
+              "texto": "Tenha lanternas e baterias por perto",
+              "foco": "casa",
+              "ancora": "casa",
+              "etiqueta": "Lanternas e baterias"
             }
           ],
           "explicacao": [
@@ -1083,7 +1184,11 @@
             "F2"
           ]
         }
-      ]
+      ],
+      "acoes": [
+        "plano"
+      ],
+      "acoesTitulo": "Preencha o plano da sua família"
     },
     {
       "id": 6,
@@ -1091,33 +1196,357 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Não atravesse ruas alagadas nem pontes cobertas de água.",
-          "Desligue a energia elétrica, feche o gás e o registro de água.",
-          "Vá para um local seguro.",
-          "Se o carro pode ser levado pela água, abandone e vá para um local seguro.",
-          "Deslizamento: saia na hora e avise os vizinhos.",
-          "Em risco, ligue 199 (Defesa Civil) ou 193 (Bombeiros)."
+          "Desligue a energia elétrica, feche o gás e a rede de água.",
+          "Não atravesse ruas alagadas, pontes ou pontilhões submersos.",
+          "Abandone o veículo e procure um local seguro caso ele possa ser levado pela água.",
+          "Vá para um local seguro. Se precisar de abrigo, entre em contato com a Prefeitura.",
+          "Evite contato com a água da enchente.",
+          "Emergência: ligue 199."
         ],
-        "porque": "Evite contato com a água da enchente: ela pode estar contaminada e provocar doenças.",
-        "dica": "Carro não é abrigo em enchente. Se a água pode levar o carro, sai dele e procura um local seguro."
+        "porque": "A água da enchente pode estar contaminada e provocar doenças.",
+        "dica": "Não caminhe por lugares inundados."
       },
       "perfil_variacoes": {
         "encosta": {
-          "dica": "Na encosta, a regra é uma só: sinal de deslizamento, sai na hora e avisa quem mora do lado."
+          "dica": "Na encosta, ao notar sinais de deslizamento, comunique os vizinhos sobre o perigo e, em condições seguras, saia do local."
         },
         "baixada": {
-          "dica": "Na baixada, desliga a energia e o gás antes de a água entrar e vai para um local seguro."
+          "dica": "Na baixada, fique atento ao nível da água e evite ficar isolado."
         },
         "aberto": {
-          "dica": "No vendaval, fica num cômodo central da casa, longe das janelas. Na rua, longe de árvores, placas e postes."
+          "dica": "No vendaval, fique num cômodo interno da casa, longe de janelas e portas de vidro, e evite ficar embaixo de árvores, postes ou fiação elétrica."
         }
       },
       "fontes": [
         "F1",
         "F2",
         "F3",
-        "F10"
-      ]
+        "F10",
+        "F10b"
+      ],
+      "tipo": "roteiro",
+      "cena": "enchente",
+      "letreiro": "Durante a emergência",
+      "resumo": "O que fazer quando a água começa a subir: desligar, não atravessar, sair a pé pelo alto e pedir ajuda.",
+      "final": {
+        "titulo": "Você sabe agir durante a emergência",
+        "texto": "Próximo passo: o que fazer depois que a água baixar."
+      },
+      "etapas": [
+        {
+          "id": "desligar",
+          "titulo": "Antes de sair de casa",
+          "curto": "Desligar",
+          "icone": "raio",
+          "base": [
+            "chuva"
+          ],
+          "resumo": "Desligue a energia elétrica, feche o gás e a rede de água.",
+          "subpassos": [
+            {
+              "texto": "Desligue a energia elétrica",
+              "foco": "casa",
+              "efeito": "energia",
+              "ancora": "energia",
+              "etiqueta": "Energia desligada",
+              "agente": "apontar",
+              "vizinho": {
+                "baixada": "desligar",
+                "encosta": "examinar"
+              }
+            },
+            {
+              "texto": "Feche o gás",
+              "foco": "casa",
+              "efeito": "gas",
+              "ancora": "gas",
+              "etiqueta": "Gás fechado",
+              "agente": "apontar",
+              "vizinho": {
+                "baixada": "desligar",
+                "encosta": "examinar"
+              }
+            },
+            {
+              "texto": "Feche a rede de água",
+              "foco": "casa",
+              "efeito": "registro",
+              "ancora": "registro",
+              "etiqueta": "Registro fechado",
+              "agente": "apontar",
+              "vizinho": {
+                "baixada": "desligar",
+                "encosta": "examinar"
+              },
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar da Defesa Civil de SC orienta desligar a energia elétrica, fechar o gás e a rede de água.",
+            "A Defesa Civil Nacional pede, se houver risco de inundação, desligar aparelhos elétricos e o quadro geral de energia e fechar o registro de entrada de água."
+          ],
+          "dicas": [
+            "Fique atento ao nível da água e evite ficar isolado."
+          ],
+          "fontes": [
+            "F2",
+            "F3"
+          ]
+        },
+        {
+          "id": "atravessar",
+          "titulo": "Não atravesse a água",
+          "curto": "Não atravesse",
+          "icone": "proibido",
+          "base": [
+            "chuva",
+            "energia",
+            "gas",
+            "registro"
+          ],
+          "resumo": "Não atravesse ruas alagadas, pontes ou pontilhões submersos.",
+          "subpassos": [
+            {
+              "texto": "A água sobe e cobre a rua",
+              "foco": "rua",
+              "efeito": "agua",
+              "agente": "parado",
+              "pausa": 1.2
+            },
+            {
+              "texto": "Não atravesse ruas alagadas",
+              "foco": "rua",
+              "efeito": "xrua",
+              "ancora": "rua",
+              "etiqueta": "Rua alagada: não atravesse",
+              "agente": "apontar"
+            },
+            {
+              "texto": "Nem pontes ou pontilhões submersos",
+              "foco": "rua",
+              "efeito": "xponte",
+              "ancora": "ponte",
+              "etiqueta": "Pontilhão submerso",
+              "agente": "apontar",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil de SC orienta: não atravesse ruas alagadas, pontes ou pontilhões submersos.",
+            "O Plano Emergencial Familiar reforça: não caminhe por lugares inundados."
+          ],
+          "dicas": [
+            "Não caminhe por lugares inundados."
+          ],
+          "fontes": [
+            "F1",
+            "F2"
+          ]
+        },
+        {
+          "id": "carro",
+          "titulo": "O carro na água",
+          "curto": "Carro",
+          "icone": "carro",
+          "base": [
+            "chuva",
+            "energia",
+            "gas",
+            "registro",
+            "agua"
+          ],
+          "resumo": "Abandone o veículo se ele puder ser levado pela água.",
+          "subpassos": [
+            {
+              "texto": "A água pode levar o carro",
+              "foco": "carro",
+              "efeito": "carro",
+              "ancora": "carro",
+              "etiqueta": "Carro pode ser levado",
+              "agente": "apontar",
+              "pausa": 1.4
+            },
+            {
+              "texto": "Abandone o veículo e procure um local seguro",
+              "foco": "carro",
+              "ancora": "carro",
+              "etiqueta": "Abandone o veículo",
+              "agente": "apontar",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar orienta abandonar o veículo e procurar um local seguro caso ele possa ser levado pela água."
+          ],
+          "dicas": [
+            "Abandone o veículo e procure um local seguro caso ele possa ser levado pela água."
+          ],
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "id": "local",
+          "titulo": "Vá para um local seguro",
+          "curto": "Local seguro",
+          "icone": "rota",
+          "base": [
+            "chuva",
+            "energia",
+            "gas",
+            "registro",
+            "agua",
+            "carro"
+          ],
+          "resumo": "Vá para um local seguro, pelo caminho que não passa pela água.",
+          "subpassos": [
+            {
+              "texto": "Vá para um local seguro",
+              "foco": "local",
+              "efeito": "ponto",
+              "ancora": "local",
+              "etiqueta": "Local seguro",
+              "agente": "acenar"
+            },
+            {
+              "texto": "O caminho a pé, pelo alto, sem atravessar a água",
+              "foco": "local",
+              "efeito": "rota",
+              "ancora": "caminho",
+              "etiqueta": "Caminho seguro",
+              "agente": "apontar",
+              "vizinhoPara": [
+                [
+                  0.45,
+                  -0.6
+                ],
+                [
+                  1.8,
+                  -0.55
+                ],
+                [
+                  2.9,
+                  -0.95
+                ],
+                [
+                  3.8,
+                  -1.5
+                ],
+                [
+                  4.6,
+                  -2.0
+                ]
+              ],
+              "vizinho": "acenar",
+              "pausa": 7
+            },
+            {
+              "texto": "Se precisar de abrigo, entre em contato com a Prefeitura",
+              "foco": "local",
+              "ancora": "local",
+              "etiqueta": "Abrigo: fale com a Prefeitura",
+              "agente": "acenar",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "O Plano Emergencial Familiar orienta: vá para um local seguro. Se necessitar de um abrigo, entre em contato com a Prefeitura.",
+            "A Defesa Civil de SC também orienta procurar abrigo em local seguro."
+          ],
+          "dicas": [
+            "Use o caminho combinado no plano de fuga da família."
+          ],
+          "fontes": [
+            "F1",
+            "F2"
+          ]
+        },
+        {
+          "id": "contato",
+          "titulo": "Evite contato com a água",
+          "curto": "Água",
+          "icone": "agua",
+          "base": [
+            "chuva",
+            "energia",
+            "gas",
+            "registro",
+            "agua",
+            "carro",
+            "ponto",
+            "rota"
+          ],
+          "resumo": "A água da enchente pode estar contaminada.",
+          "subpassos": [
+            {
+              "texto": "Evite contato com a água da enchente",
+              "foco": "rua",
+              "efeito": "contaminada",
+              "ancora": "agua",
+              "etiqueta": "Água pode estar contaminada",
+              "agente": "apontar",
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil Nacional orienta: se houver inundações ou alagamentos, evite contato com as águas, pois podem estar contaminadas e provocar doenças."
+          ],
+          "dicas": [
+            "Evite contato com a água da enchente."
+          ],
+          "fontes": [
+            "F1",
+            "F3"
+          ]
+        },
+        {
+          "id": "ajuda",
+          "titulo": "Peça ajuda",
+          "curto": "199",
+          "icone": "telefone",
+          "base": [
+            "chuva",
+            "energia",
+            "gas",
+            "registro",
+            "agua",
+            "carro",
+            "ponto",
+            "rota",
+            "contaminada"
+          ],
+          "resumo": "Em emergência, ligue para a Defesa Civil: 199.",
+          "subpassos": [
+            {
+              "texto": "Emergência: ligue 199, a Defesa Civil",
+              "foco": "contato",
+              "efeito": "telefone",
+              "ancora": "telefone",
+              "etiqueta": "Defesa Civil: 199",
+              "agente": "radio",
+              "pausa": 2.4
+            }
+          ],
+          "explicacao": [
+            "O número de emergência da Defesa Civil de SC é 199.",
+            "O Plano Emergencial Familiar orienta avisar as autoridades: Corpo de Bombeiros e Defesa Civil do município."
+          ],
+          "dicas": [
+            "Siga as orientações das autoridades do seu município."
+          ],
+          "fontes": [
+            "F1",
+            "F2",
+            "F3"
+          ]
+        }
+      ],
+      "acoes": [
+        "ligar199",
+        "sms40199",
+        "whatsapp"
+      ],
+      "acoesTitulo": "Tenha à mão"
     },
     {
       "id": 7,
@@ -1125,22 +1554,266 @@
       "rascunho": true,
       "abas": {
         "passo": [
-          "Só volte para casa quando as autoridades disserem que é seguro.",
-          "Não beba água de poço ou de fonte natural depois da enchente. Para tratar a água: 2 gotas de hipoclorito de sódio 2,5% por litro e espere 30 minutos.",
-          "Jogue fora alimento que teve contato com a água da enchente.",
-          "Ao voltar, sacuda roupas e sapatos e mexa nos móveis com um cabo de vassoura: pode ter cobra, aranha ou rato.",
-          "Avalie os danos da casa e informe as autoridades, como a Defesa Civil do município."
+          "Não volte para casa até as águas baixarem e o caminho estar seguro. Volte durante o dia.",
+          "Veja se sua casa não corre risco de desabar.",
+          "Não use água de poços e fontes naturais depois da enchente. Para tratar a água: 2 gotas de hipoclorito de sódio a 2,5% para cada litro e espere 30 minutos.",
+          "Não utilize alimentos que tiveram contato com a água da enchente.",
+          "Sacuda roupas e sapatos antes de usar e mexa nos móveis com um cabo de vassoura: cuidado com aranhas, cobras e ratos."
         ],
-        "porque": "Depois que a água baixa, a casa pode ter estrutura danificada, água e comida contaminadas e animais peçonhentos.",
-        "dica": "Voltou? Usa bota e luva onde alagou e não anda descalço."
+        "porque": "Depois da enchente, a água de poços e fontes fica contaminada e animais como cobras, aranhas e ratos podem estar dentro de casa.",
+        "dica": "Use sempre botas impermeáveis e luvas ao transitar em áreas inundadas."
       },
       "perfil_variacoes": {},
       "fontes": [
-        "F3",
         "F4",
-        "F5",
         "F9",
-        "F10"
+        "F9a",
+        "F9b",
+        "F9c"
+      ],
+      "tipo": "fazer",
+      "cena": "depois",
+      "letreiro": "Depois da água baixar",
+      "resumo": "Voltar para casa com segurança, cuidar da água, dos alimentos e dos animais escondidos.",
+      "final": {
+        "titulo": "Trilha concluída",
+        "texto": "Você passou pelas sete paradas. Reveja o plano da família a cada seis meses."
+      },
+      "etapas": [
+        {
+          "id": "voltar",
+          "titulo": "Voltar com segurança",
+          "curto": "Voltar",
+          "icone": "casa",
+          "resumo": "Só volte quando a água baixar e o caminho estiver seguro. Volte de dia e confira a casa antes de entrar.",
+          "subpassos": [
+            {
+              "texto": "Não volte para casa até as águas baixarem e o caminho estar seguro",
+              "acao": "baixar",
+              "foco": "geral",
+              "etiqueta": "A água baixou",
+              "uso": "Só volte com o caminho seguro",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Volte para casa durante o dia",
+              "acao": "dia",
+              "foco": "geral",
+              "etiqueta": "Volte durante o dia",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Veja se sua casa não corre risco de desabar",
+              "acao": "vistoria",
+              "foco": "casa",
+              "etiqueta": "Risco de desabar?",
+              "uso": "Confira a casa antes de entrar",
+              "pausa": 1.8
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil Nacional orienta: não volte para casa até as águas baixarem e o caminho estar seguro. Volte para casa durante o dia.",
+            "Tenha cuidado: veja se sua casa não corre risco de desabar."
+          ],
+          "dicas": [
+            "Volte para casa durante o dia."
+          ],
+          "fontes": [
+            "F4"
+          ]
+        },
+        {
+          "id": "protecao",
+          "titulo": "Proteja-se",
+          "curto": "Botas e luvas",
+          "icone": "saude",
+          "resumo": "Antes de pisar na lama, calce botas impermeáveis e luvas.",
+          "subpassos": [
+            {
+              "texto": "Use sempre botas impermeáveis e luvas ao transitar em áreas inundadas",
+              "acao": "epi",
+              "foco": "caminho",
+              "etiqueta": "Botas impermeáveis e luvas",
+              "uso": "Proteção ao andar em área inundada",
+              "pausa": 2.0
+            },
+            {
+              "texto": "Não ande descalço",
+              "acao": "descalco",
+              "foco": "caminho",
+              "etiqueta": "Não ande descalço",
+              "pausa": 1.8
+            }
+          ],
+          "explicacao": [
+            "O Ministério da Saúde orienta usar sempre botas impermeáveis e luvas ao transitar em áreas inundadas, como cuidado contra a leptospirose.",
+            "Para evitar animais peçonhentos, não ande descalço."
+          ],
+          "dicas": [
+            "Use sempre botas impermeáveis e luvas ao transitar em áreas inundadas."
+          ],
+          "fontes": [
+            "F9b",
+            "F9c"
+          ]
+        },
+        {
+          "id": "agua",
+          "titulo": "Cuidado com a água",
+          "curto": "Água",
+          "icone": "agua",
+          "resumo": "Água de poço e de fonte fica contaminada. Trate a água antes de beber.",
+          "subpassos": [
+            {
+              "texto": "Não use água de poços e fontes naturais depois da enchente",
+              "acao": "poco",
+              "foco": "poco",
+              "etiqueta": "Água de poço contaminada",
+              "uso": "Não use água de poço ou fonte",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Para tratar: 2 gotas de hipoclorito de sódio a 2,5% para cada litro de água",
+              "acao": "gotas",
+              "foco": "mesa",
+              "etiqueta": "Hipoclorito de sódio 2,5%",
+              "uso": "Trata a água: 2 gotas por litro",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Espere 30 minutos antes de beber",
+              "acao": "espera",
+              "foco": "mesa",
+              "etiqueta": "Espere 30 minutos",
+              "uso": "Beba a água tratada em até 24 horas",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Sem hipoclorito, ferva a água por 5 minutos depois que começar a ferver",
+              "acao": "ferver",
+              "foco": "mesa",
+              "etiqueta": "Sem hipoclorito? Ferva",
+              "uso": "5 minutos depois de começar a ferver",
+              "pausa": 2.0
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil Nacional orienta não usar água de fontes naturais e poços depois da enxurrada, pois estão contaminados.",
+            "O Ministério da Saúde orienta adicionar 2 gotas de hipoclorito de sódio a 2,5% para cada 1 litro de água e esperar meia hora antes de consumir. A água tratada deve ser consumida em até 24 horas."
+          ],
+          "dicas": [
+            "A água tratada com hipoclorito deve ser consumida em até 24 horas."
+          ],
+          "fontes": [
+            "F4",
+            "F9a"
+          ]
+        },
+        {
+          "id": "alimentos",
+          "titulo": "Alimentos",
+          "curto": "Alimentos",
+          "icone": "lata",
+          "resumo": "Não utilize alimentos que tiveram contato com a água da enchente.",
+          "subpassos": [
+            {
+              "texto": "Não utilize alimentos que tiveram contato com a água da enchente",
+              "acao": "alimentos",
+              "foco": "comida",
+              "etiqueta": "Tocou na água da enchente",
+              "uso": "Não use esse alimento",
+              "pausa": 2.0
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil Nacional orienta: não utilize alimentos que tiveram contato com as águas da enxurrada."
+          ],
+          "dicas": [
+            "Lave e desinfete os objetos que tiveram contato com a água."
+          ],
+          "fontes": [
+            "F4"
+          ]
+        },
+        {
+          "id": "animais",
+          "titulo": "Animais escondidos",
+          "curto": "Animais",
+          "icone": "alerta",
+          "resumo": "Cobras, aranhas e ratos podem estar nos objetos e móveis.",
+          "subpassos": [
+            {
+              "texto": "Sacuda roupas, sapatos, toalhas e lençóis antes de usá-los",
+              "acao": "sacudir",
+              "foco": "varal",
+              "etiqueta": "Sacuda antes de usar",
+              "uso": "Roupas, sapatos, toalhas e lençóis",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Use um cabo de vassoura para mexer em móveis e objetos",
+              "acao": "vassoura",
+              "foco": "moveis",
+              "etiqueta": "Cabo de vassoura",
+              "uso": "Mexa nos móveis sem pôr a mão",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Cuidado com aranhas, cobras e ratos",
+              "acao": "bichos",
+              "foco": "moveis",
+              "etiqueta": "Cobras, aranhas e ratos",
+              "uso": "Cuidado ao mexer em objetos e móveis",
+              "pausa": 2.0
+            }
+          ],
+          "explicacao": [
+            "O Ministério da Saúde orienta sacudir roupas, sapatos, toalhas e lençóis antes de usá-los e usar ferramentas como enxadas, cabos de vassoura e pedaços de madeira compridos para mexer em móveis ou objetos.",
+            "A Defesa Civil Nacional alerta: cuidado com aranhas, cobras e ratos ao movimentar objetos, móveis e utensílios."
+          ],
+          "dicas": [
+            "Não coloque as mãos em buracos ou frestas."
+          ],
+          "fontes": [
+            "F9c",
+            "F4"
+          ]
+        },
+        {
+          "id": "limpeza",
+          "titulo": "Limpeza",
+          "curto": "Limpeza",
+          "icone": "check",
+          "resumo": "Raspe a lama e desinfete o que teve contato com a água.",
+          "subpassos": [
+            {
+              "texto": "Raspe toda a lama e o lixo do chão, das paredes, dos móveis e utensílios",
+              "acao": "raspar",
+              "foco": "quintal",
+              "etiqueta": "Raspe a lama",
+              "uso": "Chão, paredes, móveis e utensílios",
+              "pausa": 1.8
+            },
+            {
+              "texto": "Lave e desinfete os objetos que tiveram contato com a água",
+              "acao": "lavar",
+              "foco": "moveis",
+              "etiqueta": "Lave e desinfete",
+              "uso": "Tudo o que teve contato com a água",
+              "pausa": 2.2
+            }
+          ],
+          "explicacao": [
+            "A Defesa Civil Nacional orienta raspar toda a lama e o lixo do chão, das paredes, dos móveis e utensílios, e lavar e desinfetar os objetos que tiveram contato com as águas."
+          ],
+          "dicas": [
+            "Use sempre botas impermeáveis e luvas ao transitar em áreas inundadas."
+          ],
+          "fontes": [
+            "F4",
+            "F9b"
+          ]
+        }
       ]
     }
   ]

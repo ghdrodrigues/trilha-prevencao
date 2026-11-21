@@ -1,11 +1,14 @@
-// Lição do tipo "roteiro": etapas → subpassos sobre uma cena fixa. Cada
-// subpasso leva a câmera a um ponto da cena (foco), dispara um efeito e mostra
-// uma etiqueta. Usada na parada 1 ("Conheça seu risco") sobre o mapa.
+// Lição do tipo "roteiro" em lista: ao abrir a parada, o guia mostra tudo o
+// que fazer, numerado e agrupado por etapa, com a fonte de cada grupo. A cena
+// 3D é só ilustração: tocar num item leva a câmera ao ponto, dispara o efeito
+// e mostra a etiqueta. Nada roda sozinho; quem ignora a cena não perde nada.
 
 import * as THREE from 'three';
-import { paragrafos, lista, avisoRascunho, citarFontes } from '../ui/guia.js';
+import { paragrafos, avisoRascunho } from '../ui/guia.js';
+import { renderAcoes } from '../ui/meu-plano.js';
+import { abrirGrupo, fecharGrupo, rodapeNavegacao, rolarAte } from './comum.js';
 
-export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadramentos, palco, guia, linhaTempo, etiquetas, progresso, aoTerminar }) {
+export function criarLicaoRoteiro({ licao, total, perfil, efeitos, personagens, enquadramentos, palco, guia, linhaTempo, etiquetas, progresso, aoTerminar, abrirPlano }) {
   // Etapas marcadas com ordenarPorPerfil mostram primeiro o perfil de quem usa.
   const etapas = licao.etapas.map((e) => {
     if (!e.ordenarPorPerfil || !perfil) return e;
@@ -13,20 +16,18 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
     return { ...e, subpassos };
   });
   const variacao = licao.perfil_variacoes?.[perfil] ?? {};
-  const concluidas = new Set();
-  let etapa = 0;
-  let sub = -1;
+  const totalItens = etapas.reduce((n, e) => n + e.subpassos.length, 0);
+  const vistos = new Set();
+  let atual = null; // [etapa, subpasso] ilustrado agora
   let token = 0;
-  let final = false;
-  let focoAtual = null; // evita reenquadrar quando o foco não muda
-
-  const esperar = (seg) => palco.tweens.animar({ duracao: seg, aoAtualizar: () => {} });
+  let focoAtual = null;
+  const chave = (ei, si) => `${ei}:${si}`;
 
   function atualizarProgresso() {
-    progresso({ rotulo: licao.titulo, feitas: concluidas.size, total: etapas.length });
+    progresso({ rotulo: licao.titulo, feitas: vistos.size, total: totalItens });
     linhaTempo.marcar(
-      etapa,
-      etapas.map((_, i) => concluidas.has(i)),
+      atual?.[0] ?? 0,
+      etapas.map((e, ei) => e.subpassos.every((_, si) => vistos.has(chave(ei, si)))),
     );
   }
 
@@ -42,8 +43,6 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
     etapas[ei].subpassos.slice(0, si).forEach((s) => efeitos.aplicar(s.efeito, { instantaneo: true }));
   }
 
-  // Personagens: a Agente vai para o foco e indica a âncora; o vizinho acena
-  // quando a zona dele aparece. Ações vêm do subpasso (agente, vizinho).
   function encenar(s, foco) {
     if (!personagens) return;
     const ancora = s.ancora && efeitos.ancoras[s.ancora];
@@ -52,55 +51,41 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
     personagens.encenar({ foco, mira, agente: s.agente, vizinho, vizinhoPara: s.vizinhoPara });
   }
 
-  async function tocarSubpasso(ei, si, meu) {
+  // Ilustra um item: câmera rápida, efeito e etiqueta. Sem cadeia automática.
+  async function ilustrar(ei, si, { instantaneo = false } = {}) {
+    const meu = ++token;
+    palco.tweens.concluirTodos();
+    atual = [ei, si];
+    vistos.add(chave(ei, si));
+    marcarItens();
+    atualizarProgresso();
+    prepararCena(ei, si);
     const s = etapas[ei].subpassos[si];
-    sub = si;
-    renderGuia();
-    etiquetas.limpar();
     const foco = s.foco ?? 'geral';
     if (foco !== focoAtual) {
       focoAtual = foco;
-      await palco.enquadrar(enquadramentos[foco]);
-      if (meu !== token) return false;
+      await palco.enquadrar(enquadramentos[foco] ?? enquadramentos.geral, { instantaneo, duracao: 0.45 });
+      if (meu !== token) return;
     }
     encenar(s, foco);
-    const efeito = efeitos.aplicar(s.efeito);
+    efeitos.aplicar(s.efeito, { instantaneo });
     if (s.ancora && efeitos.ancoras[s.ancora]) {
       etiquetas.adicionar('atual', { ancora: efeitos.ancoras[s.ancora], texto: textoEtiqueta(s) });
     }
-    await efeito;
-    if (meu !== token) return false;
-    await esperar(s.pausa ?? 1.8);
-    return meu === token;
   }
 
-  async function tocarEtapa(ei, de = 0) {
-    const meu = ++token;
-    final = false;
-    etapa = ei;
-    prepararCena(ei, de);
-    atualizarProgresso();
-    renderGuia();
-    for (let si = de; si < etapas[ei].subpassos.length; si++) {
-      if (!(await tocarSubpasso(ei, si, meu))) return;
-    }
-    concluidas.add(ei);
-    sub = etapas[ei].subpassos.length;
-    if (ei === etapas.length - 1) final = true;
-    atualizarProgresso();
-    renderGuia();
-  }
-
+  // Linha do tempo: leva ao grupo na lista e ilustra o primeiro item.
   function irPara(ei) {
-    focoAtual = null;
-    palco.tweens.concluirTodos();
-    tocarEtapa(ei, 0);
+    guia.mostrarAba('instrucoes');
+    rolarAte(`grupo-${ei}`);
+    ilustrar(ei, 0);
   }
 
   function reiniciar() {
-    concluidas.clear();
-    palco.tweens.concluirTodos();
-    tocarEtapa(0, 0);
+    vistos.clear();
+    focoAtual = null;
+    ilustrar(0, 0);
+    rolarAte(`grupo-0`);
   }
 
   function parar() {
@@ -111,83 +96,82 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
   }
 
   // ---------- Guia ----------
-  function botao(texto, aoClicar, classe) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = classe;
-    b.textContent = texto;
-    b.addEventListener('click', aoClicar);
-    return b;
+  let botoesItens = [];
+  function marcarItens() {
+    for (const b of botoesItens) {
+      const k = b.dataset.item;
+      const eAtual = atual && k === chave(...atual);
+      b.parentElement.classList.toggle('atual', Boolean(eAtual));
+      b.parentElement.classList.toggle('visto', vistos.has(k) && !eAtual);
+      if (eAtual) b.setAttribute('aria-current', 'step');
+      else b.removeAttribute('aria-current');
+    }
   }
 
-  function renderInstrucoes(el) {
-    const e = etapas[etapa];
-    paragrafos(el, e.resumo);
-    const ol = document.createElement('ol');
-    ol.className = 'subpassos';
-    e.subpassos.forEach((s, si) => {
-      const li = document.createElement('li');
-      li.className = si === sub ? 'atual' : si < sub ? 'visto' : '';
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'subpasso';
-      b.innerHTML = `<span class="sp-marca" aria-hidden="true"></span><span class="sp-texto"></span>`;
-      b.querySelector('.sp-texto').textContent = `${si + 1}. ${s.texto}${s.perfil && s.perfil === perfil ? ' (você)' : ''}`;
-      if (si === sub) b.setAttribute('aria-current', 'step');
-      b.addEventListener('click', () => {
-        palco.tweens.concluirTodos();
-        tocarEtapa(etapa, si);
-      });
-      li.appendChild(b);
-      ol.appendChild(li);
-    });
-    el.appendChild(ol);
-
-    const fim = sub >= e.subpassos.length;
-    if (fim && etapa < etapas.length - 1) {
-      el.appendChild(botao('Próxima etapa →', () => irPara(etapa + 1), 'botao primario pulsar'));
+  function renderLista(el) {
+    botoesItens = [];
+    if (variacao.dica) {
+      const p = document.createElement('p');
+      p.className = 'dica-perfil';
+      p.textContent = variacao.dica;
+      el.append(p);
     }
-    if (final) {
+    let n = 0;
+    etapas.forEach((e, ei) => {
+      const sec = abrirGrupo(el, e, ei);
+      const ol = document.createElement('ol');
+      ol.className = 'subpassos';
+      e.subpassos.forEach((s, si) => {
+        n += 1;
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'subpasso';
+        b.dataset.item = chave(ei, si);
+        b.innerHTML = `<span class="sp-num" aria-hidden="true"></span><span class="sp-texto"></span>`;
+        b.querySelector('.sp-num').textContent = n;
+        b.querySelector('.sp-texto').textContent = `${s.texto}${s.perfil && s.perfil === perfil ? ' (você)' : ''}`;
+        b.setAttribute('aria-label', `${n}. ${b.querySelector('.sp-texto').textContent}. Mostrar na cena`);
+        b.addEventListener('click', () => ilustrar(ei, si));
+        li.append(b);
+        ol.append(li);
+        botoesItens.push(b);
+      });
+      sec.append(ol);
+      fecharGrupo(sec, e, licao.fontes);
+    });
+    renderAcoes(el, licao);
+    if (licao.final && licao.id === total) {
       const div = document.createElement('div');
       div.className = 'final';
       div.innerHTML = `<p class="final-titulo"></p><p></p>`;
-      div.querySelector('.final-titulo').textContent = licao.final?.titulo ?? 'Agora você conhece seu risco';
-      div.querySelector('p:last-child').textContent =
-        licao.final?.texto ?? 'Próximo passo: cadastrar o alerta por SMS para saber antes quando a chuva forte vier.';
-      div.appendChild(botao('Próxima parada →', () => aoTerminar?.(), 'botao primario'));
-      el.appendChild(div);
+      div.querySelector('.final-titulo').textContent = licao.final.titulo;
+      div.querySelector('p:last-child').textContent = licao.final.texto;
+      el.append(div);
     }
+    if (licao.rascunho) avisoRascunho(el);
+    marcarItens();
+  }
+
+  function renderPorque(el) {
+    if (variacao.porque) paragrafos(el, variacao.porque);
+    etapas.forEach((e, ei) => {
+      if (!e.explicacao?.length) return;
+      const sec = abrirGrupo(el, e, `porque-${ei}`);
+      paragrafos(sec, e.explicacao);
+    });
   }
 
   function renderGuia() {
-    const e = etapas[etapa];
     guia.mostrar({
-      cabeca: `Parada ${licao.id} · Etapa ${etapa + 1} de ${etapas.length}`,
-      titulo: e.titulo,
-      manterAba: true,
+      cabeca: `Parada ${licao.id} de ${total} · ${totalItens} itens`,
+      titulo: licao.titulo,
+      aba: 'instrucoes',
       abas: [
-        { chave: 'instrucoes', rotulo: 'Instruções', render: renderInstrucoes },
-        {
-          chave: 'explicacao',
-          rotulo: 'Por que importa',
-          render: (el) => paragrafos(el, etapa === 0 && variacao.porque ? [variacao.porque, ...[].concat(e.explicacao)] : e.explicacao),
-        },
-        {
-          chave: 'dicas',
-          rotulo: 'Dica do agente',
-          render: (el) => lista(el, etapa === 0 && variacao.dica ? [variacao.dica, ...[].concat(e.dicas ?? [])] : e.dicas),
-        },
+        { chave: 'instrucoes', rotulo: 'O que fazer', render: renderLista },
+        { chave: 'explicacao', rotulo: 'Por que importa', render: renderPorque },
       ],
-      rodape: (el) => {
-        if (e.nota) {
-          const p = document.createElement('p');
-          p.className = 'contagem-kit';
-          p.textContent = e.nota;
-          el.appendChild(p);
-        }
-        citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes);
-        if (licao.rascunho) avisoRascunho(el);
-      },
+      rodape: (el) => rodapeNavegacao(el, { licao, total, aoTerminar, abrirPlano }),
     });
   }
 
@@ -198,7 +182,9 @@ export function criarLicaoRoteiro({ licao, perfil, efeitos, personagens, enquadr
       atual: 0,
     });
     personagens?.entrar(perfil);
-    tocarEtapa(0, 0);
+    renderGuia();
+    // Abre já ilustrando o primeiro item, sem esperar animação de câmera.
+    ilustrar(0, 0, { instantaneo: true });
   }
 
   return { iniciar, irPara, reiniciar, parar };
