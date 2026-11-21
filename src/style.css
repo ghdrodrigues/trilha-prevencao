@@ -88,6 +88,8 @@ button { font: inherit; color: inherit; }
   box-shadow: var(--sombra);
 }
 .etiqueta.visivel { opacity: 1; }
+.etiqueta.secundaria { padding: 3px 8px 3px 7px; border-left-width: 3px; font-size: 0.64rem; color: var(--cinza-texto); box-shadow: none; }
+.etiqueta.secundaria.visivel { opacity: 0.88; }
 
 /* ---------- Botões ---------- */
 .icone-botao {
@@ -341,6 +343,7 @@ body:not([data-modo='licao']) .so-licao { display: none !important; }
 
 /* ---------- Lição em lista (opção A) ---------- */
 body[data-modo='licao'] .guia { max-height: 60vh; }
+body[data-vitrine] .guia { max-height: 46vh; }
 .guia-rodape:not(:empty) {
   position: sticky;
   bottom: -14px;
@@ -378,6 +381,8 @@ body[data-modo='licao'] .guia { max-height: 60vh; }
 .atual .sp-num { background: var(--laranja); color: var(--indigo-3); }
 .subpassos.kit .tenho { margin: 0; min-height: 44px; padding: 4px 6px; font-family: var(--titulo); font-size: 0.92rem; font-weight: 700; color: var(--indigo-3); }
 .subpassos.kit .tenho-sim .sp-num { background: #2e7d32; color: var(--branco); }
+.subpassos.kit li:has(> .subpasso) { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.subpassos.kit li > .tenho { margin: 0; padding: 4px 8px; min-height: 40px; font-size: 0.78rem; font-family: var(--titulo); font-weight: 800; color: var(--indigo-2); text-transform: uppercase; letter-spacing: 0.04em; }
 .acoes { margin: 18px 0 4px; padding: 12px; border-top: 4px solid var(--laranja); background: var(--cinza-1); }
 .acoes-titulo { margin: 0 0 8px; font-family: var(--titulo); font-size: 0.9rem; font-weight: 900; color: var(--indigo-3); }
 .acao { display: flex; align-items: center; gap: 12px; min-height: 52px; margin-top: 8px; padding: 8px 12px; background: var(--laranja); color: var(--indigo-3); text-decoration: none; }

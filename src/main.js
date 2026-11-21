@@ -21,6 +21,10 @@ import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, P
 import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 import { abrirMeuPlano } from './ui/meu-plano.js';
+import { criarLicaoPassos } from './licoes/passos.js';
+import { criarVitrine } from './scenes/vitrine.js';
+import { ITENS_KIT } from './scenes/objetos-kit.js';
+import { ITENS_SINAIS } from './scenes/objetos-sinais.js';
 
 aplicarIcones();
 
@@ -139,7 +143,10 @@ function colunasKit() {
 function reorganizarKit() {
   if (palco.cena === cenaKit && cenaKit.layout(colunasKit())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
 }
-window.addEventListener('resize', reorganizarKit);
+window.addEventListener('resize', () => {
+  reorganizarKit();
+  licaoAtiva?.reenquadrar?.();
+});
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -379,6 +386,54 @@ function mostrarLicaoRoteiro(l) {
   licaoAtiva.iniciar();
 }
 
+// Vitrines das lições "passos" (palco limpo), montadas na primeira visita.
+const ITENS_VITRINE = { kit: ITENS_KIT, sinais: ITENS_SINAIS };
+const vitrines = {};
+function vitrinePara(l) {
+  if (!vitrines[l.id]) {
+    const itens = ITENS_VITRINE[l.cena];
+    const etapas = l.etapas.map((e) => e.subpassos.map((s) => s.objeto));
+    const usados = Object.fromEntries(etapas.flat().map((id) => [id, itens[id]]));
+    vitrines[l.id] = criarVitrine({ itens: usados, etapas });
+    vitrines[l.id].conectar(palco);
+  }
+  return vitrines[l.id];
+}
+
+// Quantos objetos cabem lado a lado: todos no desktop; 2 em tela estreita.
+function colunasVitrine(n) {
+  const l = areaLivre();
+  const prop = (window.innerWidth - l.esquerda - l.direita) / Math.max(window.innerHeight - l.topo - l.base, 1);
+  if (prop >= 1.3) return Math.min(n, 4);
+  return prop >= 0.85 ? Math.min(n, 3) : Math.min(n, 2);
+}
+
+function mostrarLicaoPassos(l) {
+  document.body.dataset.modo = 'licao';
+  document.body.dataset.vitrine = 'sim';
+  letreiro.textContent = l.letreiro ?? l.titulo;
+  guia.recolher(false);
+  personagensRisco.sair();
+  const v = vitrinePara(l);
+  palco.definirCena(v);
+  licaoAtiva = criarLicaoPassos({
+    licao: l,
+    total: dados.licoes.length,
+    perfil,
+    cena: v,
+    palco,
+    guia,
+    linhaTempo,
+    etiquetas,
+    progresso,
+    colunas: colunasVitrine,
+    abrirPlano: () => abrirPlano(),
+    aoTerminar: () => irParaParada(l.id + 1),
+  });
+  navegar = (i) => licaoAtiva.irPara(i);
+  licaoAtiva.iniciar();
+}
+
 function rotear() {
   const id = Number(new URLSearchParams(location.search).get('parada'));
   const l = dados.licoes.find((x) => x.id === id);
@@ -395,7 +450,9 @@ function rotear() {
   bp.innerHTML = icone('pausar');
   bp.setAttribute('aria-pressed', 'false');
   bp.setAttribute('aria-label', 'Pausar');
+  delete document.body.dataset.vitrine;
   if (!l) return mostrarTrilha();
+  if (l.tipo === 'passos') return mostrarLicaoPassos(l);
   if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
   if (l.etapas) return mostrarLicaoMontagem(l);
   mostrarTrilha(l.id);
