@@ -41,8 +41,9 @@ export function marcarKit(chave, sim) {
 }
 
 // Itens do kit (parada 3): cada subpasso é um item marcável.
+// A chave é a mesma que a lição grava ao marcar "Tenho": "<etapa>:<índice>".
 export function itensKit() {
-  const l = dados.licoes.find((x) => x.tipo === 'montagem');
+  const l = dados.licoes.find((x) => x.marcavel) ?? dados.licoes.find((x) => x.tipo === 'montagem');
   if (!l) return [];
   return l.etapas.flatMap((e) => e.subpassos.map((s, si) => ({ chave: `${e.id}:${si}`, texto: s.texto, grupo: e.titulo })).filter((x) => !x.texto.startsWith('Monte')));
 }
@@ -160,7 +161,7 @@ function textoPlano(perfil) {
   for (const c of CAMPOS_PLANO) if (p[c.campo]) linhas.push(`${c.rotulo}: ${p[c.campo]}`);
   linhas.push('', `Kit: tenho ${tem.length} de ${kitItens.length}`);
   if (falta.length) linhas.push(`Falta: ${falta.join(', ')}`);
-  linhas.push('', 'Emergência: Defesa Civil 199', 'Alertas: SMS 40199 com o CEP · WhatsApp (61) 2034-4611', 'Revisar o plano a cada seis meses.');
+  linhas.push('', 'Emergência: Defesa Civil 199 · Bombeiros 193', 'Alertas: SMS 40199 com o CEP · WhatsApp (61) 2034-4611', 'Revisar o plano a cada seis meses.');
   return linhas.join('\n');
 }
 
@@ -219,7 +220,7 @@ export function abrirMeuPlano({ perfil, aoFechar } = {}) {
     sk.append(ul);
   } else sk.append(el('p', null, 'Você marcou todos os itens.'));
   const se = sec('Emergência');
-  se.append(el('p', 'mp-num', 'Defesa Civil: 199'), el('p', 'mp-num', 'Alertas: SMS 40199 com o CEP · WhatsApp (61) 2034-4611'));
+  se.append(el('p', 'mp-num', 'Defesa Civil: 199 · Bombeiros: 193'), el('p', 'mp-num', 'Alertas: SMS 40199 com o CEP · WhatsApp (61) 2034-4611'));
   caixa.append(el('p', 'nota', 'Reveja o plano com a família a cada seis meses. Fonte: Plano Emergencial Familiar, Defesa Civil SC.'));
 
   const botoes = el('div', 'mp-botoes');
@@ -241,11 +242,17 @@ export function abrirMeuPlano({ perfil, aoFechar } = {}) {
   const imprimir = el('button', 'botao', 'Imprimir ou salvar em PDF');
   imprimir.type = 'button';
   imprimir.addEventListener('click', () => window.print());
-  const editar = el('a', 'botao', 'Preencher o plano');
+  // Plano vazio: o primeiro passo é preencher, não enviar.
+  const vazio = !p.cep && CAMPOS_PLANO.every((c) => !p[c.campo]);
+  const editar = el('a', vazio ? 'botao primario' : 'botao', 'Preencher o plano');
   editar.href = '?parada=5';
-  botoes.append(wa, copiar, imprimir, editar);
-  // os botões vêm logo abaixo do título: enviar é o que a pessoa quer fazer
-  caixa.insertBefore(botoes, caixa.children[2]);
+  if (vazio) {
+    wa.className = 'botao';
+    botoes.append(editar, wa, copiar, imprimir);
+    caixa.insertBefore(el('p', 'mp-vazio', 'Seu plano ainda está vazio. Comece pela parada 5, Plano de fuga da família.'), caixa.children[2]);
+  } else botoes.append(wa, copiar, imprimir, editar);
+  // os botões vêm logo abaixo do título
+  caixa.insertBefore(botoes, caixa.children[vazio ? 3 : 2]);
   dlg.append(caixa);
 
   function fecharDlg() {

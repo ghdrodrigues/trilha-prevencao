@@ -14,6 +14,7 @@
     />
   </head>
   <body>
+    <a class="pular" href="#guia">Pular para a lição</a>
     <!-- Fundo: degradê índigo com hexágonos e letreiro vazado (identidade Defesa Civil SC). -->
     <div class="fundo" aria-hidden="true"><span id="letreiro" class="letreiro">Prepare-se</span></div>
     <div id="palco" class="palco"></div>
@@ -28,13 +29,13 @@
       </a>
 
       <div class="controles" role="toolbar" aria-label="Controles da cena">
-        <button type="button" class="icone-botao" data-acao="girar-esq" aria-label="Girar a vista para a esquerda"><i data-icone="girarEsq"></i></button>
-        <button type="button" class="icone-botao" data-acao="redefinir" aria-label="Redefinir a vista"><i data-icone="centro"></i></button>
-        <button type="button" class="icone-botao" data-acao="girar-dir" aria-label="Girar a vista para a direita"><i data-icone="girarDir"></i></button>
-        <span class="separador so-licao" aria-hidden="true"></span>
-        <button type="button" class="icone-botao so-licao" data-acao="reiniciar" aria-label="Reiniciar a lição"><i data-icone="reiniciar"></i></button>
-        <button type="button" class="icone-botao so-licao" data-acao="pausar" aria-label="Pausar" aria-pressed="false"><i data-icone="pausar"></i></button>
-        <button type="button" class="icone-botao so-licao velocidade" data-acao="velocidade" aria-label="Velocidade da animação: 1 vez">1×</button>
+        <button type="button" class="icone-botao so-giro" data-acao="girar-esq" aria-label="Girar a vista para a esquerda"><i data-icone="girarEsq"></i></button>
+        <button type="button" class="icone-botao so-giro" data-acao="redefinir" aria-label="Redefinir a vista"><i data-icone="centro"></i></button>
+        <button type="button" class="icone-botao so-giro" data-acao="girar-dir" aria-label="Girar a vista para a direita"><i data-icone="girarDir"></i></button>
+        <span class="separador so-anima" aria-hidden="true"></span>
+        <button type="button" class="icone-botao so-licao so-anima" data-acao="reiniciar" aria-label="Reiniciar a lição"><i data-icone="reiniciar"></i></button>
+        <button type="button" class="icone-botao so-licao so-anima" data-acao="pausar" aria-label="Pausar" aria-pressed="false"><i data-icone="pausar"></i></button>
+        <button type="button" class="icone-botao so-licao so-anima velocidade" data-acao="velocidade" aria-label="Velocidade da animação: 1 vez">1×</button>
       </div>
 
       <div class="progresso so-licao" id="progresso" aria-live="polite">
@@ -66,7 +67,7 @@
       </p>
     </nav>
 
-    <aside id="guia" class="guia" aria-label="Guia da lição"></aside>
+    <aside id="guia" class="guia" aria-label="Guia da lição" tabindex="-1"></aside>
 
     <footer id="linha-tempo" class="linha-tempo" aria-label="Etapas"></footer>
 
@@ -80,7 +81,8 @@
         <div class="intro-cartao">
           <h2>Onde você mora?</h2>
           <div id="perfis" class="perfis"></div>
-          <button type="button" class="botao primario" id="comecar" disabled>Começar a trilha <i data-icone="proxima"></i></button>
+          <button type="button" class="botao primario" id="comecar" disabled aria-describedby="comecar-dica">Começar a trilha <i data-icone="proxima"></i></button>
+          <p class="comecar-dica" id="comecar-dica">Escolha onde você mora para começar.</p>
         </div>
       </div>
     </div>

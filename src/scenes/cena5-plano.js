@@ -36,9 +36,9 @@ const CASA_PARENTE = [5.6, 3.3];
 
 export const ENQUADRAMENTOS_PLANO = {
   geral: { centro: [0.2, 0.3, 0.2], largura: 15.5, altura: 10.5 },
-  casa: { centro: [-3.2, 0.7, -1.3], largura: 7.2, altura: 5.2 },
+  casa: { centro: [-3.2, 0.7, -1.3], largura: 9.2, altura: 6.6 },
   rota: { centro: [0.8, 0.4, -0.6], largura: 13, altura: 8.6 },
-  encontro: { centro: [4.6, 1.0, -1.6], largura: 7, altura: 5.2 },
+  encontro: { centro: [4.6, 1.0, -1.6], largura: 8.8, altura: 6.4 },
   contato: { centro: [1.0, 0.5, 1.0], largura: 14, altura: 9 },
 };
 

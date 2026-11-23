@@ -5,7 +5,7 @@
 
 import { paragrafos, lista, avisoRascunho, citarFontes } from '../ui/guia.js';
 import { renderAcoes, temNoKit, marcarKit } from '../ui/meu-plano.js';
-import { botao, rodapeNavegacao } from './comum.js';
+import { botao, rodapeNavegacao, renderObjetivo, renderPratica, renderFinal } from './comum.js';
 
 export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linhaTempo, etiquetas, progresso, colunas, aoTerminar, abrirPlano }) {
   const etapas = licao.etapas;
@@ -20,7 +20,7 @@ export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linh
 
   function atualizarProgresso() {
     if (marcavel) progresso({ rotulo: 'Tenho em casa', feitas: contarTenho(), total: totalItens });
-    else progresso({ rotulo: licao.titulo, feitas: vistos.size, total: totalItens });
+    else progresso({ rotulo: 'Itens vistos', feitas: vistos.size, total: totalItens });
     linhaTempo.marcar(
       etapa,
       etapas.map((e, ei) => e.subpassos.every((_, si) => (marcavel ? temNoKit(chave(ei, si)) : vistos.has(chave(ei, si))))),
@@ -32,22 +32,13 @@ export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linh
   // ---------- Cena ----------
   function etiquetar() {
     etiquetas.limpar();
+    const s = etapas[etapa].subpassos[sub];
+    const ancora = s && cena.ancoras[s.objeto];
+    if (!ancora) return;
+    // só a etiqueta do item ativo: as numeradas se sobrepunham e cortavam
     const n = etapas[etapa].subpassos.length;
-    etapas[etapa].subpassos.forEach((s, si) => {
-      const ancora = cena.ancoras[s.objeto];
-      const lado = n > 1 && si >= n / 2 ? -1 : 1; // metade direita aponta para a esquerda
-      if (!ancora) return;
-      const ativo = si === sub;
-      // tela estreita: só a etiqueta do item ativo, para não amontoar
-      if (!ativo && window.innerWidth < 600) return;
-      etiquetas.adicionar(`p${si}`, {
-        ancora,
-        texto: ativo ? s.etiqueta ?? s.texto : `${si + 1}. ${s.etiqueta ?? s.texto}`,
-        tipo: ativo ? '' : 'secundaria',
-        dy: ativo ? -58 : -34,
-        dx: (ativo ? 46 : 28) * lado,
-      });
-    });
+    const lado = n > 1 && sub >= n / 2 ? -1 : 1; // metade direita aponta para a esquerda
+    etiquetas.adicionar('ativo', { ancora, texto: s.etiqueta ?? s.texto, dy: -58, dx: 46 * lado });
   }
 
   function selecionar(si) {
@@ -90,6 +81,7 @@ export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linh
   function renderFazer(el) {
     const e = etapas[etapa];
     linhas = [];
+    if (etapa === 0) renderObjetivo(el, licao);
     paragrafos(el, e.resumo);
     const ol = document.createElement('ol');
     ol.className = `subpassos${marcavel ? ' kit' : ''}`;
@@ -123,26 +115,20 @@ export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linh
       linhas.push(li);
     });
     el.append(ol);
-    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true });
+    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true, max: 1 });
     if (etapa === etapas.length - 1) {
       renderAcoes(el, licao);
-      if (licao.final) {
-        const div = document.createElement('div');
-        div.className = 'final';
-        div.innerHTML = `<p class="final-titulo"></p><p></p>`;
-        div.querySelector('.final-titulo').textContent = licao.final.titulo;
-        div.querySelector('p:last-child').textContent = licao.final.texto;
-        el.append(div);
-      }
+      renderPratica(el, licao);
+      renderFinal(el, licao);
     }
-    if (licao.rascunho) avisoRascunho(el);
     marcarItens();
   }
 
   function renderPorque(el) {
     const e = etapas[etapa];
     paragrafos(el, e.explicacao);
-    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true });
+    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes);
+    if (licao.rascunho) avisoRascunho(el);
   }
 
   function renderDicas(el) {
@@ -161,11 +147,11 @@ export function criarLicaoPassos({ licao, total, perfil, cena, palco, guia, linh
     const e = etapas[etapa];
     const ultima = etapa === etapas.length - 1;
     guia.mostrar({
-      cabeca: `Parada ${licao.id} · Etapa ${etapa + 1} de ${etapas.length}`,
+      cabeca: `Parada ${licao.id} de ${total} · Etapa ${etapa + 1} de ${etapas.length}`,
       titulo: e.titulo,
       manterAba: true,
       abas: [
-        { chave: 'fazer', rotulo: marcavel ? 'O que ter' : 'O que fazer', render: renderFazer },
+        { chave: 'fazer', rotulo: licao.abaPrincipal ?? 'O que fazer', render: renderFazer },
         { chave: 'porque', rotulo: 'Por quê', render: renderPorque },
         { chave: 'dicas', rotulo: 'Dicas', render: renderDicas },
       ],

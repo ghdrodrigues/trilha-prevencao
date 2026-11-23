@@ -7,7 +7,7 @@
 
 import { paragrafos, lista, avisoRascunho, citarFontes } from '../ui/guia.js';
 import { renderAcoes } from '../ui/meu-plano.js';
-import { botao, rodapeNavegacao } from './comum.js';
+import { botao, rodapeNavegacao, renderObjetivo, renderPratica, renderFinal } from './comum.js';
 
 let licaoNoQuadro = null; // só a lição ativa atualiza a barra do subpasso
 let quadroRegistrado = false;
@@ -41,7 +41,7 @@ export function criarLicaoFazer({ licao, total, perfil, cena, palco, guia, linha
   }
 
   function atualizarProgresso() {
-    progresso({ rotulo: licao.titulo, feitas: feitos.size, total: ordem.length });
+    progresso({ rotulo: 'Passos feitos', feitas: feitos.size, total: ordem.length });
     const { ei } = ordem[atual];
     linhaTempo.marcar(
       ei,
@@ -90,8 +90,17 @@ export function criarLicaoFazer({ licao, total, perfil, cena, palco, guia, linha
     atualizarProgresso();
     await esperar(s.pausa ?? 1.8);
     if (v !== vez) return;
-    if (g + 1 < ordem.length) tocar(g + 1);
-    else terminar();
+    if (g + 1 >= ordem.length) return terminar();
+    // dentro da etapa segue sozinho; na virada de etapa, espera o toque em
+    // "Próxima etapa" para o guia não trocar de texto enquanto a pessoa lê
+    if (ordem[g + 1].ei === ei) tocar(g + 1);
+    else fimDeEtapa();
+  }
+
+  function fimDeEtapa() {
+    etiquetas.limpar();
+    const b = document.querySelector('.guia-rodape .botao.primario');
+    b?.classList.add('pulsar');
   }
 
   function terminar() {
@@ -105,6 +114,7 @@ export function criarLicaoFazer({ licao, total, perfil, cena, palco, guia, linha
   function renderFazer(el) {
     const ei = etapaNoGuia;
     const e = etapas[ei];
+    if (ei === 0) renderObjetivo(el, licao);
     paragrafos(el, e.resumo);
     const ol = document.createElement('ol');
     ol.className = 'subpassos fazer';
@@ -122,28 +132,21 @@ export function criarLicaoFazer({ licao, total, perfil, cena, palco, guia, linha
       linhas.push(li);
     });
     el.append(ol);
-    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true });
+    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true, max: 1 });
     caixaFinal = null;
     if (ei === etapas.length - 1) {
       renderAcoes(el, licao);
-      if (licao.final) {
-        const div = document.createElement('div');
-        div.className = 'final';
-        div.innerHTML = `<p class="final-titulo"></p><p></p>`;
-        div.querySelector('.final-titulo').textContent = licao.final.titulo;
-        div.querySelector('p:last-child').textContent = licao.final.texto;
-        el.append(div);
-        caixaFinal = div;
-      }
+      renderPratica(el, licao);
+      caixaFinal = renderFinal(el, licao);
     }
-    if (licao.rascunho) avisoRascunho(el);
     if (ordem[atual]?.ei === ei) marcarItens();
   }
 
   function renderPorque(el) {
     const e = etapas[etapaNoGuia];
     paragrafos(el, e.explicacao);
-    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes, { curto: true });
+    citarFontes(el, e.fontes?.length ? e.fontes : licao.fontes);
+    if (licao.rascunho) avisoRascunho(el);
   }
 
   function renderDicas(el) {
@@ -163,7 +166,7 @@ export function criarLicaoFazer({ licao, total, perfil, cena, palco, guia, linha
     const ei = etapaNoGuia;
     const ultima = ei === etapas.length - 1;
     guia.mostrar({
-      cabeca: `Parada ${licao.id} · Etapa ${ei + 1} de ${etapas.length}`,
+      cabeca: `Parada ${licao.id} de ${total} · Etapa ${ei + 1} de ${etapas.length}`,
       titulo: etapas[ei].titulo,
       manterAba: true,
       abas: [

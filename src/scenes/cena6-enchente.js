@@ -43,9 +43,9 @@ export function relevo(x, z) {
 
 export const ENQUADRAMENTOS_ENCHENTE = {
   geral: { centro: [0.3, 0.3, 0.2], largura: 15.5, altura: 10.5 },
-  casa: { centro: [0.7, 0.7, -1.3], largura: 6.4, altura: 4.6 },
-  rua: { centro: [-1.4, 0.2, 0.5], largura: 8.4, altura: 5.8 },
-  carro: { centro: [0.6, 0.3, 0.6], largura: 6.2, altura: 4.4 },
+  casa: { centro: [0.7, 0.7, -1.3], largura: 8.4, altura: 6.0 },
+  rua: { centro: [-1.4, 0.2, 0.5], largura: 10.0, altura: 6.9 },
+  carro: { centro: [0.6, 0.3, 0.6], largura: 8.0, altura: 5.6 },
   local: { centro: [2.9, 0.8, -1.3], largura: 9.8, altura: 6.8 },
   contato: { centro: [3.4, 0.9, -1.0], largura: 9.5, altura: 6.6 },
 };
@@ -654,7 +654,7 @@ export function criarCenaEnchente({ palco }) {
     return o;
   };
   const ancoras = {
-    energia: ancora(lampada.position.x, lampada.position.y + 0.35, lampada.position.z),
+    energia: ancora(lampada.position.x, lampada.position.y, lampada.position.z + 0.04),
     gas: ancora(objGas.grupo.position.x, objGas.grupo.position.y + 0.75, objGas.grupo.position.z),
     registro: ancora(objRegistro.grupo.position.x, objRegistro.grupo.position.y + 0.6, objRegistro.grupo.position.z),
     rua: xRua,
