@@ -588,3 +588,86 @@ body[data-vitrine] .guia { max-height: 46vh; }
 @media (max-width: 899px) {
   body[data-fazer] .guia { max-height: 42vh; }
 }
+
+/* ---------- Correções do diagnóstico de 23/11 ---------- */
+/* #14 pular para a lição */
+.pular { position: fixed; left: 8px; top: -80px; z-index: 100; padding: 12px 16px; background: var(--branco); color: var(--indigo-3); font-family: var(--titulo); font-weight: 800; text-decoration: none; }
+.pular:focus { top: 8px; }
+/* #10 faixa índigo atrás do topo: a marca não some sobre telhados */
+.topo::before { content: ''; position: absolute; inset: 0 0 -28px 0; z-index: -1; pointer-events: none; background: linear-gradient(rgb(23 26 78 / 0.92), rgb(23 26 78 / 0.7) 65%, transparent); }
+/* #4 pausar, reiniciar e velocidade só onde a cena anima (parada 7) */
+body:not([data-fazer]) .so-anima { display: none !important; }
+/* #17 letreiro gigante só no mapa */
+body[data-modo='licao'] .letreiro { display: none; }
+/* #11 abertura: foco diferente da seleção, botão travado com explicação */
+.cartao-perfil:focus-visible { outline: 3px dashed var(--indigo-1); outline-offset: 3px; }
+#comecar:disabled { opacity: 1; background: var(--cinza-2); border-color: var(--cinza-2); color: var(--cinza-texto); }
+.comecar-dica { margin: 8px 0 0; font-size: 0.9rem; color: var(--cinza-texto); }
+.comecar-dica[hidden] { display: none; }
+/* #12 "para você" legível */
+.lt-marca { font-size: 0.72rem; color: #8f4700; }
+/* #13 alvos de toque */
+.controles .icone-botao { min-width: 44px; height: 44px; }
+.guia-alca { min-height: 44px; }
+.subpasso { min-height: 44px; }
+.fontes a { display: inline-block; padding: 5px 0; }
+.tenho input { width: 24px; height: 24px; }
+.subpassos.kit li > .tenho { min-height: 44px; }
+/* #6 objetivo da parada */
+.objetivo { margin: 0 0 10px !important; padding: 8px 12px; border-left: 4px solid var(--indigo-1); background: #eef0fb; font-weight: 700; color: var(--indigo-3); }
+/* #5 o que saber (sem número) x o que fazer (numerado) */
+.subpassos li.fato { background: transparent; }
+.subpassos li.fato .sp-num { background: var(--branco); border: 2px solid var(--indigo-1); color: var(--indigo-1); font-family: Georgia, serif; font-style: italic; }
+.subpassos li.fato .subpasso { font-family: 'Open Sans', system-ui, sans-serif; font-weight: 600; color: var(--texto); }
+.subpassos li.fato.atual { background: var(--laranja-claro); }
+.ver-todos { display: inline-flex; align-items: center; min-height: 44px; margin-top: 6px; padding: 0; border: 0; background: none; color: var(--indigo-1); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* #3 prática */
+.pratica { margin: 18px 0 4px; padding: 12px; border-top: 4px solid var(--indigo-1); background: #eef0fb; }
+.pratica-titulo { margin: 0 0 10px; font-family: var(--titulo); font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: var(--indigo-2); }
+.pergunta { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+.pergunta legend { padding: 0; margin-bottom: 4px; font-weight: 700; color: var(--indigo-3); }
+.opcao { display: block; width: 100%; min-height: 44px; margin-top: 6px; padding: 8px 12px; border: 2px solid var(--cinza-2); background: var(--branco); color: var(--texto); font: inherit; text-align: left; cursor: pointer; }
+.opcao:hover { border-color: var(--indigo-1); }
+.opcao.certa { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; font-weight: 700; }
+.opcao.errada { border-color: var(--vermelho); background: #fdecec; color: #a30000; }
+.retorno { margin: 8px 0 0 !important; font-size: 0.9rem; }
+.retorno:empty { display: none; }
+.retorno .fontes { display: block; margin-top: 4px; }
+.mp-vazio { margin: 4px 0 0; padding: 8px 12px; border-left: 4px solid var(--laranja); background: var(--laranja-claro); font-weight: 600; }
+body.carregando .palco { cursor: progress; }
+
+/* #1 celular: topo numa linha, cena maior, guia compacto */
+@media (max-width: 899px) {
+  :root { --topo-h: 56px; }
+  .controles { display: none; }
+  /* na parada 7 ficam só pausar e reiniciar, sobre o canto da cena */
+  body[data-fazer] .controles { display: flex; flex-direction: column; top: calc(var(--topo-h) + max(8px, env(safe-area-inset-top))); }
+  body[data-fazer] .controles .so-giro,
+  body[data-fazer] .controles .separador,
+  body[data-fazer] .controles .velocidade { display: none !important; }
+  body[data-modo='licao'] .guia,
+  body[data-fazer] .guia,
+  body[data-vitrine] .guia { max-height: 48vh; max-height: 48svh; }
+  .guia-alca { position: absolute; top: 0; right: 0; z-index: 2; width: 44px; padding: 0; }
+  .guia-alca-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .guia-alca-barra { width: 20px; }
+  .guia-corpo { padding-top: 10px; }
+  .guia-cabeca { padding-right: 40px; }
+  .guia-titulo { font-size: 1.12rem; margin-bottom: 4px; }
+  .abas { margin-bottom: 8px; }
+  .abas [role='tab'] { min-height: 44px; padding: 4px; }
+  .aba-conteudo p { margin-bottom: 8px; }
+  .objetivo { margin-bottom: 6px !important; padding: 5px 10px; font-size: 0.8rem; line-height: 1.35; }
+  /* o resumo da etapa repete a lista: no celular, a lista vem direto */
+  .aba-conteudo[aria-labelledby='aba-fazer'] > p:first-child:not(.objetivo):not(.dica-perfil),
+  .aba-conteudo[aria-labelledby='aba-fazer'] > .objetivo + p:not(.dica-perfil) { display: none; }
+  .guia-cabeca { font-size: 0.62rem; }
+  .guia-corpo { padding: 8px 14px 12px; }
+  .guia-rodape:not(:empty) { padding: 8px 14px 12px; margin: 8px -14px -12px; bottom: -12px; }
+  .subpasso { font-size: 0.88rem; }
+  body[data-modo='licao'] .lt-rotulo { display: none; }
+  .lt-cartao { min-height: 48px; padding: 6px 10px; }
+  .rodape-botoes { flex-wrap: nowrap; }
+  .rodape-botoes .botao { padding: 0 10px; font-size: 0.78rem; }
+  .guia.recolhido .guia-corpo { padding-top: 10px; }
+}

@@ -59,13 +59,13 @@ const DESCALCO = [-1.45, 1.35];
 
 export const ENQUADRAMENTOS_FAZER = {
   geral: { centro: [-0.2, 0.4, 0], largura: 13.2, altura: 9.0 },
-  casa: { centro: [-1.5, 0.8, -0.7], largura: 7.6, altura: 5.6 },
-  caminho: { centro: [-2.1, 0.4, 1.0], largura: 6.2, altura: 4.6 },
-  poco: { centro: [1.6, 0.7, -1.6], largura: 4.6, altura: 3.4 },
+  casa: { centro: [-1.5, 0.8, -0.7], largura: 9.2, altura: 6.6 },
+  caminho: { centro: [-2.1, 0.4, 1.0], largura: 7.6, altura: 5.4 },
+  poco: { centro: [1.6, 0.6, -1.6], largura: 6.2, altura: 4.4 },
   mesa: { centro: [1.4, 0.85, 0.8], largura: 2.9, altura: 2.15 },
-  comida: { centro: [0.05, 0.35, 1.1], largura: 4.6, altura: 3.4 },
-  varal: { centro: [2.3, 0.45, -0.2], largura: 3.8, altura: 2.8 },
-  moveis: { centro: [-3.6, 0.4, 1.1], largura: 5.0, altura: 3.7 },
+  comida: { centro: [0.05, 0.35, 1.1], largura: 5.6, altura: 4.0 },
+  varal: { centro: [2.3, 0.45, -0.2], largura: 4.8, altura: 3.5 },
+  moveis: { centro: [-3.6, 0.4, 1.1], largura: 6.2, altura: 4.5 },
   quintal: { centro: [-1.8, 0.3, 0.7], largura: 8.4, altura: 6.0 },
 };
 
@@ -1162,7 +1162,7 @@ export function criarCenaFazer7({ palco }) {
     vistoria: ancora(CASA.x + CASA.w / 2 + 0.06, yc + CASA.h, CASA.z + CASA.d / 2 + 0.06),
     epi: ancBotas,
     descalco: xPe,
-    poco: xPoco,
+    poco: ancora(POCO[0], chao(...POCO) + 0.7, POCO[1]),
     gotas: ancora(...mesaW(new THREE.Vector3(-0.16, 0.7, 0.12)).toArray()),
     espera: relEspera.sprite,
     ferver: ancora(...mesaW(new THREE.Vector3(0.36, 0.75, 0)).toArray()),

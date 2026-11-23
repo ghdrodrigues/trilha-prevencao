@@ -13,7 +13,7 @@ export function criarSeletorPerfil({ elemento, perfis, aoEscolher }) {
     b.innerHTML = `<span class="icone">${icone(chave)}</span>
       <strong></strong><span class="enfase"></span>`;
     b.querySelector('strong').textContent = p.titulo;
-    b.querySelector('.enfase').textContent = `Ênfase em ${p.enfase}`;
+    b.querySelector('.enfase').textContent = `Risco principal: ${p.enfase}`;
     b.addEventListener('click', () => {
       marcar(chave);
       aoEscolher(chave);

@@ -306,9 +306,10 @@ function texturaNumero(n) {
 
 // Paradas destacadas por perfil (BRIEF §3.1: o perfil adapta as lições 1, 4 e 6).
 export const DESTAQUES_PERFIL = {
+  // só as paradas que têm texto próprio para o perfil (perfil_variacoes)
   encosta: [1, 4, 6],
-  baixada: [1, 4, 6],
-  aberto: [1, 4, 6],
+  baixada: [1, 6],
+  aberto: [1, 6],
 };
 
 // Zona do terreno ligada a cada perfil (anel grande no chão).

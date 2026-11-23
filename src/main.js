@@ -6,26 +6,16 @@ import dados from '../data/licoes.json';
 import { criarPalco } from './motor/palco.js';
 import { criarEtiquetas } from './motor/etiquetas.js';
 import { criarCena1, DESTAQUES_PERFIL } from './scenes/cena1-terreno.js';
-import { criarCenaKit, colunasPara } from './scenes/cena3-kit.js';
-import { criarGuia, paragrafos, lista, avisoRascunho, citarFontes } from './ui/guia.js';
+import { criarGuia, paragrafos } from './ui/guia.js';
 import { criarLinhaTempo } from './ui/linha-tempo.js';
 import { criarSeletorPerfil } from './ui/perfil.js';
-import { criarLicaoMontagem } from './licoes/montagem.js';
 import { criarLicaoRoteiro } from './licoes/roteiro.js';
 import { criarEfeitosRisco, ENQUADRAMENTOS } from './scenes/efeitos-risco.js';
 import { criarPersonagensRisco } from './scenes/personagens-risco.js';
-import { criarCenaPlano, relevo as relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO } from './scenes/cena5-plano.js';
-import { criarCenaAlerta, relevo as relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA } from './scenes/cena2-alerta.js';
-import { criarCenaFazer7 } from './scenes/cena7-fazer.js';
 import { criarLicaoFazer } from './licoes/fazer.js';
-import { criarCenaEnchente, relevo as relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE } from './scenes/cena6-enchente.js';
-import { criarCenaSinais, relevo as relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS } from './scenes/cena4-sinais.js';
 import { aplicarIcones, icone } from './ui/icones.js';
 import { abrirMeuPlano } from './ui/meu-plano.js';
 import { criarLicaoPassos } from './licoes/passos.js';
-import { criarVitrine } from './scenes/vitrine.js';
-import { ITENS_KIT } from './scenes/objetos-kit.js';
-import { ITENS_SINAIS } from './scenes/objetos-sinais.js';
 
 aplicarIcones();
 
@@ -63,10 +53,10 @@ function areaLivre() {
     };
   }
   const base = h - Math.min(guiaEl.getBoundingClientRect().top, linhaEl.getBoundingClientRect().top);
-  // os controles ficam numa segunda linha abaixo da marca
-  const ctl = topo.querySelector('.controles').getBoundingClientRect();
-  const alto = Math.max(topo.getBoundingClientRect().bottom, ctl.height ? ctl.bottom : 0);
-  return { esquerda: 8, topo: alto + 8, direita: 8, base: Math.max(base, 0) + 8 };
+  // no celular o topo tem uma linha só; os controles da parada 7 ficam
+  // sobre o canto da cena e não tiram altura dela
+  const alto = topo.getBoundingClientRect().bottom;
+  return { esquerda: 8, topo: alto + 4, direita: 8, base: Math.max(base, 0) + 6 };
 }
 
 const palco = criarPalco($('#palco'), { areaLivre });
@@ -83,8 +73,6 @@ const linhaTempo = criarLinhaTempo(linhaEl, { aoEscolher: (i) => navegar(i) });
 
 // ---------- Cenas ----------
 const cena1 = criarCena1();
-const cenaKit = criarCenaKit();
-cenaKit.conectar(palco);
 const efeitosRisco = criarEfeitosRisco({ cena1, palco });
 cena1.raiz.add(efeitosRisco.grupo);
 const personagensRisco = criarPersonagensRisco({ palco });
@@ -101,14 +89,22 @@ const cenaRisco = {
   },
 };
 
-// Cenas de roteiro das paradas 2, 4, 5, 6 e 7: montadas só na primeira visita,
-// para não pesar a abertura no celular.
-function cenaRoteiro(criar, relevo, enquadramentos, posicoesAgente, vizinhos, alturaAtor = 1.1) {
+// Cenas de roteiro das paradas 2, 4, 5 e 6: o código de cada uma só é baixado
+// e montado na primeira visita, para não pesar a abertura no celular.
+function cenaRoteiro(carregar, nome, alturaAtor = 1.1) {
   let pronta = null;
-  return () => {
+  return async () => {
     if (pronta) return pronta;
-    const c = criar({ palco });
-    const personagens = criarPersonagensRisco({ palco, relevo, posicoesAgente, vizinhos, alturaAtor });
+    const m = await carregar();
+    const enquadramentos = m[`ENQUADRAMENTOS_${nome}`];
+    const c = m[Object.keys(m).find((k) => k.startsWith('criarCena'))]({ palco });
+    const personagens = criarPersonagensRisco({
+      palco,
+      relevo: m.relevo,
+      posicoesAgente: m[`POSICOES_AGENTE_${nome}`],
+      vizinhos: m[`VIZINHOS_${nome}`],
+      alturaAtor,
+    });
     c.raiz.add(personagens.grupo);
     const cena = {
       raiz: c.raiz,
@@ -126,27 +122,14 @@ function cenaRoteiro(criar, relevo, enquadramentos, posicoesAgente, vizinhos, al
 
 // Cada lição do tipo roteiro escolhe a cena pelo campo "cena".
 const CENAS_ROTEIRO = {
-  terreno: () => ({ cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS }),
-  alerta: cenaRoteiro(criarCenaAlerta, relevoAlerta, ENQUADRAMENTOS_ALERTA, POSICOES_AGENTE_ALERTA, VIZINHOS_ALERTA),
-  sinais: cenaRoteiro(criarCenaSinais, relevoSinais, ENQUADRAMENTOS_SINAIS, POSICOES_AGENTE_SINAIS, VIZINHOS_SINAIS, 1.15),
-  plano: cenaRoteiro(criarCenaPlano, relevoPlano, ENQUADRAMENTOS_PLANO, POSICOES_AGENTE_PLANO, VIZINHOS_PLANO),
-  enchente: cenaRoteiro(criarCenaEnchente, relevoEnchente, ENQUADRAMENTOS_ENCHENTE, POSICOES_AGENTE_ENCHENTE, VIZINHOS_ENCHENTE),
+  terreno: async () => ({ cena: cenaRisco, efeitos: efeitosRisco, personagens: personagensRisco, enquadramentos: ENQUADRAMENTOS }),
+  alerta: cenaRoteiro(() => import('./scenes/cena2-alerta.js'), 'ALERTA'),
+  sinais: cenaRoteiro(() => import('./scenes/cena4-sinais.js'), 'SINAIS', 1.15),
+  plano: cenaRoteiro(() => import('./scenes/cena5-plano.js'), 'PLANO'),
+  enchente: cenaRoteiro(() => import('./scenes/cena6-enchente.js'), 'ENCHENTE'),
 };
 
-// No celular, o kit vira uma grade com as colunas que deixam os itens maiores
-// na área livre. No desktop, fica a lona horizontal.
-function colunasKit() {
-  if (desktop.matches) return 0;
-  const l = areaLivre();
-  return colunasPara(window.innerWidth - l.esquerda - l.direita, window.innerHeight - l.topo - l.base);
-}
-function reorganizarKit() {
-  if (palco.cena === cenaKit && cenaKit.layout(colunasKit())) palco.enquadrar(cenaKit.enquadramento, { instantaneo: true });
-}
-window.addEventListener('resize', () => {
-  reorganizarKit();
-  licaoAtiva?.reenquadrar?.();
-});
+window.addEventListener('resize', () => licaoAtiva?.reenquadrar?.());
 
 // ---------- Perfil ----------
 let perfil = ler(CHAVE_PERFIL);
@@ -158,6 +141,7 @@ const seletor = criarSeletorPerfil({
     perfil = p;
     gravar(CHAVE_PERFIL, p);
     $('#comecar').disabled = false;
+    $('#comecar-dica').hidden = true;
     aplicarPerfil();
   },
 });
@@ -170,6 +154,7 @@ function aplicarPerfil() {
 function abrirIntro() {
   $('#intro').hidden = false;
   $('#comecar').disabled = !perfil;
+  $('#comecar-dica').hidden = Boolean(perfil);
   ($('#perfis [aria-pressed=true]') ?? $('#perfis button'))?.focus();
 }
 $('#comecar').addEventListener('click', () => {
@@ -201,7 +186,7 @@ for (const l of dados.licoes) {
   a.href = `?parada=${l.id}`;
   a.className = 'menu-item';
   a.innerHTML = `${icone(ICONES_MENU[l.id - 1])} <span></span>`;
-  a.querySelector('span').textContent = `${l.id}. ${l.titulo}${l.etapas ? ' · 3D' : ''}`;
+  a.querySelector('span').textContent = `${l.id}. ${l.titulo}`;
   li.appendChild(a);
   $('#menu-paradas').appendChild(li);
 }
@@ -304,68 +289,27 @@ function mostrarTrilha(selecionada = null) {
         rotulo: 'Trilha',
         render: (el) => {
           paragrafos(el, 'Sete paradas para preparar sua família para chuva forte, enchente e deslizamento.');
-          if (perfil) paragrafos(el, 'As paradas com anel laranja foram adaptadas para onde você mora.');
+          if (perfil) paragrafos(el, 'As paradas com anel laranja têm orientação própria para onde você mora.');
         },
       },
     ],
   });
 }
 
-// Lições ainda sem cena animada: o mapa fica ao fundo e o guia mostra as 3 abas.
-function mostrarLicaoSimples(l) {
-  document.body.dataset.modo = 'simples';
-  guia.recolher(false); // sem animação, o texto é o conteúdo
-  const abas = { ...l.abas, ...(l.perfil_variacoes?.[perfil] ?? {}) };
-  const adaptado = Boolean(l.perfil_variacoes?.[perfil]);
-  guia.mostrar({
-    cabeca: `Parada ${l.id} de ${dados.licoes.length}${adaptado ? ' · adaptada para você' : ''}`,
-    titulo: l.titulo,
-    abas: [
-      { chave: 'passo', rotulo: 'Passo a passo', render: (el) => lista(el, abas.passo, true) },
-      { chave: 'porque', rotulo: 'Por que importa', render: (el) => paragrafos(el, abas.porque) },
-      { chave: 'dica', rotulo: 'Dica do agente', render: (el) => paragrafos(el, abas.dica) },
-    ],
-    rodape: (el) => {
-      const p = document.createElement('p');
-      p.className = 'em-breve';
-      p.textContent = 'Cena animada desta parada: em produção.';
-      el.appendChild(p);
-      citarFontes(el, l.fontes);
-      if (l.rascunho) avisoRascunho(el);
-    },
-  });
-}
+// Rota atual: uma troca de parada durante um carregamento cancela a anterior.
+let rota = 0;
+const carregando = () => document.body.classList.add('carregando');
+const carregado = () => document.body.classList.remove('carregando');
 
-function mostrarLicaoMontagem(l) {
-  document.body.dataset.modo = 'licao';
-  letreiro.textContent = l.letreiro ?? l.titulo;
-  guia.recolher(false); // a lista é o conteúdo; a cena ilustra
-  cenaKit.layout(colunasKit());
-  palco.definirCena(cenaKit);
-  licaoAtiva = criarLicaoMontagem({
-    licao: l,
-    cena: cenaKit,
-    palco,
-    guia,
-    linhaTempo,
-    etiquetas,
-    progresso,
-    total: dados.licoes.length,
-    abrirPlano: () => abrirPlano(),
-    aoTerminar: () => irParaParada(l.id + 1),
-  });
-  navegar = (i) => licaoAtiva.irPara(i);
-  licaoAtiva.iniciar();
-  // o guia e a linha do tempo já têm a altura final: confere a grade
-  requestAnimationFrame(reorganizarKit);
-}
-
-function mostrarLicaoRoteiro(l) {
+async function mostrarLicaoRoteiro(l, minha) {
+  carregando();
+  const c = await (CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno)();
+  carregado();
+  if (minha !== rota) return;
   document.body.dataset.modo = 'licao';
   letreiro.textContent = l.letreiro ?? l.titulo;
   guia.recolher(false);
   cena1.mostrarTrilha(false);
-  const c = (CENAS_ROTEIRO[l.cena] ?? CENAS_ROTEIRO.terreno)();
   palco.definirCena(c.cena);
   licaoAtiva = criarLicaoRoteiro({
     licao: l,
@@ -387,15 +331,21 @@ function mostrarLicaoRoteiro(l) {
 }
 
 // Cenas das lições "fazer": uma ação animada por subpasso, sem personagens.
-const CENAS_FAZER = { depois: criarCenaFazer7 };
+const CENAS_FAZER = { depois: () => import('./scenes/cena7-fazer.js').then((m) => m.criarCenaFazer7) };
 const cenasFazer = {};
-function mostrarLicaoFazer(l) {
+async function mostrarLicaoFazer(l, minha) {
+  if (!cenasFazer[l.cena]) {
+    carregando();
+    const criar = await CENAS_FAZER[l.cena]();
+    carregado();
+    cenasFazer[l.cena] ??= criar({ palco });
+  }
+  if (minha !== rota) return;
   document.body.dataset.modo = 'licao';
   document.body.dataset.fazer = 'sim';
   letreiro.textContent = l.letreiro ?? l.titulo;
   guia.recolher(false);
   personagensRisco.sair();
-  cenasFazer[l.cena] ??= CENAS_FAZER[l.cena]({ palco });
   const c = cenasFazer[l.cena];
   palco.definirCena(c);
   licaoAtiva = criarLicaoFazer({
@@ -417,11 +367,15 @@ function mostrarLicaoFazer(l) {
 }
 
 // Vitrines das lições "passos" (palco limpo), montadas na primeira visita.
-const ITENS_VITRINE = { kit: ITENS_KIT, sinais: ITENS_SINAIS };
+const ITENS_VITRINE = {
+  kit: () => import('./scenes/objetos-kit.js').then((m) => m.ITENS_KIT),
+  sinais: () => import('./scenes/objetos-sinais.js').then((m) => m.ITENS_SINAIS),
+};
 const vitrines = {};
-function vitrinePara(l) {
+async function vitrinePara(l) {
   if (!vitrines[l.id]) {
-    const itens = ITENS_VITRINE[l.cena];
+    const [itens, { criarVitrine }] = await Promise.all([ITENS_VITRINE[l.cena](), import('./scenes/vitrine.js')]);
+    if (vitrines[l.id]) return vitrines[l.id];
     const etapas = l.etapas.map((e) => e.subpassos.map((s) => s.objeto));
     const usados = Object.fromEntries(etapas.flat().map((id) => [id, itens[id]]));
     vitrines[l.id] = criarVitrine({ itens: usados, etapas });
@@ -438,13 +392,16 @@ function colunasVitrine(n) {
   return prop >= 0.85 ? Math.min(n, 3) : Math.min(n, 2);
 }
 
-function mostrarLicaoPassos(l) {
+async function mostrarLicaoPassos(l, minha) {
+  carregando();
+  const v = await vitrinePara(l);
+  carregado();
+  if (minha !== rota) return;
   document.body.dataset.modo = 'licao';
   document.body.dataset.vitrine = 'sim';
   letreiro.textContent = l.letreiro ?? l.titulo;
   guia.recolher(false);
   personagensRisco.sair();
-  const v = vitrinePara(l);
   palco.definirCena(v);
   licaoAtiva = criarLicaoPassos({
     licao: l,
@@ -465,6 +422,7 @@ function mostrarLicaoPassos(l) {
 }
 
 function rotear() {
+  const minha = ++rota;
   const id = Number(new URLSearchParams(location.search).get('parada'));
   const l = dados.licoes.find((x) => x.id === id);
   licaoAtiva?.parar();
@@ -483,12 +441,9 @@ function rotear() {
   delete document.body.dataset.vitrine;
   delete document.body.dataset.fazer;
   if (!l) return mostrarTrilha();
-  if (l.tipo === 'passos') return mostrarLicaoPassos(l);
-  if (l.tipo === 'fazer') return mostrarLicaoFazer(l);
-  if (l.tipo === 'roteiro') return mostrarLicaoRoteiro(l);
-  if (l.etapas) return mostrarLicaoMontagem(l);
-  mostrarTrilha(l.id);
-  mostrarLicaoSimples(l);
+  if (l.tipo === 'passos') return mostrarLicaoPassos(l, minha);
+  if (l.tipo === 'fazer') return mostrarLicaoFazer(l, minha);
+  return mostrarLicaoRoteiro(l, minha);
 }
 
 aplicarPerfil();

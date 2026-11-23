@@ -129,34 +129,37 @@
           "resumo": "Cada terreno tem um risco principal. Comece pelo seu.",
           "subpassos": [
             {
-              "texto": "Encosta ou morro: risco de deslizamento",
+              "texto": "Encosta ou morro",
               "perfil": "encosta",
               "foco": "encosta",
               "efeito": "zona:encosta",
               "ancora": "encosta",
               "etiqueta": "Encosta",
-              "agente": "apontar"
+              "agente": "apontar",
+              "fato": true
             },
             {
-              "texto": "Beira de rio ou baixada: risco de enchente",
+              "texto": "Beira de rio ou baixada",
               "perfil": "baixada",
               "foco": "baixada",
               "efeito": "zona:baixada",
               "ancora": "baixada",
               "etiqueta": "Baixada",
-              "agente": "apontar"
+              "agente": "apontar",
+              "fato": true
             },
             {
-              "texto": "Área aberta ou interior: risco de vendaval e granizo",
+              "texto": "Área aberta ou interior",
               "perfil": "aberto",
               "foco": "aberto",
               "efeito": "zona:aberto",
               "ancora": "aberto",
               "etiqueta": "Área aberta",
-              "agente": "apontar"
+              "agente": "apontar",
+              "fato": true
             },
             {
-              "texto": "Identifique se sua casa está em área de risco",
+              "texto": "Confira se sua casa fica em encosta, perto de rio ou em área de várzea",
               "foco": "geral",
               "efeito": "zonas",
               "agente": "acenar"
@@ -165,9 +168,7 @@
           "explicacao": [
             "Em Santa Catarina, chuva acima da média aumenta a chance de alagamentos, enxurradas, inundações e deslizamentos de terra."
           ],
-          "dicas": [
-            "Confere se a casa fica em encosta, perto de rio ou em área de várzea."
-          ],
+          "dicas": [],
           "fontes": [
             "F1",
             "F10"
@@ -181,12 +182,13 @@
           "resumo": "Chuva intensa traz um risco diferente para cada terreno.",
           "subpassos": [
             {
-              "texto": "Chuva intensa e contínua",
+              "texto": "Chuva intensa e contínua aumenta o risco",
               "foco": "geral",
               "efeito": "chuva",
               "ancora": "chuva",
               "etiqueta": "Chuva intensa",
-              "agente": "radio"
+              "agente": "radio",
+              "fato": true
             },
             {
               "texto": "Na encosta: risco de deslizamento",
@@ -197,7 +199,8 @@
               "agente": "apontar",
               "vizinho": {
                 "encosta": "examinar"
-              }
+              },
+              "fato": true
             },
             {
               "texto": "Na baixada: risco de alagamento e inundação",
@@ -205,7 +208,8 @@
               "efeito": "enchente",
               "ancora": "enchente",
               "etiqueta": "Enchente",
-              "agente": "apontar"
+              "agente": "apontar",
+              "fato": true
             },
             {
               "texto": "Na área aberta: risco de vendaval e granizo",
@@ -213,14 +217,15 @@
               "efeito": "vento",
               "ancora": "vento",
               "etiqueta": "Vendaval",
-              "agente": "apontar"
+              "agente": "apontar",
+              "fato": true
             }
           ],
           "explicacao": [
             "Em Santa Catarina, chuva acima da média aumenta a chance de alagamentos, enxurradas, inundações e deslizamentos de terra."
           ],
           "dicas": [
-            "Chuva forte por muitas horas? Acompanha os alertas, e só pelos canais oficiais da Defesa Civil."
+            "Chuva forte por muitas horas? Acompanhe os alertas, e só pelos canais oficiais da Defesa Civil."
           ],
           "fontes": [
             "F1",
@@ -254,7 +259,7 @@
             "A Defesa Civil de SC orienta ficar atento ao nível da água, evitar ficar isolado e comunicar os vizinhos ao notar sinais de perigo."
           ],
           "dicas": [
-            "Passou o perigo? Vê se algum vizinho precisa de ajuda."
+            "Passou o perigo? Veja se algum vizinho precisa de ajuda."
           ],
           "fontes": [
             "F2",
@@ -288,7 +293,7 @@
             "A Defesa Civil orienta verificar se a casa está em área de risco, como encostas e várzeas, e manter contato com a Defesa Civil e os órgãos competentes."
           ],
           "dicas": [
-            "Em caso de risco, liga 199 e fala com a Defesa Civil."
+            "Em caso de risco, ligue 199 e fale com a Defesa Civil."
           ],
           "fontes": [
             "F1",
@@ -302,6 +307,49 @@
         "F10",
         "F10b",
         "F3"
+      ],
+      "objetivo": "Ao final, você sabe qual é o risco do terreno onde mora.",
+      "pratica": [
+        {
+          "pergunta": "Chove forte há muitas horas. Onde você acompanha os alertas?",
+          "opcoes": [
+            {
+              "texto": "Só nos canais oficiais da Defesa Civil",
+              "certa": true
+            },
+            {
+              "texto": "Em correntes de mensagens dos grupos"
+            },
+            {
+              "texto": "Em lugar nenhum, se não chove na minha rua"
+            }
+          ],
+          "explicacao": "A Defesa Civil orienta acompanhar os alertas só pelos canais oficiais.",
+          "fontes": [
+            "F1",
+            "F3"
+          ]
+        },
+        {
+          "pergunta": "Você notou sinais de perigo perto de casa. O que fazer com os vizinhos?",
+          "opcoes": [
+            {
+              "texto": "Avisar os vizinhos",
+              "certa": true
+            },
+            {
+              "texto": "Esperar alguém da Defesa Civil avisar"
+            },
+            {
+              "texto": "Não falar nada para não assustar"
+            }
+          ],
+          "explicacao": "Ao notar sinais de perigo, a orientação é comunicar os vizinhos.",
+          "fontes": [
+            "F2",
+            "F10"
+          ]
+        }
       ]
     },
     {
@@ -356,7 +404,8 @@
               "ancora": "celular",
               "etiqueta": "Gratuito",
               "agente": "acenar",
-              "pausa": 2.0
+              "pausa": 2.0,
+              "fato": true
             }
           ],
           "explicacao": [
@@ -423,7 +472,8 @@
               "ancora": "torre",
               "etiqueta": "Alerta para a área de risco",
               "agente": "apontar",
-              "pausa": 1.6
+              "pausa": 1.6,
+              "fato": true
             },
             {
               "texto": "Não é necessário cadastro prévio",
@@ -431,7 +481,8 @@
               "ancora": "celular",
               "etiqueta": "Sem cadastro",
               "agente": "acenar",
-              "pausa": 1.4
+              "pausa": 1.4,
+              "fato": true
             },
             {
               "texto": "A mensagem aparece na tela do celular",
@@ -440,7 +491,8 @@
               "ancora": "celular",
               "etiqueta": "Mensagem na tela",
               "agente": "apontar",
-              "pausa": 1.6
+              "pausa": 1.6,
+              "fato": true
             },
             {
               "texto": "Pode tocar mesmo no modo silencioso",
@@ -449,7 +501,8 @@
               "ancora": "sino",
               "etiqueta": "Toca no silencioso",
               "agente": "apontar",
-              "pausa": 2.2
+              "pausa": 2.2,
+              "fato": true
             }
           ],
           "explicacao": [
@@ -482,7 +535,8 @@
               "ancora": "celular",
               "etiqueta": "Recomendações",
               "agente": "apontar",
-              "pausa": 1.8
+              "pausa": 1.8,
+              "fato": true
             },
             {
               "texto": "Siga as recomendações das autoridades locais",
@@ -511,7 +565,48 @@
         "whatsapp",
         "ligar199"
       ],
-      "acoesTitulo": "Cadastre agora"
+      "acoesTitulo": "Cadastre agora",
+      "objetivo": "Ao final, seu celular está pronto para receber os alertas da Defesa Civil.",
+      "pratica": [
+        {
+          "pergunta": "Como cadastrar o alerta por SMS?",
+          "opcoes": [
+            {
+              "texto": "Enviar o CEP da área de interesse para 40199",
+              "certa": true
+            },
+            {
+              "texto": "Ligar para 199 e pedir o cadastro"
+            },
+            {
+              "texto": "Enviar o nome completo para 40199"
+            }
+          ],
+          "explicacao": "O serviço do governo federal orienta enviar uma mensagem para 40199 com o CEP da área de interesse. É gratuito.",
+          "fontes": [
+            "F6"
+          ]
+        },
+        {
+          "pergunta": "O Defesa Civil Alerta, que aparece na tela do celular, precisa de cadastro?",
+          "opcoes": [
+            {
+              "texto": "Não. Celulares compatíveis em áreas de risco recebem sem cadastro",
+              "certa": true
+            },
+            {
+              "texto": "Sim, pelo SMS 40199"
+            },
+            {
+              "texto": "Sim, por um aplicativo"
+            }
+          ],
+          "explicacao": "A Anatel informa que os alertas vão para celulares compatíveis na área de risco, sem cadastro prévio.",
+          "fontes": [
+            "F8"
+          ]
+        }
+      ]
     },
     {
       "id": 3,
@@ -716,7 +811,49 @@
         "F10b",
         "REF-PR"
       ],
-      "marcavel": true
+      "marcavel": true,
+      "objetivo": "Ao final, você sabe o que ter no kit de emergência e quais itens já tem em casa.",
+      "abaPrincipal": "O que ter",
+      "pratica": [
+        {
+          "pergunta": "Como guardar os documentos no kit?",
+          "opcoes": [
+            {
+              "texto": "Numa pasta ou saco plástico bem fechado",
+              "certa": true
+            },
+            {
+              "texto": "Soltos na mochila"
+            },
+            {
+              "texto": "Fora do kit, numa gaveta"
+            }
+          ],
+          "explicacao": "A Defesa Civil orienta proteger documentos e objetos de valor em sacos plásticos bem fechados.",
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "pergunta": "Para que serve o apito do kit?",
+          "opcoes": [
+            {
+              "texto": "Para sinalizar e pedir ajuda",
+              "certa": true
+            },
+            {
+              "texto": "Para avisar que o alerta acabou"
+            },
+            {
+              "texto": "Para chamar os animais de estimação"
+            }
+          ],
+          "explicacao": "O apito serve para sinalizar e pedir ajuda.",
+          "fontes": [
+            "F2"
+          ]
+        }
+      ]
     },
     {
       "id": 4,
@@ -736,12 +873,6 @@
       "perfil_variacoes": {
         "encosta": {
           "dica": "Na encosta, água barrenta saindo do barranco ou muro estufado é sinal de sair na hora."
-        },
-        "baixada": {
-          "dica": "Na baixada, fique atento ao nível da água e evite ficar isolado."
-        },
-        "aberto": {
-          "dica": "No vendaval, evite ficar embaixo de árvores, postes ou fiação elétrica."
         }
       },
       "fontes": [
@@ -919,6 +1050,49 @@
       ],
       "acoes": [
         "ligar199"
+      ],
+      "objetivo": "Ao final, você reconhece os sinais de deslizamento e sabe o que fazer ao ver um.",
+      "abaPrincipal": "O que observar",
+      "pratica": [
+        {
+          "pergunta": "Qual destes está na lista de sinais de deslizamento da Defesa Civil?",
+          "opcoes": [
+            {
+              "texto": "Água barrenta surgindo no barranco",
+              "certa": true
+            },
+            {
+              "texto": "Céu nublado"
+            },
+            {
+              "texto": "Vento fraco"
+            }
+          ],
+          "explicacao": "O surgimento de água barrenta está na lista de sinais de deslizamento da Defesa Civil de SC.",
+          "fontes": [
+            "F1"
+          ]
+        },
+        {
+          "pergunta": "Você viu uma trinca nova na parede e o muro estufado. O que fazer?",
+          "opcoes": [
+            {
+              "texto": "Sair da área, avisar os vizinhos e ligar 199",
+              "certa": true
+            },
+            {
+              "texto": "Esperar a chuva passar para ver se piora"
+            },
+            {
+              "texto": "Tapar a trinca e ficar em casa"
+            }
+          ],
+          "explicacao": "Ao perceber sinais de instabilidade, a Defesa Civil de SC orienta sair imediatamente da área e acionar a Defesa Civil pelo 199.",
+          "fontes": [
+            "F1",
+            "F2"
+          ]
+        }
       ]
     },
     {
@@ -1013,7 +1187,7 @@
               "agente": "acenar"
             },
             {
-              "texto": "Rota de fuga externa: o caminho até o ponto de encontro",
+              "texto": "Anotem a rota de fuga externa até o ponto de encontro",
               "foco": "rota",
               "efeito": "rota",
               "ancora": "rota",
@@ -1188,7 +1362,48 @@
       "acoes": [
         "plano"
       ],
-      "acoesTitulo": "Preencha o plano da sua família"
+      "acoesTitulo": "Preencha o plano da sua família",
+      "objetivo": "Ao final, sua família tem saídas, ponto de encontro e contato de apoio combinados.",
+      "pratica": [
+        {
+          "pergunta": "Onde deve ficar o ponto de encontro da família?",
+          "opcoes": [
+            {
+              "texto": "Num lugar fora do bairro",
+              "certa": true
+            },
+            {
+              "texto": "Dentro de casa"
+            },
+            {
+              "texto": "Na casa do vizinho ao lado"
+            }
+          ],
+          "explicacao": "O Plano Emergencial Familiar pede que a família escolha um lugar fora do bairro para ser o ponto de encontro.",
+          "fontes": [
+            "F2"
+          ]
+        },
+        {
+          "pergunta": "De quanto em quanto tempo a família deve rever o plano?",
+          "opcoes": [
+            {
+              "texto": "A cada seis meses, com simulação das rotas",
+              "certa": true
+            },
+            {
+              "texto": "Só quando chegar um alerta"
+            },
+            {
+              "texto": "Uma vez, e pronto"
+            }
+          ],
+          "explicacao": "O Plano Emergencial Familiar recomenda rever o plano a cada seis meses e fazer a simulação das rotas de fuga.",
+          "fontes": [
+            "F2"
+          ]
+        }
+      ]
     },
     {
       "id": 6,
@@ -1311,7 +1526,8 @@
               "foco": "rua",
               "efeito": "agua",
               "agente": "parado",
-              "pausa": 1.2
+              "pausa": 1.2,
+              "fato": true
             },
             {
               "texto": "Não atravesse ruas alagadas",
@@ -1364,7 +1580,8 @@
               "ancora": "carro",
               "etiqueta": "Carro pode ser levado",
               "agente": "apontar",
-              "pausa": 1.4
+              "pausa": 1.4,
+              "fato": true
             },
             {
               "texto": "Abandone o veículo e procure um local seguro",
@@ -1546,7 +1763,49 @@
         "sms40199",
         "whatsapp"
       ],
-      "acoesTitulo": "Tenha à mão"
+      "acoesTitulo": "Tenha à mão",
+      "objetivo": "Ao final, você sabe o que fazer quando a água começa a subir.",
+      "pratica": [
+        {
+          "pergunta": "A rua está alagada e é o caminho mais curto. O que fazer?",
+          "opcoes": [
+            {
+              "texto": "Não atravessar e ir a pé pelo caminho que não passa pela água",
+              "certa": true
+            },
+            {
+              "texto": "Atravessar devagar, segurando no muro"
+            },
+            {
+              "texto": "Atravessar de carro"
+            }
+          ],
+          "explicacao": "A Defesa Civil de SC orienta não atravessar ruas alagadas, pontes ou pontilhões submersos.",
+          "fontes": [
+            "F1",
+            "F2"
+          ]
+        },
+        {
+          "pergunta": "A água pode levar o carro. O que fazer?",
+          "opcoes": [
+            {
+              "texto": "Abandonar o veículo e procurar um local seguro",
+              "certa": true
+            },
+            {
+              "texto": "Ficar dentro do carro até a água baixar"
+            },
+            {
+              "texto": "Acelerar para sair da água"
+            }
+          ],
+          "explicacao": "O Plano Emergencial Familiar orienta abandonar o veículo e procurar um local seguro caso ele possa ser levado pela água.",
+          "fontes": [
+            "F2"
+          ]
+        }
+      ]
     },
     {
       "id": 7,
@@ -1812,6 +2071,47 @@
           "fontes": [
             "F4",
             "F9b"
+          ]
+        }
+      ],
+      "objetivo": "Ao final, você sabe voltar para casa com segurança e cuidar da água, dos alimentos e da limpeza.",
+      "pratica": [
+        {
+          "pergunta": "Para tratar a água, quantas gotas de hipoclorito de sódio a 2,5% por litro?",
+          "opcoes": [
+            {
+              "texto": "2 gotas por litro, e esperar 30 minutos para beber",
+              "certa": true
+            },
+            {
+              "texto": "10 gotas por litro, e beber na hora"
+            },
+            {
+              "texto": "Nenhuma: água de poço não precisa de tratamento"
+            }
+          ],
+          "explicacao": "O Ministério da Saúde orienta 2 gotas de hipoclorito de sódio a 2,5% para cada litro e esperar 30 minutos antes de beber.",
+          "fontes": [
+            "F9a"
+          ]
+        },
+        {
+          "pergunta": "Um pacote de comida encostou na água da enchente. O que fazer?",
+          "opcoes": [
+            {
+              "texto": "Não usar esse alimento",
+              "certa": true
+            },
+            {
+              "texto": "Lavar o pacote e usar"
+            },
+            {
+              "texto": "Usar, se a embalagem parecer seca"
+            }
+          ],
+          "explicacao": "A Defesa Civil Nacional orienta não utilizar alimentos que tiveram contato com as águas da enxurrada.",
+          "fontes": [
+            "F4"
           ]
         }
       ]

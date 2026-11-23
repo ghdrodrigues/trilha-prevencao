@@ -30,7 +30,7 @@ const CELULAR = [0.3, 0.9];
 
 export const ENQUADRAMENTOS_ALERTA = {
   geral: { centro: [0.4, 0.6, -0.2], largura: 11.5, altura: 7.8 },
-  celular: { centro: [0.1, 1.1, 0.6], largura: 5.2, altura: 3.7 },
+  celular: { centro: [0.1, 1.0, 0.6], largura: 7.0, altura: 5.0 },
   torre: { centro: [1.8, 1.4, -0.9], largura: 9, altura: 6.4 },
 };
 

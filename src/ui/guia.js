@@ -119,11 +119,13 @@ export function avisoRascunho(el) {
 
 // Fontes oficiais da etapa ou da lição (códigos de _fontes no licoes.json),
 // mostradas como links no rodapé do guia.
-export function citarFontes(el, codigos, { curto = false } = {}) {
+// max: quantas mostrar (a primeira da lista é a mais direta); a lista completa
+// fica na aba "Por quê".
+export function citarFontes(el, codigos, { curto = false, max = Infinity } = {}) {
   const cat = dados._fontes ?? {};
-  const itens = (codigos ?? []).map((c) => cat[c]).filter((f) => f?.url);
+  const itens = (codigos ?? []).map((c) => cat[c]).filter((f) => f?.url).slice(0, max);
   if (!itens.length) return;
-  const p = document.createElement('p');
+  const p = document.createElement(el.tagName === 'P' ? 'span' : 'p');
   p.className = 'fontes';
   p.append(itens.length > 1 ? 'Fontes: ' : 'Fonte: ');
   itens.forEach((f, i) => {
